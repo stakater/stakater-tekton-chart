@@ -1,0 +1,47 @@
+apiVersion: v1beta1
+kind: Pipeline
+metadata:
+  {{- if .Values.name }}
+  name: {{ .Values.name }}
+  {{- else }}
+  name: {{ include "my-chart.fullname" . }}
+  {{- end }}
+  namespace: {{ .Release.Namespace }}
+
+spec:
+  params:
+    {{- range $.Values.pipelines.params }}
+    - name: {{ .name }} 
+    {{- end }}
+  workspaces:
+    {{- range $.Values.pipelines.workspaces }}
+    - name: {{ .name }} 
+    {{- end }}
+  tasks: 
+    {{- range $.Values.pipelines.tasks }}
+    - name: {{ .taskName }}
+      taskRef:
+        - name : {{ .taskName }}
+      params:
+        {{- range .params }}
+        - name: {{ .name }}
+          {{- if .value }}
+          value: {{ .value }}
+          {{- else }}
+          value: {{ cat "$(params." .name ")" | replace " " "" }}
+          {{- end }}    
+        {{- end }}
+      {{- if .workspaces }}
+      workspaces:
+        {{- range .workspaces }}
+        - name: {{ .name }}
+          workspace: {{ .workspace }}
+        {{- end }}
+      {{- end }} 
+      {{- if .runAfter }}
+      runAfter:
+      {{- range .runAfter }}
+       - {{ . }}
+      {{- end }}
+      {{- end }}
+    {{- end }}

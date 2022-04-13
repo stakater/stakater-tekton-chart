@@ -1,0 +1,24 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: EventListener
+metadata:
+  name: {{ .Values.eventlistener.name }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  serviceAccountName: {{ .Values.eventlistener.serviceAccountName }}
+  {{- if .Values.eventlistener.triggers }}
+  {{- range .Values.eventlistener.triggers }} 
+  triggers:
+  - name: {{ .name }}
+    {{- if .interceptors_cel_filter }}
+    interceptors:
+    - cel:
+        filter: {{ quote .interceptors_cel_filter }}
+    {{- end }}
+    {{- range .bindings }}
+    bindings:
+    - ref: {{ . }}
+    {{- end }}
+    template:
+      name: {{ .templateName }}
+  {{- end }}
+  {{- end }}

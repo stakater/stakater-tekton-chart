@@ -1,0 +1,110 @@
+##########################################################
+# Name/Namespace of the application
+##########################################################
+
+name: my-helm-chart
+
+##########################################################
+# Pipeline Run Annotations in Trigger Template
+##########################################################
+
+annotations: {}
+
+##########################################################
+# Pipeline Definition
+# Creates a Single Trigger Template
+##########################################################
+
+pipelines:
+  # Pipeline Workspaces
+  workspaces:
+    - name: source
+  # Pipeline Params
+  params:
+    - name: pipelineparam1
+      description: pipelineparam1 description
+    - name: pipelineparam2
+      description: pipelineparam1 description
+  # Pipeline Tasks
+  tasks:
+    # Task Name, Params, Workspaces
+    - taskName: task1
+      params:
+        - name: pipelineparam1
+        - name: pipelineparam2
+      workspaces:
+        - name:  output
+          workspace: source
+
+    # Task Name, Params, Workspaces
+    - taskName: task2
+      params:
+        - name: pipelineparam2
+      workspaces:
+        - name:  source
+          workspace: source
+      runAfter:
+      - git-clone
+
+
+##########################################################
+# Trigger Template Definition
+# Creates a Single Trigger Template
+# Takes Params from pipelines as well as its own params
+##########################################################
+
+triggertemplate:
+
+ enabled: true
+ # Additional Params
+ params:
+ - name: templateparam
+   description: templateparam description
+   default: "templateparam-default"
+ # PipelineRun Name Prefix
+ pipelineRunNamePrefix: $(tt.params.templateparam)
+ # Service Account Name 
+ serviceAccountName: myserviceaccount
+ # Workspace Definition
+ workspaces:
+  - name: source
+    type: volumeClaimTemplate
+    accessModes: ReadWriteOnce
+    resourcesRequestsStorage: 1Gi
+
+
+##########################################################
+# Trigger Binding Definition
+# Creates multiple trigger bindings as specified.
+# Name and Params needs to be specified for every
+##########################################################
+
+triggerbinding:
+  enabled: true
+  # All Bindings to be Created are specified here
+  bindings:
+    # Name
+  - name: triggerbinding1
+    # Fields to Extracts from Event Body
+    bodyParams:
+      - name: param1
+        value: $(body.param1)
+
+##########################################################
+# Event Listener Definition
+# 1 or more triggers can be specified
+##########################################################
+
+eventlistener:
+  enabled: true
+  # Name
+  name: eventlistener1
+  # Service Account
+  serviceAccountName: myserviceaccount
+  # All Event Triggers
+  triggers:
+    - name: triggername1
+      templateName: triggertemplatename
+      interceptors_cel_filter: "()"
+      bindings:
+      - triggerbinding1
