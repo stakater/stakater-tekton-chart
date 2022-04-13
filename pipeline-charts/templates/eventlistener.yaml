@@ -1,3 +1,4 @@
+{{ if .Values.eventlistener.enabled }}
 apiVersion: triggers.tekton.dev/v1alpha1
 kind: EventListener
 metadata:
@@ -22,3 +23,4 @@ spec:
       name: {{ .templateName }}
   {{- end }}
   {{- end }}
+{{- end }}

@@ -1,3 +1,4 @@
+{{ if .Values.triggertemplate.enabled }}
 apiVersion: triggers.tekton.dev/v1alpha1
 kind: TriggerTemplate
 metadata:
@@ -57,7 +58,6 @@ spec:
                 requests:
                   storage: {{ .resourcesRequestsStorage }}
           {{- end -}}
-
           {{- if eq .type "persistentvolumeclaim" }}
           - name: {{ .name }}
             persistentVolumeClaim:
@@ -75,3 +75,4 @@ spec:
           {{- end }}
           {{- end }}
         {{- end }}
+{{- end }}
