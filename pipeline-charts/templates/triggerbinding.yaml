@@ -8,7 +8,7 @@ metadata:
   {{- if .name }}
   name: {{ .name }}
   {{- else }}
-  name: {{ include "my-chart.fullname" . }}
+  name: {{ include "pipeline-charts.fullname" . }}
   {{- end }}
 
 spec:

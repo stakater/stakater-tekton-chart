@@ -4,7 +4,7 @@ metadata:
   {{- if .Values.name }}
   name: {{ .Values.name }}
   {{- else }}
-  name: {{ include "my-chart.fullname" . }}
+  name: {{ include "pipeline-charts.fullname" . }}
   {{- end }}
   namespace: {{ .Release.Namespace }}
 
