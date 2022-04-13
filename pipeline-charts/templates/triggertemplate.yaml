@@ -1,17 +1,9 @@
 apiVersion: triggers.tekton.dev/v1alpha1
 kind: TriggerTemplate
 metadata:
-
-  {{- if .Values.name }}
-  name: {{ .Values.name }}
-  {{- else }}
-  name: {{ include "pipeline-charts.fullname" . }}
-  {{- end }}
-
+  name: {{ include "pipeline-charts.name" . }}
   namespace: {{ .Release.Namespace }}
-
 spec:
-
   params:
     {{- range .Values.pipelines.params }}
     - name: {{ .name }}   
@@ -21,7 +13,6 @@ spec:
       {{- if .default }}
       default: {{ .default }} 
       {{- end }}
-
     {{- end }}
     {{- range .Values.triggertemplate.params }}
     - name: {{ .name }}   
@@ -31,9 +22,7 @@ spec:
       {{- if .default }}
       default: {{ .default }} 
       {{- end }}
-
     {{- end }}
-
   resourcetemplates:
     - apiVersion: tekton.dev/v1beta1
       kind: PipelineRun

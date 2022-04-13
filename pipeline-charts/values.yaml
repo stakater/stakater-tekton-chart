@@ -21,10 +21,6 @@ pipelines:
     - name: source
   # Pipeline Params
   params:
-    - name: pipelineparam1
-      description: pipelineparam1 description
-    - name: pipelineparam2
-      description: pipelineparam1 description
   # Pipeline Tasks
   tasks:
     # Task Name, Params, Workspaces
@@ -97,8 +93,6 @@ triggerbinding:
 
 eventlistener:
   enabled: true
-  # Name
-  name: eventlistener1
   # Service Account
   serviceAccountName: myserviceaccount
   # All Event Triggers

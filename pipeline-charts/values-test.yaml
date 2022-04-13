@@ -211,8 +211,6 @@ triggerbinding:
 
 eventlistener:
   enabled: true
-  # Name
-  name: stakater-github-v1
   # Service Account
   serviceAccountName: stakater-tekton-builder
   # All Event Triggers
