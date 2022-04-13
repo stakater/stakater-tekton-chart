@@ -1,0 +1,26 @@
+{{ if .Values.triggerbinding.enabled }}
+
+{{- range .Values.triggerbinding.bindings }}
+---
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerBinding
+metadata:
+  {{- if .name }}
+  name: {{ .name }}
+  {{- else }}
+  name: {{ include "my-chart.fullname" . }}
+  {{- end }}
+
+spec:
+ params:
+ {{- if .bodyParams }}
+ {{- range .bodyParams }}
+  - name: {{ .name }}
+    value: {{ .value}}
+ {{- end -}}
+ {{- end -}}
+
+
+{{- end -}}
+
+{{- end -}}

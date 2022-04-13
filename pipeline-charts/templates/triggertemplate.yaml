@@ -1,0 +1,88 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerTemplate
+metadata:
+
+  {{- if .Values.name }}
+  name: {{ .Values.name }}
+  {{- else }}
+  name: {{ include "my-chart.fullname" . }}
+  {{- end }}
+
+  namespace: {{ .Release.Namespace }}
+
+spec:
+
+  params:
+    {{- range .Values.pipelines.params }}
+    - name: {{ .name }}   
+      {{- if .description }}
+      description: {{ .description }} 
+      {{- end }}
+      {{- if .default }}
+      default: {{ .default }} 
+      {{- end }}
+
+    {{- end }}
+    {{- range .Values.triggertemplate.params }}
+    - name: {{ .name }}   
+      {{- if .description }}
+      description: {{ .description }} 
+      {{- end }}
+      {{- if .default }}
+      default: {{ .default }} 
+      {{- end }}
+
+    {{- end }}
+
+  resourcetemplates:
+    - apiVersion: tekton.dev/v1beta1
+      kind: PipelineRun
+      metadata:
+        generateName: {{ .Values.triggertemplate.pipelineRunNamePrefix }}-
+        namespace: {{ .Release.Namespace }}
+        {{- if .Values.annotations }}
+        annotations: 
+{{ toYaml .Values.annotations | indent 10 }}
+        {{- end }}
+      spec:
+        {{- if .Values.triggertemplate.serviceAccountName }}
+        serviceAccountName: {{ .Values.triggertemplate.serviceAccountName }}
+        {{- end }}
+        params:
+          {{- range .Values.pipelines.params }}
+          - name: {{ .name }}
+            value: {{ cat "$(tt.params." .name ")" | replace " " "" }}    
+          {{- end }}
+        pipelineRef:
+          name: {{ .Values.name }}
+        {{- if .Values.triggertemplate.workspaces }}
+        workspaces:
+          {{- range .Values.triggertemplate.workspaces -}}
+          {{- if eq .type "volumeClaimTemplate"}}
+          - name: {{ .name }}
+            volumeClaimTemplate:
+            spec:
+              accessModes:
+              - {{ .accessModes }}
+              resources:
+                requests:
+                  storage: {{ .resourcesRequestsStorage }}
+          {{- end -}}
+
+          {{- if eq .type "persistentvolumeclaim" }}
+          - name: {{ .name }}
+            persistentVolumeClaim:
+              claimName: {{ .claimName }}
+            subPath: {{ .subPath }}
+          {{- end -}}
+          {{- if eq .type "emptydir" }}
+          - name: {{ .name }}
+            emptyDir: {}
+          {{- end -}}
+          {{- if eq .type "configmap" }}
+          - name: {{ .name }}
+            configmap:
+              name: {{ .configMapName }}
+          {{- end }}
+          {{- end }}
+        {{- end }}
