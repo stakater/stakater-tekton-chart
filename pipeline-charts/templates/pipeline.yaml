@@ -1,4 +1,4 @@
- {{ if .Values.pipelines.enabled }}
+{{- if .Values.pipelines.enabled }}
 apiVersion: v1beta1
 kind: Pipeline
 metadata:
@@ -17,7 +17,6 @@ spec:
     {{- range $.Values.pipelines.workspaces }}
     - name: {{ .name }} 
     {{- end }}
-  
   tasks: 
     {{- range $.Values.pipelines.tasks }}
     - name: {{ .taskName }}

@@ -18,6 +18,7 @@ annotations:
 ##########################################################
 
 pipelines:
+  enabled: true
   # Pipeline Workspaces
   workspaces:
     - name: source
