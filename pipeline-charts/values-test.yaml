@@ -164,7 +164,7 @@ triggertemplate:
 
  enabled: true
  # Additional Params
- params:
+ additionalParams:
  - name: repoName
    description: Repository name
    default: "NA"
@@ -232,5 +232,3 @@ eventlistener:
       interceptors_cel_filter: "(header.match('X-GitHub-Event', 'push') && (body.ref == 'refs/heads/main' || body.ref == 'refs/heads/master') )"
       bindings:
       - stakater-main-v1
-
-

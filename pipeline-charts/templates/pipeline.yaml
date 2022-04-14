@@ -1,5 +1,5 @@
 {{- if .Values.pipelines.enabled }}
-apiVersion: v1beta1
+apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
   name: {{ include "pipeline-charts.name" . }}
@@ -13,15 +13,18 @@ spec:
     {{- end }}
     {{- end }}
   {{- end }}
+  {{- if .Values.pipelines.workspaces }}
   workspaces:
     {{- range $.Values.pipelines.workspaces }}
     - name: {{ .name }} 
     {{- end }}
+  {{- end }}
   tasks: 
     {{- range $.Values.pipelines.tasks }}
     - name: {{ .taskName }}
       taskRef:
         - name : {{ .taskName }}
+      {{- if .params }}
       params:
         {{- range .params }}
         - name: {{ .name }}
@@ -31,6 +34,7 @@ spec:
           value: {{ cat "$(params." .name ")" | replace " " "" }}
           {{- end }}    
         {{- end }}
+      {{- end }}
       {{- if .workspaces }}
       workspaces:
         {{- range .workspaces }}

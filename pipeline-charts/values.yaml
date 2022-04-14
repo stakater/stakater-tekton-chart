@@ -16,6 +16,7 @@ annotations: {}
 ##########################################################
 
 pipelines:
+  enabled: true
   # Pipeline Workspaces
   workspaces:
     - name: source
@@ -53,7 +54,7 @@ triggertemplate:
 
  enabled: true
  # Additional Params
- params:
+ additionalParams:
  - name: templateparam
    description: templateparam description
    default: "templateparam-default"

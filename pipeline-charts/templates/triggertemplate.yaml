@@ -5,6 +5,7 @@ metadata:
   name: {{ include "pipeline-charts.name" . }}
   namespace: {{ .Release.Namespace }}
 spec:
+  {{- if or .Values.pipelines.params .Values.triggertemplate.additionalParams }}
   params:
     {{- range .Values.pipelines.params }}
     - name: {{ .name }}   
@@ -15,7 +16,7 @@ spec:
       default: {{ .default }} 
       {{- end }}
     {{- end }}
-    {{- range .Values.triggertemplate.params }}
+    {{- range .Values.triggertemplate.additionalParams }}
     - name: {{ .name }}   
       {{- if .description }}
       description: {{ .description }} 
@@ -24,39 +25,48 @@ spec:
       default: {{ .default }} 
       {{- end }}
     {{- end }}
+  {{- end }}
   resourcetemplates:
     - apiVersion: tekton.dev/v1beta1
       kind: PipelineRun
       metadata:
+        {{- if .Values.triggertemplate.pipelineRunNamePrefix }}
         generateName: {{ .Values.triggertemplate.pipelineRunNamePrefix }}-
+        {{- else }}
+        generateName: {{ include "pipeline-charts.name" . }}-
+        {{- end }}
         namespace: {{ .Release.Namespace }}
         {{- if .Values.annotations }}
-        annotations: 
-{{ toYaml .Values.annotations | indent 10 }}
+        annotations:
+        {{- range $key, $value := .Values.annotations }}        
+          - {{ $key }}: {{ $value }}
+        {{- end }}
         {{- end }}
       spec:
         {{- if .Values.triggertemplate.serviceAccountName }}
         serviceAccountName: {{ .Values.triggertemplate.serviceAccountName }}
         {{- end }}
+        {{- if .Values.pipelines.params }}
         params:
           {{- range .Values.pipelines.params }}
           - name: {{ .name }}
             value: {{ cat "$(tt.params." .name ")" | replace " " "" }}    
           {{- end }}
+        {{- end }}
         pipelineRef:
-          name: {{ .Values.name }}
+          name: {{ include "pipeline-charts.name" . }}
         {{- if .Values.triggertemplate.workspaces }}
         workspaces:
           {{- range .Values.triggertemplate.workspaces -}}
           {{- if eq .type "volumeClaimTemplate"}}
           - name: {{ .name }}
             volumeClaimTemplate:
-            spec:
-              accessModes:
-              - {{ .accessModes }}
-              resources:
-                requests:
-                  storage: {{ .resourcesRequestsStorage }}
+              spec:
+                accessModes:
+                - {{ .accessModes }}
+                resources:
+                  requests:
+                    storage: {{ .resourcesRequestsStorage }}
           {{- end -}}
           {{- if eq .type "persistentvolumeclaim" }}
           - name: {{ .name }}
