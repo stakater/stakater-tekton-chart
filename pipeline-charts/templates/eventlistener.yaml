@@ -17,12 +17,16 @@ spec:
     - cel:
         filter: {{ quote .interceptors_cel_filter }}
     {{- end }}
-    {{- range .bindings }}
+    {{- if .bindings }}
     bindings:
+    {{- range .bindings }}
     - ref: {{ . }}
     {{- end }}
+    {{- end }}
+    {{- if .templateName }}
     template:
       name: {{ .templateName }}
+    {{- end }}
   {{- end }}
   {{- end }}
 {{- end }}

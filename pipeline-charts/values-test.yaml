@@ -232,3 +232,27 @@ eventlistener:
       interceptors_cel_filter: "(header.match('X-GitHub-Event', 'push') && (body.ref == 'refs/heads/main' || body.ref == 'refs/heads/master') )"
       bindings:
       - stakater-main-v1
+
+##########################################################
+# Event Listener Route Definition
+##########################################################
+
+route:
+  enabled: true
+
+  # Route Labels
+  routeLabels: 
+    category: route
+    router: default
+
+  # Port
+  port:
+    targetPort: http-listener
+
+  # Wildcard policy
+  wildcardPolicy: None
+
+  # tls settings
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect

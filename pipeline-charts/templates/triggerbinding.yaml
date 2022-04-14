@@ -1,4 +1,5 @@
 {{ if .Values.triggerbinding.enabled }}
+{{ if .Values.triggerbinding.bindings }}
 {{- range .Values.triggerbinding.bindings }}
 ---
 apiVersion: triggers.tekton.dev/v1alpha1
@@ -13,5 +14,6 @@ spec:
     value: {{ .value}}
  {{- end -}}
  {{- end -}}
+{{- end -}}
 {{- end -}}
 {{- end -}}

@@ -19,29 +19,33 @@ pipelines:
   enabled: true
   # Pipeline Workspaces
   workspaces:
-    - name: source
+    #- name: source
   # Pipeline Params
   params:
+    #- name: pipelineparam1
+    #  description:
+    #- name: pipelineparam2
+
   # Pipeline Tasks
   tasks:
     # Task Name, Params, Workspaces
     - taskName: task1
-      params:
-        - name: pipelineparam1
-        - name: pipelineparam2
-      workspaces:
-        - name:  output
-          workspace: source
+    #  params:
+    #    - name: pipelineparam1
+    #    - name: pipelineparam2
+    #  workspaces:
+    #    - name:  output
+    #      workspace: source
 
     # Task Name, Params, Workspaces
-    - taskName: task2
-      params:
-        - name: pipelineparam2
-      workspaces:
-        - name:  source
-          workspace: source
-      runAfter:
-      - git-clone
+    #- taskName: task2
+    #  params:
+    #    - name: pipelineparam2
+    #  workspaces:
+    #    - name:  source
+    #      workspace: source
+    #  runAfter:
+    #  - git-clone
 
 
 ##########################################################
@@ -53,21 +57,25 @@ pipelines:
 triggertemplate:
 
  enabled: true
+
  # Additional Params
  additionalParams:
- - name: templateparam
-   description: templateparam description
-   default: "templateparam-default"
+ # - name: templateparam
+ #   description: templateparam description
+ #   default: "templateparam-default"
+
  # PipelineRun Name Prefix
- pipelineRunNamePrefix: $(tt.params.templateparam)
+ pipelineRunNamePrefix: 
+
  # Service Account Name 
- serviceAccountName: myserviceaccount
+ serviceAccountName: 
+
  # Workspace Definition
  workspaces:
-  - name: source
-    type: volumeClaimTemplate
-    accessModes: ReadWriteOnce
-    resourcesRequestsStorage: 1Gi
+  #- name: source
+  #  type: volumeClaimTemplate
+  #  accessModes: ReadWriteOnce
+  #  resourcesRequestsStorage: 1Gi
 
 
 ##########################################################
@@ -81,11 +89,11 @@ triggerbinding:
   # All Bindings to be Created are specified here
   bindings:
     # Name
-  - name: triggerbinding1
+  #- name: triggerbinding1
     # Fields to Extracts from Event Body
-    bodyParams:
-      - name: param1
-        value: $(body.param1)
+  #  bodyParams:
+  #    - name: param1
+  #      value: $(body.param1)
 
 ##########################################################
 # Event Listener Definition
@@ -99,7 +107,31 @@ eventlistener:
   # All Event Triggers
   triggers:
     - name: triggername1
-      templateName: triggertemplatename
-      interceptors_cel_filter: "()"
+#      templateName: triggertemplatename
+#      interceptors_cel_filter: ""
       bindings:
-      - triggerbinding1
+#      - triggerbinding1
+
+##########################################################
+# Event Listener Route Definition
+##########################################################
+
+route:
+  enabled: true
+
+  # Route Labels
+  routeLabels: 
+    #category: route
+    #router: default
+
+  # Port
+  port:
+    #targetPort: http-listener
+
+  # Wildcard policy
+  wildcardPolicy: 
+
+  # tls settings
+  tls:
+    #termination: edge
+    #insecureEdgeTerminationPolicy: Redirect
