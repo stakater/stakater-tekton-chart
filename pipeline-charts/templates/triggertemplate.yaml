@@ -38,9 +38,7 @@ spec:
         namespace: {{ .Release.Namespace }}
         {{- if .Values.annotations }}
         annotations:
-        {{- range $key, $value := .Values.annotations }}        
-          - {{ $key }}: {{ $value }}
-        {{- end }}
+          {{- toYaml .Values.annotations | nindent 10 }}
         {{- end }}
       spec:
         {{- if .Values.triggertemplate.serviceAccountName }}
