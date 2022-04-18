@@ -5,14 +5,6 @@
 name: stakater-main-pr-v1
 
 ##########################################################
-# Pipeline Run Annotations in Trigger Template
-##########################################################
-annotations: 
-  tekton.dev/git-status: "true"
-  tekton.dev/status-context: "pipeline-operator"
-  tekton.dev/status-description: "Pipeline running on Openshift"
-
-##########################################################
 # Pipeline Definition
 # Creates a Single Trigger Template
 ##########################################################

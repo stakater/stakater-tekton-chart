@@ -5,12 +5,6 @@
 name: my-helm-chart
 
 ##########################################################
-# Pipeline Run Annotations in Trigger Template
-##########################################################
-
-annotations: {}
-
-##########################################################
 # Pipeline Definition
 # Creates a Single Trigger Template
 ##########################################################
