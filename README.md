@@ -49,8 +49,8 @@ To uninstall the chart:
 | triggertemplate.serviceAccount | Service Account to be used for pipelineRun                                             | ``              |
 | triggertemplate.pipelineRunAnnotations | Annotations for pipelineRun                                                    | `{}`            |
 | triggertemplate.workspaces | Workspaces used by pipelines ie volumeClaimTemplate, volumeClaimRef, configMaps, secrets | `{}`       |
-| triggertemplate.workspaces.name | Name of the workspace                                                                 | `{}`            |
-| triggertemplate.workspaces.type | Type of workspace ie volume claim template, volume claim, config map, empty dir       | `{}`            |
+| triggertemplate.workspaces.name | Name of the workspace                                                                 | ``            |
+| triggertemplate.workspaces.type | Type of workspace ie volume claim template, volume claim, config map, empty dir       | ``            |
 | triggertemplate.workspaces.accessModes | If type is volume claim template, define access mode                           | `ReadWriteOnce` |
 | triggertemplate.workspaces.resourcesRequestsStorage | If type is volume claim template, define resourcesRequestsStorage | `1Gi`           |
 | triggertemplate.workspaces.claimName | If type is volume claim, define already existing claimName                       | ``              |
