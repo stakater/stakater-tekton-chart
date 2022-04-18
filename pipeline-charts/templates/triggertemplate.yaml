@@ -36,9 +36,9 @@ spec:
         generateName: {{ include "pipeline-charts.name" . }}-
         {{- end }}
         namespace: {{ .Release.Namespace }}
-        {{- if .Values.annotations }}
+        {{- if .Values.triggertemplate.pipelineRunAnnotations }}
         annotations:
-          {{- toYaml .Values.annotations | nindent 10 }}
+          {{- toYaml .Values.triggertemplate.pipelineRunAnnotations | nindent 10 }}
         {{- end }}
       spec:
         {{- if .Values.triggertemplate.serviceAccountName }}

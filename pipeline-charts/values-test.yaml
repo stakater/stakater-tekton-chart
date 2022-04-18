@@ -181,6 +181,11 @@ triggertemplate:
     type: volumeClaimTemplate
     accessModes: ReadWriteOnce
     resourcesRequestsStorage: 1Gi
+ # Annotations for pipeline run
+ pipelineRunAnnotations: 
+  tekton.dev/git-status: "true"
+  tekton.dev/status-context: "pipeline-operator"
+  tekton.dev/status-description: "Pipeline running on Openshift"
 
 
 ##########################################################
