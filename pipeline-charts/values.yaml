@@ -66,10 +66,19 @@ triggertemplate:
 
  # Workspace Definition
  workspaces:
-  #- name: source
-  #  type: volumeClaimTemplate
-  #  accessModes: ReadWriteOnce
-  #  resourcesRequestsStorage: 1Gi
+#  - name: source
+#    volumeClaimTemplate:
+#      accessModes: ReadWriteOnce
+#      resourcesRequestsStorage: 1Gi
+#  - name: source1
+#    persistentVolumeClaim:
+#      claimName: my-pcv
+#  - name: source2
+#    configMap: 
+#      configMapName: my-cm
+#  - name: source3
+#    emptyDir: "true"
+
  # Annotations for pipeline run
  pipelineRunAnnotations: 
 #  tekton.dev/git-status: "true"

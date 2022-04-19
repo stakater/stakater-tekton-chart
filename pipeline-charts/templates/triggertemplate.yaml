@@ -56,37 +56,37 @@ spec:
         {{- if .Values.triggertemplate.workspaces }}
         workspaces:
           {{- range .Values.triggertemplate.workspaces -}}
-          {{- if eq .type "volumeClaimTemplate"}}
+          {{- if and .volumeClaimTemplate .name }}
           - name: {{ .name }}
-            {{- if and .accessModes .resourcesRequestsStorage }}
+            {{- if and .volumeClaimTemplate.accessModes .volumeClaimTemplate.resourcesRequestsStorage }}
             volumeClaimTemplate:
               spec:
                 accessModes:
-                - {{ .accessModes }}
+                - {{ .volumeClaimTemplate.accessModes }}
                 resources:
                   requests:
-                    storage: {{ .resourcesRequestsStorage }}
+                    storage: {{ .volumeClaimTemplate.resourcesRequestsStorage }}
             {{- end -}}
           {{- end -}}
-          {{- if eq .type "persistentvolumeclaim" }}
+          {{- if and .persistentVolumeClaim .name }}
           - name: {{ .name }}
-            {{- if .claimName }}
+            {{- if .persistentVolumeClaim.claimName }}
             persistentVolumeClaim:
-              claimName: {{ .claimName }}
+              claimName: {{ .persistentVolumeClaim.claimName }}
             {{- end -}}
-            {{- if .subPath }}
-            subPath: {{ .subPath }}
+            {{- if .persistentVolumeClaim.subPath }}
+            subPath: {{ .persistentVolumeClaim.subPath }}
             {{- end }}
           {{- end }}
-          {{- if eq .type "emptydir" }}
+          {{- if and .emptyDir .name }}
           - name: {{ .name }}
             emptyDir: {}
           {{- end -}}
-          {{- if eq .type "configmap" }}
+          {{- if and .configMap .name }}
           - name: {{ .name }}
-            {{ if .configMapName }}
+            {{- if .configMap.configMapName }}
             configmap:
-              name: {{ .configMapName }}
+              name: {{ .configMap.configMapName }}
             {{- end }}
           {{- end }}
           {{- end }}
