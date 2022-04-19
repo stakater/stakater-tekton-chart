@@ -23,7 +23,7 @@ pipelines:
   # Pipeline Tasks
   tasks:
     # Task Name, Params, Workspaces
-    - taskName: task1
+    - taskName: 
     #  params:
     #    - name: pipelineparam1
     #    - name: pipelineparam2
@@ -105,7 +105,7 @@ eventlistener:
   serviceAccountName: myserviceaccount
   # All Event Triggers
   triggers:
-    - templateName: triggertemplatename
+    - templateName: 
 #      interceptors_cel_filter: ""
       bindings:
 #      - triggerbinding1
