@@ -3,7 +3,8 @@ name: Push Chart to Helm Repository
 
 on:
   push:
-    branches: [ main ]
+    branches: 
+      - main
     paths-ignore:
     - 'README.md'
 
@@ -25,12 +26,12 @@ jobs:
           fetch-depth: 0 # otherwise, you will fail to push refs to dest repo
 
       # Log in to OC cluster
-      - name: Authenticate to OC cluster
-        uses: redhat-actions/oc-login@v1
-        with:
-          openshift_server_url: ${{ secrets.STAKATER_TEST_CLUSTER }}
-          openshift_username: ${{ secrets.STAKATER_TEST_USER }}
-          openshift_password: ${{ secrets.STAKATER_TEST_PASSWORD }}
+#      - name: Authenticate to OC cluster
+#        uses: redhat-actions/oc-login@v1
+#        with:
+#          openshift_server_url: ${{ secrets.STAKATER_TEST_CLUSTER }}
+#          openshift_username: ${{ secrets.STAKATER_TEST_USER }}
+#          openshift_password: ${{ secrets.STAKATER_TEST_PASSWORD }}
 
       # Generate Tag without tagging the branch 
       - name: Generate Tag
@@ -61,9 +62,9 @@ jobs:
           helm lint ${CHART_NAME}
 
       # Dry run to ensure that manifests are generated successfully 
-      - name: Dry Run Chart
-        run: |
-          helm install ${CHART_NAME} ${CHART_NAME} -f ${CHART_NAME}/values-test.yaml -n stakater-chart-pipeline-test --dry-run --debug
+  #    - name: Dry Run Chart
+  #      run: |
+  #        helm install ${CHART_NAME} ${CHART_NAME} -f ${CHART_NAME}/values-test.yaml -n stakater-chart-pipeline-test --dry-run --debug
 
       # Publish helm chart
       - name: Publish Helm chart
