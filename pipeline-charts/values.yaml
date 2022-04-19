@@ -72,7 +72,7 @@ triggertemplate:
 #      resourcesRequestsStorage: 1Gi
 #  - name: source1
 #    persistentVolumeClaim:
-#      claimName: my-pcv
+#      claimName: my-pvc
 #  - name: source2
 #    configMap: 
 #      configMapName: my-cm
