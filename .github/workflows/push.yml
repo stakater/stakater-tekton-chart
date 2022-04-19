@@ -105,10 +105,10 @@ jobs:
           DEFAULT_BUMP: patch
 
       # CleanUp
-      - name: Clean up KUBECONFIG
-        if: always() 
-        run: |
-          rm $KUBECONFIG
+#      - name: Clean up KUBECONFIG
+#        if: always() 
+#        run: |
+#          rm $KUBECONFIG
 
       # Notify Slack
       - name: Notify Slack
