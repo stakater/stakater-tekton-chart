@@ -213,19 +213,16 @@ eventlistener:
   serviceAccountName: stakater-tekton-builder
   # All Event Triggers
   triggers:
-    - name: pullrequest-merge-trigger
-      templateName: stakater-pr-cleaner-v1
+    - templateName: stakater-pr-cleaner-v1
       interceptors_cel_filter: "(header.match('X-GitHub-Event', 'pull_request') && body.action == 'closed' )"
       bindings:
       - stakater-pr-cleaner-v1
-    - name: pullrequest-trigger
-      templateName: stakater-main-pr-v1
+    - templateName: stakater-main-pr-v1
       interceptors_cel_filter: "(header.match('X-GitHub-Event', 'pull_request') && body.action == 'opened' || body.action == 'synchronize')"
       bindings:
       - stakater-pr-v1
 
-    - name: push-trigger
-      templateName: stakater-main-pr-v1
+    - templateName: stakater-main-pr-v1
       interceptors_cel_filter: "(header.match('X-GitHub-Event', 'push') && (body.ref == 'refs/heads/main' || body.ref == 'refs/heads/master') )"
       bindings:
       - stakater-main-v1

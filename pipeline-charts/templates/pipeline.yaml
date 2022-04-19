@@ -31,7 +31,7 @@ spec:
           {{- if .value }}
           value: {{ .value }}
           {{- else }}
-          value: {{ cat "$(params." .name ")" | replace " " "" }}
+          value: $(params.{{.name}})
           {{- end }}    
         {{- end }}
       {{- end }}

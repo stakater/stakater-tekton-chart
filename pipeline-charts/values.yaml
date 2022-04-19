@@ -105,8 +105,7 @@ eventlistener:
   serviceAccountName: myserviceaccount
   # All Event Triggers
   triggers:
-    - name: triggername1
-#      templateName: triggertemplatename
+    - templateName: triggertemplatename
 #      interceptors_cel_filter: ""
       bindings:
 #      - triggerbinding1

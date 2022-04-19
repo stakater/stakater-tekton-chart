@@ -9,9 +9,10 @@ spec:
   serviceAccountName: {{ .Values.eventlistener.serviceAccountName }}
   {{- end }}
   {{- if .Values.eventlistener.triggers }}
-  {{- range .Values.eventlistener.triggers }} 
   triggers:
-  - name: {{ .name }}
+  {{- range .Values.eventlistener.triggers }}
+  {{- if .templateName }}
+  - name: {{ .templateName }}
     {{- if .interceptors_cel_filter }}
     interceptors:
     - cel:
@@ -27,6 +28,7 @@ spec:
     template:
       name: {{ .templateName }}
     {{- end }}
+  {{- end }}
   {{- end }}
   {{- end }}
 {{- end }}

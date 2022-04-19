@@ -73,8 +73,7 @@ To uninstall the chart:
 | ------------------------ | -------------------------------------------------------------------------------------------- | --------------- |
 | eventlistener.enabled    | Enable event listener manifest on helm chart                                                 | ``              |
 | eventlistener.triggers    | Define pipelines trigger templates in case of event, can use already existing trigger templates | `{}`        |
-| eventlistener.triggers.name    | Trigger Name                                                                           | ``              |
-| eventlistener.triggers.templateName    | Trigger Template Name to be evoked                                             | ``              |
+| eventlistener.triggers.templateName    | Trigger Template Name to be evoked, Used as step name                          | ``              |
 | eventlistener.triggers.interceptors_cel_filter    | Specify Interceptors CEL filter                                     | ``              |
 | eventlistener.triggers.bindings    | Trigger Bindings to be passed to trigger templates                                 | `{}`            |
 
