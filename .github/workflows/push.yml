@@ -3,7 +3,9 @@ name: Push Chart to Helm Repository
 
 on:
   push:
-    branches: [ main ]
+    branches: 
+      - main
+      - add-chart-repo
     paths-ignore:
     - 'README.md'
 
