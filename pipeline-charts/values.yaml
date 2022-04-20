@@ -111,7 +111,7 @@ triggerbinding:
 eventlistener:
   enabled: true
   # Service Account
-  serviceAccountName: myserviceaccount
+  serviceAccountName: 
   # All Event Triggers
   triggers:
     - templateName: 
