@@ -5,19 +5,12 @@
 name: stakater-main-pr-v1
 
 ##########################################################
-# Pipeline Run Annotations in Trigger Template
-##########################################################
-annotations: 
-  tekton.dev/git-status: "true"
-  tekton.dev/status-context: "pipeline-operator"
-  tekton.dev/status-description: "Pipeline running on Openshift"
-
-##########################################################
 # Pipeline Definition
 # Creates a Single Trigger Template
 ##########################################################
 
 pipelines:
+  enabled: true
   # Pipeline Workspaces
   workspaces:
     - name: source
@@ -163,7 +156,7 @@ triggertemplate:
 
  enabled: true
  # Additional Params
- params:
+ additionalParams:
  - name: repoName
    description: Repository name
    default: "NA"
@@ -177,9 +170,22 @@ triggertemplate:
  # Workspace Definition
  workspaces:
   - name: source
-    type: volumeClaimTemplate
-    accessModes: ReadWriteOnce
-    resourcesRequestsStorage: 1Gi
+    volumeClaimTemplate:
+      accessModes: ReadWriteOnce
+      resourcesRequestsStorage: 1Gi
+#  - name: source1
+#    persistentVolumeClaim:
+#      claimName: my-pcv
+#  - name: source2
+#    configMap: 
+#      configMapName: my-cm
+#  - name: source3
+#    emptyDir: "true"
+ # Annotations for pipeline run
+ pipelineRunAnnotations: 
+  tekton.dev/git-status: "true"
+  tekton.dev/status-context: "pipeline-operator"
+  tekton.dev/status-description: "Pipeline running on Openshift"
 
 
 ##########################################################
@@ -211,27 +217,44 @@ triggerbinding:
 
 eventlistener:
   enabled: true
-  # Name
-  name: stakater-github-v1
   # Service Account
   serviceAccountName: stakater-tekton-builder
   # All Event Triggers
   triggers:
-    - name: pullrequest-merge-trigger
-      templateName: stakater-pr-cleaner-v1
+    - templateName: stakater-pr-cleaner-v1
       interceptors_cel_filter: "(header.match('X-GitHub-Event', 'pull_request') && body.action == 'closed' )"
       bindings:
       - stakater-pr-cleaner-v1
-    - name: pullrequest-trigger
-      templateName: stakater-main-pr-v1
+    - templateName: stakater-main-pr-v1
       interceptors_cel_filter: "(header.match('X-GitHub-Event', 'pull_request') && body.action == 'opened' || body.action == 'synchronize')"
       bindings:
       - stakater-pr-v1
 
-    - name: push-trigger
-      templateName: stakater-main-pr-v1
+    - templateName: stakater-main-pr-v1
       interceptors_cel_filter: "(header.match('X-GitHub-Event', 'push') && (body.ref == 'refs/heads/main' || body.ref == 'refs/heads/master') )"
       bindings:
       - stakater-main-v1
 
+##########################################################
+# Event Listener Route Definition
+##########################################################
 
+route:
+  enabled: true
+
+  # Route Labels
+  routeLabels: 
+    category: route
+    router: default
+
+  # Port
+  port:
+    targetPort: http-listener
+
+  # Wildcard policy
+  wildcardPolicy: None
+
+  # tls settings
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect

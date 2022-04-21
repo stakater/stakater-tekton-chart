@@ -1,36 +1,40 @@
-apiVersion: v1beta1
+{{- if .Values.pipelines.enabled }}
+apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
-  {{- if .Values.name }}
-  name: {{ .Values.name }}
-  {{- else }}
-  name: {{ include "my-chart.fullname" . }}
-  {{- end }}
+  name: {{ include "pipeline-charts.name" . }}
   namespace: {{ .Release.Namespace }}
-
 spec:
+  {{- if .Values.pipelines.params }}
   params:
     {{- range $.Values.pipelines.params }}
+    {{- if .name }}
     - name: {{ .name }} 
     {{- end }}
+    {{- end }}
+  {{- end }}
+  {{- if .Values.pipelines.workspaces }}
   workspaces:
     {{- range $.Values.pipelines.workspaces }}
     - name: {{ .name }} 
     {{- end }}
+  {{- end }}
   tasks: 
     {{- range $.Values.pipelines.tasks }}
     - name: {{ .taskName }}
       taskRef:
         - name : {{ .taskName }}
+      {{- if .params }}
       params:
         {{- range .params }}
         - name: {{ .name }}
           {{- if .value }}
           value: {{ .value }}
           {{- else }}
-          value: {{ cat "$(params." .name ")" | replace " " "" }}
+          value: $(params.{{.name}})
           {{- end }}    
         {{- end }}
+      {{- end }}
       {{- if .workspaces }}
       workspaces:
         {{- range .workspaces }}
@@ -45,3 +49,4 @@ spec:
       {{- end }}
       {{- end }}
     {{- end }}
+{{- end }}

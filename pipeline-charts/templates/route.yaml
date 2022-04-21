@@ -1,0 +1,32 @@
+{{- if .Values.route.enabled }}
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: {{ include "pipeline-charts.name" . }}
+  namespace: {{ .Release.Namespace }}
+  {{- if .Values.route.routeLabels }}
+  labels:
+    {{- toYaml .Values.route.routeLabels | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if .Values.route.port }}
+  port:
+    {{- toYaml .Values.route.port | nindent 4 }}
+  {{- end }}
+  to:
+    kind: Service
+    name: el-{{ include "pipeline-charts.name" . }}
+    weight: 100
+  {{- if .Values.route.tls }}
+  tls:
+    {{- if .Values.route.tls.termination }}
+    termination: {{ .Values.route.tls.termination }}
+    {{- end }}
+    {{- if .Values.route.tls.insecureEdgeTerminationPolicy }}
+    insecureEdgeTerminationPolicy: {{ .Values.route.tls.insecureEdgeTerminationPolicy }}
+    {{- end }}
+  {{- end -}}
+  {{- if .Values.route.wildcardPolicy }}
+  wildcardPolicy: {{ .Values.route.wildcardPolicy }}
+  {{- end }}
+{{- end -}}

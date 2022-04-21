@@ -1,24 +1,32 @@
+{{ if .Values.eventlistener.enabled }}
 apiVersion: triggers.tekton.dev/v1alpha1
 kind: EventListener
 metadata:
-  name: {{ .Values.eventlistener.name }}
+  name: {{ include "pipeline-charts.name" . }}
   namespace: {{ .Release.Namespace }}
 spec:
   serviceAccountName: {{ .Values.eventlistener.serviceAccountName }}
   {{- if .Values.eventlistener.triggers }}
-  {{- range .Values.eventlistener.triggers }} 
   triggers:
-  - name: {{ .name }}
+  {{- range .Values.eventlistener.triggers }}
+  {{- if .templateName }}
+  - name: {{ .templateName }}
     {{- if .interceptors_cel_filter }}
     interceptors:
     - cel:
         filter: {{ quote .interceptors_cel_filter }}
     {{- end }}
-    {{- range .bindings }}
+    {{- if .bindings }}
     bindings:
+    {{- range .bindings }}
     - ref: {{ . }}
     {{- end }}
+    {{- end }}
+    {{- if .templateName }}
     template:
       name: {{ .templateName }}
+    {{- end }}
   {{- end }}
   {{- end }}
+  {{- end }}
+{{- end }}
