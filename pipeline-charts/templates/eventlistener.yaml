@@ -20,7 +20,6 @@ spec:
         {{- toYaml .interceptors_cel_overlays | nindent 12 }}
         {{- end }}
     {{- end }}
-
     {{- if .bindings }}
     bindings:
     {{- range .bindings }}
