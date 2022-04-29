@@ -144,11 +144,11 @@ pipelines:
   # Pipeline Tasks
   tasks:
     # Task Name, Params, Workspaces
-    - taskName: 
-    #  params:
+    - taskName: ""
+    # params:
     #    - name: pipelineparam1
     #    - name: pipelineparam2
-    #  workspaces:
+    # workspaces:
     #    - name:  output
     #      workspace: source
 
