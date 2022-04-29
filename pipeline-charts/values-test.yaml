@@ -155,4 +155,4 @@ route:
     router: default
 
   # Port
-  port: http-listener
+  targetPort: http-listener

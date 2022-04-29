@@ -9,9 +9,9 @@ metadata:
     {{- toYaml .Values.route.routeLabels | nindent 4 }}
   {{- end }}
 spec:
-  {{- if .Values.route.port }}
+  {{- if .Values.route.targetPort }}
   port:
-    targetPort: {{ .Values.route.port }}
+    targetPort: {{ .Values.route.targetPort }}
   {{- end }}
   to:
     kind: Service
