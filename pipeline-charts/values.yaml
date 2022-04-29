@@ -137,8 +137,8 @@ pipelines:
     #- name: source
   # Pipeline Params
   params:
-    - name: gitorganization
-      description: my description
+#    - name: gitorganization
+#      description: my description
     #- name: pipelineparam2
 
   # Pipeline Tasks
