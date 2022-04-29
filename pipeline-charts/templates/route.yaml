@@ -11,7 +11,7 @@ metadata:
 spec:
   {{- if .Values.route.port }}
   port:
-    {{- toYaml .Values.route.port | nindent 4 }}
+    targetPort: {{ .Values.route.port }}
   {{- end }}
   to:
     kind: Service

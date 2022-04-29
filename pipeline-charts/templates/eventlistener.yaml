@@ -9,13 +9,18 @@ spec:
   {{- if .Values.eventlistener.triggers }}
   triggers:
   {{- range .Values.eventlistener.triggers }}
-  {{- if .templateName }}
-  - name: {{ .templateName }}
-    {{- if .interceptors_cel_filter }}
+  {{- if .triggerName }}
+  - name: {{ .triggerName }}
+    {{- if or .interceptors_cel_filter .interceptors_cel_overlays  }}
     interceptors:
     - cel:
         filter: {{ quote .interceptors_cel_filter }}
+        {{- if .interceptors_cel_overlays }}
+        overlays:
+        {{- toYaml .interceptors_cel_overlays | nindent 12 }}
+        {{- end }}
     {{- end }}
+
     {{- if .bindings }}
     bindings:
     {{- range .bindings }}

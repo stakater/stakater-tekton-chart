@@ -8,6 +8,127 @@ name: my-helm-chart
 # Pipeline Definition
 # Creates a Single Trigger Template
 ##########################################################
+default_pipelines:
+  params:
+    - name: gitorganization
+      description: The git organization containing the CD repo
+    - name: gitcdrepo
+      description: The CD git repo in the gitorganization param
+    - name: team
+      description: The team name for the microservice
+    - name: clusterName
+      description: The cluster name on which the apps will get deployed
+    - name: gitrevision
+      description: The git revision
+      default: main
+    - name: gitrepositoryurl
+      description: The git repository url
+    - name: image_registry_url
+      description: The container registry url
+    - name: namespace
+      description: The namespace to create the resources
+    - name: prnumber
+      description: PR number in case of pull request, Empty value if it's a push event
+      default: NA
+    - name: repoPath
+      description: Path of repository with group name
+      default: "NA"
+    - name: author
+      description: Author of commit
+    - name: helm_registry
+      description: Helm registry url 
+    - name: environment
+      description: Name of environment
+  workspaces:
+    - name: source
+  tasks:
+    git-clone:
+      params:
+        - name: url
+          value: $(params.gitrepositoryurl)
+        - name: revision
+          value: $(params.gitrevision)
+      workspaces:
+        - name:  output
+          workspace: source 
+    stakater-create-git-tag-v1:
+      params:
+        - name: prnumber
+        - name: gitrevision
+      workspaces:
+        - name:  source
+          workspace: source
+      runAfter:
+      - git-clone
+    stakater-buildah-v1:
+      params:
+        - name: IMAGE
+          value: $(params.image_registry_url):$(tasks.stakater-create-git-tag-v1.results.GIT_TAG)
+        - name: TLSVERIFY
+          value: "false"
+        - name: FORMAT
+          value: "docker"
+      workspaces:
+        - name:  source
+          workspace: source
+      runAfter:
+      - stakater-create-git-tag-v1
+    stakater-comment-on-github-pr-v1:
+      params:
+        - name: prnumber
+        - name: gitrepositoryurl
+        - name: IMAGE
+          value: $(params.image_registry_url):$(tasks.stakater-create-git-tag-v1.results.GIT_TAG)
+      workspaces:
+        - name:  source
+          workspace: source
+      runAfter:
+      - stakater-buildah-v1
+    stakater-helm-push-v1:
+      params:
+        - name: prnumber
+        - name: repoPath
+        - name: gitrevision
+        - name: registry
+          value: $(params.helm_registry)
+        - name: semVer
+          value: $(tasks.stakater-create-git-tag-v1.results.GIT_TAG)
+      workspaces:
+        - name:  source
+          workspace: source
+      runAfter:
+      - stakater-comment-on-github-pr-v1
+    stakater-update-cd-repo-v1:
+      params:
+        - name: prnumber
+        - name: environment
+        - name: repoPath
+        - name: gitrevision
+        - name: gitorganization
+        - name: gitcdrepo
+        - name: clusterName
+        - name: team
+        - name: namespace
+        - name: IMAGE_TAG
+          value: $(tasks.stakater-create-git-tag-v1.results.GIT_TAG)
+        - name: IMAGE_NAME
+          value: $(params.image_registry_url)
+      workspaces:
+        - name:  source
+          workspace: source
+      runAfter:
+      - stakater-helm-push-v1
+    stakater-push-main-tag-v1:
+      params:
+      - name: prnumber
+      - name: gitrevision
+      - name: IMAGE_TAG
+        value: $(tasks.stakater-create-git-tag-v1.results.GIT_TAG)
+      workspaces:
+        - name:  source
+          workspace: source
+      runAfter:
+      - stakater-update-cd-repo-v1
 
 pipelines:
   enabled: true
@@ -16,8 +137,8 @@ pipelines:
     #- name: source
   # Pipeline Params
   params:
-    #- name: pipelineparam1
-    #  description:
+    - name: gitorganization
+      description: my description
     #- name: pipelineparam2
 
   # Pipeline Tasks
@@ -81,9 +202,9 @@ triggertemplate:
 
  # Annotations for pipeline run
  pipelineRunAnnotations: 
-#  tekton.dev/git-status: "true"
-#  tekton.dev/status-context: "pipeline-operator"
-#  tekton.dev/status-description: "Pipeline running on Openshift"
+  tekton.dev/git-status: "true"
+  tekton.dev/status-context: "pipeline-operator"
+  tekton.dev/status-description: "Pipeline running on Openshift"
 
 
 ##########################################################
@@ -116,6 +237,10 @@ eventlistener:
   triggers:
     - templateName: 
 #      interceptors_cel_filter: ""
+#      interceptors_cel_overlays:
+#        - key: marshalled-body
+#          expression: body.marshalJSON()
+
       bindings:
 #      - triggerbinding1
 
@@ -132,13 +257,12 @@ route:
     #router: default
 
   # Port
-  port:
-    #targetPort: http-listener
+  #port: http-listener
 
   # Wildcard policy
   wildcardPolicy: 
 
   # tls settings
   tls:
-    #termination: edge
-    #insecureEdgeTerminationPolicy: Redirect
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
