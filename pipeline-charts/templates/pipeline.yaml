@@ -94,7 +94,7 @@ spec:
       {{- if or .runAfter $var.runAfter }}
       runAfter:
         {{- if .runAfter }}
-        - {{ .runAfter }}
+        - {{ first .runAfter }}
         {{- else }}
           {{- if $var.runAfter }}
         - {{ first $var.runAfter }}

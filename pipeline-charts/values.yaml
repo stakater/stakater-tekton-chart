@@ -2,7 +2,7 @@
 # Name/Namespace of the application
 ##########################################################
 
-name: my-helm-chart
+name: pipeline-charts
 
 ##########################################################
 # Pipeline Definition
@@ -48,6 +48,8 @@ default_pipelines:
           value: $(params.gitrepositoryurl)
         - name: revision
           value: $(params.gitrevision)
+        - name: depth
+          value: "0"
       workspaces:
         - name:  output
           workspace: source 
@@ -257,7 +259,7 @@ route:
     #router: default
 
   # Port
-  #port: http-listener
+  #targetPort: http-listener
 
   # Wildcard policy
   wildcardPolicy: 

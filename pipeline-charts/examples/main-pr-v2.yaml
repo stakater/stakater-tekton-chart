@@ -1,0 +1,248 @@
+
+name: stakater-main-pr-v2
+
+pipelines:  
+  # Pipeline Workspaces
+  workspaces:
+    ##- name: source
+  # Pipeline Params
+  params:
+  - name: gitbranch
+    description: The git branch name
+  - name: repoName
+    description: Repository name
+  - name: webhook-payload
+    description: Content of Webhook Payload
+  - name: tekton-base-url
+    description: Base Url of Tekton
+  
+  finally:
+    - taskName: stakater-set-commit-status-v1
+      params:
+      - name: webhook-payload
+        value: $(params.webhook-payload)
+      - name: state
+        value: $(tasks.status)
+      - name: tekton-base-url
+        value: $(params.tekton-base-url)
+      - name: pipeline_name
+        value: $(context.pipelineRun.name)
+      - name: pipeline_namespace
+        value: $(context.pipelineRun.namespace)  
+
+  # Pipeline Tasks
+  tasks:
+    - taskName: stakater-set-commit-status-v1
+      params:
+      - name: state
+        value: pending
+      - name: webhook-payload
+        value: $(params.webhook-payload)
+      - name: tekton-base-url
+        value: $(params.tekton-base-url)
+      - name: pipeline_name
+        value: $(context.pipelineRun.name)
+      - name: pipeline_namespace
+        value: $(context.pipelineRun.namespace)
+    - taskName: git-clone
+    - taskName: stakater-create-git-tag-v1
+    - taskName: stakater-buildah-v1
+    - taskName: stakater-comment-on-github-pr-v1
+    - taskName: stakater-helm-push-v1
+    - taskName: stakater-create-environment-provisioner-v1
+      runAfter:
+      - stakater-helm-push-v1
+      params:
+      - name: repoName
+      - name: prNumber
+        value: $(params.prnumber)
+      - name: gitUrl
+        value: $(params.gitrepositoryurl)
+      - name: gitBranch
+      - name: imageTag
+        value: $(tasks.create-git-tag.results.GIT_TAG)
+      - name: imageRepo
+        value: $(params.image_registry_url)
+      workspaces:
+        - name: output
+          workspace: source    
+    - taskName: stakater-update-cd-repo-v3
+      params:
+      - name: prnumber
+        value: $(params.prnumber)
+      - name: IMAGE_TAG
+        value: $(tasks.create-git-tag.results.GIT_TAG)
+      - name: IMAGE_NAME
+        value: $(params.image_registry_url)
+      - name: environment
+        value: $(params.environment)
+      - name: repoPath
+        value: $(params.repoPath)
+      - name: gitrevision
+        value: $(params.gitrevision)
+      - name: gitorganization
+        value: $(params.gitorganization)
+      - name: gitcdrepo
+        value: $(params.gitcdrepo)
+      - name: clusterName
+        value: $(params.clusterName)
+      - name: team
+        value: $(params.team)
+      - name: namespace
+        value: $(params.namespace)
+      - name: helm_registry
+        value: $(params.helm_registry)
+      workspaces:
+      - name: source
+        workspace: source
+      runAfter: 
+        - stakater-create-environment-provisioner-v1
+    - taskName: stakater-push-main-tag-v1
+      runAfter: 
+        - stakater-update-cd-repo-v3
+
+triggertemplate:
+  pipelineRunAnnotations: 
+    "tekton.dev/git-status": "true"
+    "tekton.dev/status-context": "pipeline-operator"
+    "tekton.dev/status-description": "Pipeline running on Openshift"
+    "tekton.dev/status-target-url": "https://console-openshift-console.apps.pilot.l84u0fhj.kubeapp.cloud/k8s/ns/$(tt.params.namespace)/tekton.dev~v1beta1~PipelineRun/$(tt.params.repoName)-$(tt.params.prnumberBranch)-$(uid)"    
+  # Additional Params
+  additionalParams:
+  - name: prnumberBranch
+    description: PR number in case of pr else main
+    default: main 
+  # PipelineRun Name Prefix
+  pipelineRunNamePrefix: $(tt.params.repoName)-$(tt.params.prnumberBranch)
+  # Service Account Name 
+  serviceAccountName: stakater-tekton-builder
+  # Workspace Definition
+  workspaces:
+    - name: source
+      volumeClaimTemplate:
+        accessModes: ReadWriteOnce
+        resourcesRequestsStorage: 1Gi
+
+
+triggerbinding:
+  # All Bindings to be Created are specified here
+  bindings:
+    # Name
+  - name: stakater-main-v1
+    # Fields to Extracts from Event Body
+    bodyParams:
+     - name: gitrevision
+       value:  $(body.repository.master_branch)
+     - name: gitorganization
+       value: "github.com/stakater"
+     - name: gitcdrepo
+       value: "gitops-config-template"
+     - name: team
+       value: NA
+     - name: clusterName
+       value: "01-devtest"
+     - name: environment
+       value: "01-dev"
+     - name: repoName
+       value: $(body.repository.name)
+     - name: repoPath
+       value: $(body.repository.full_name)
+     - name: namespace
+       value: ${namespace}
+     - name: prnumberBranch
+       value: main
+     - name: prnumber
+       value: NA
+     - name: gitrepositoryurl
+       value: "https://github.com/$(body.repository.full_name)"
+     - name: image_registry_url
+       value: "nexus-docker-stakater-nexus.apps.binero-test.8sdzwd1l.kubeapp.cloud/$(body.repository.name)"    
+     - name: author
+       value: $(body.head_commit.author.name)
+     - name: helm_registry
+       value: https://nexus-helm-stakater-nexus.apps.binero-test.8sdzwd1l.kubeapp.cloud/repository/helm-charts/
+     - name: nexus_url
+       value: https://nexus-repository-stakater-nexus.apps.binero-test.8sdzwd1l.kubeapp.cloud/repository/maven-public
+     - name: tekton-base-url
+       value: https://console-openshift-console.apps.binero-test.8sdzwd1l.kubeapp.cloud/k8s/
+     - name: webhook-payload
+       value: $(extensions.marshalled-body)
+
+  - name: stakater-pr-v1
+    bodyParams:
+    - name: gitrevision
+      value: $(body.pull_request.head.sha)
+    - name: gitbranch
+      value: $(body.pull_request.head.ref)
+    - name: namespace
+      value: ${namespace}              
+    - name: gitorganization
+      value: "github.com/stakater"
+    - name: gitcdrepo
+      value: "gitops-config-template"
+    - name: team
+      value: NA
+    - name: clusterName
+      value: "01-devtest"
+    - name: environment
+      value: "01-dev" 
+    - name: repoName
+      value: $(body.repository.name)
+    - name: repoPath
+      value: $(body.repository.full_name)
+    - name: prnumberBranch
+      value: pr-$(body.pull_request.number)
+    - name: prnumber
+      value: $(body.pull_request.number)
+    - name: gitrepositoryurl
+      value: "https://github.com/$(body.repository.full_name)"
+    - name: image_registry_url
+      value: "nexus-docker-stakater-nexus.apps.binero-test.8sdzwd1l.kubeapp.cloud/$(body.repository.name)" 
+    - name: author
+      value: $(body.pull_request.user.login)
+    - name: helm_registry
+      value: https://nexus-helm-stakater-nexus.apps.binero-test.8sdzwd1l.kubeapp.cloud/repository/helm-charts/
+    - name: nexus_url
+      value: https://nexus-repository-stakater-nexus.apps.binero-test.8sdzwd1l.kubeapp.cloud/repository/maven-public
+    - name: tekton-base-url
+      value: https://console-openshift-console.apps.binero-test.8sdzwd1l.kubeapp.cloud/k8s/
+    - name: webhook-payload
+      value: $(extensions.marshalled-body)
+
+eventlistener:
+  # Service Account
+  serviceAccountName: stakater-tekton-builder
+  # All Event Triggers
+  triggers:
+    - triggerName: pullrequest-merge-trigger
+      templateName: stakater-pr-cleaner-v2
+      interceptors_cel_filter: "(header.match('X-GitHub-Event', 'pull_request') && body.action == 'closed' )"
+      bindings:
+      - stakater-pr-cleaner-v1
+
+    - triggerName: pullrequest-trigger
+      templateName: stakater-main-pr-v2
+      interceptors_cel_filter: "(header.match('X-GitHub-Event', 'pull_request') && body.action == 'opened' || body.action == 'synchronize')"
+      interceptors_cel_overlays:
+        - key: marshalled-body
+          expression: body.marshalJSON()
+      bindings:
+      - stakater-pr-v1
+
+    - triggerName: push-trigger
+      templateName: stakater-main-pr-v2
+      interceptors_cel_filter: "(header.match('X-GitHub-Event', 'push') && (body.ref == 'refs/heads/main' || body.ref == 'refs/heads/master') )"
+      interceptors_cel_overlays:
+        - key: marshalled-body
+          expression: body.marshalJSON()
+      bindings:
+      - stakater-main-v1
+
+route:
+  # Labels
+  routeLabels: 
+    category: route
+    router: default
+
+  # Port
+  port: http-listener
