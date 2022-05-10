@@ -90,6 +90,10 @@ To uninstall the chart:
 | eventlistener.tls.insecureEdgeTerminationPolicy    | Policy for insecure traffic                                 | `Redirect`      |
 
 
+# Limitations
+
+All current limitations in this chart.
+-  All default parameters will be included in pipeline manifests. Feature to remove default params isnt added 
 
 # Changelog
 
