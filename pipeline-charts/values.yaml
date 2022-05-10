@@ -42,6 +42,18 @@ default_pipelines:
   workspaces:
     - name: source
   tasks:
+    stakater-set-commit-status-v1:
+      params:
+      - name: webhook-payload
+        value: $(params.webhook-payload)
+      - name: state
+        value: $(tasks.status)
+      - name: tekton-base-url
+        value: $(params.tekton-base-url)
+      - name: pipeline_name
+        value: $(context.pipelineRun.name)
+      - name: pipeline_namespace
+        value: $(context.pipelineRun.namespace)
     git-clone:
       params:
         - name: url
@@ -146,10 +158,7 @@ pipelines:
   # Pipeline Tasks
   tasks:
     # Task Name, Params, Workspaces
-    - taskName: ""
-    # params:
-    #    - name: pipelineparam1
-    #    - name: pipelineparam2
+    - taskName: git-clone1
     # workspaces:
     #    - name:  output
     #      workspace: source
@@ -204,9 +213,9 @@ triggertemplate:
 
  # Annotations for pipeline run
  pipelineRunAnnotations: 
-  tekton.dev/git-status: "true"
-  tekton.dev/status-context: "pipeline-operator"
-  tekton.dev/status-description: "Pipeline running on Openshift"
+#  tekton.dev/git-status: "true"
+#  tekton.dev/status-context: "pipeline-operator"
+# tekton.dev/status-description: "Pipeline running on Openshift"
 
 
 ##########################################################
@@ -220,11 +229,11 @@ triggerbinding:
   # All Bindings to be Created are specified here
   bindings:
     # Name
-  #- name: triggerbinding1
+  - name: pipeline-charts-triggerbinding
     # Fields to Extracts from Event Body
-  #  bodyParams:
-  #    - name: param1
-  #      value: $(body.param1)
+    bodyParams:
+      - name: param1
+        value: $(body.param1)
 
 ##########################################################
 # Event Listener Definition
@@ -234,17 +243,18 @@ triggerbinding:
 eventlistener:
   enabled: true
   # Service Account
-  serviceAccountName: 
+  serviceAccountName: pipeline-charts-service-account
   # All Event Triggers
   triggers:
-    - templateName: 
-#      interceptors_cel_filter: ""
+    - templateName: pipeline-charts
+      triggerName: pipeline-chart-trigger
+      interceptors_cel_filter: "header.match('X-GitHub-Event', 'pull_request')"
 #      interceptors_cel_overlays:
 #        - key: marshalled-body
 #          expression: body.marshalJSON()
 
       bindings:
-#      - triggerbinding1
+      - pipeline-charts-trigger-binding
 
 ##########################################################
 # Event Listener Route Definition

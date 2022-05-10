@@ -30,6 +30,49 @@ spec:
   {{- if .Values.pipelines.finally }}
   finally:
   {{- range .Values.pipelines.finally }}
+  {{- if pluck .taskName $.Values.default_pipelines.tasks }}
+  - name: {{ .taskName }}
+    taskRef:
+    - name: {{ .taskName }}
+      kind: ClusterTask
+    {{- $var := pluck .taskName $.Values.default_pipelines.tasks | first }}
+    params:
+      {{- if $var.params -}}
+      {{- range $var.params }}
+      - name: {{ .name }}
+        {{- if .value }}
+        value: {{ .value }}
+        {{- else }}
+        value: $(params.{{.name}})
+        {{- end }}
+      {{- end }}
+      {{- end -}}
+      {{- if .params -}}
+      {{- range .params }}
+      - name: {{ .name }}
+        {{- if .value }}
+        value: {{ .value }}
+        {{- else }}
+        value: $(params.{{.name}})
+        {{- end }}
+      {{- end }}
+      {{- end }}
+    workspaces:
+      {{- if $var.workspaces -}}
+      {{- range $var.workspaces }}
+      - name: {{ .name }}
+        {{- if .workspace }}
+        workspace: {{ .workspace }}
+        {{- end }}
+      {{- end }}
+      {{- end -}}
+      {{- if .workspaces -}}
+      {{- range .workspaces }}
+      - name: {{ .name }}
+        workspace: {{ .workspace }}
+      {{- end }}
+      {{- end }}
+ {{- else }}
   - name: {{ .taskName }}
     taskRef:
       - name : {{ .taskName }}
@@ -45,6 +88,7 @@ spec:
         {{- end }}    
       {{- end }}
     {{- end }}
+  {{- end }}
   {{- end }}  
   {{- end }}
   tasks: 
