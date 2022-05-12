@@ -6,15 +6,15 @@ Expand the name of the chart.
 {{- end }}
 
 {{- define "pipeline-charts.get_default_task_values" }}
-  {{- $givenTaskSpec := index . 0 }}
-  {{- $defaultTaskSpec := index . 1 }}
-  {{- $defaultTaskSpec :=  dict }}
-  {{- range $defaultTaskSpec }}
-  {{- if eq .taskName $givenTaskSpec.taskName }}
-  {{ $defaultTaskSpec := set $defaultTaskSpec "params" .params }}
-  {{ $defaultTaskSpec := set $defaultTaskSpec "workspaces" .workspaces }}
-  {{ $defaultTaskSpec := set $defaultTaskSpec "runAfter" .runAfter }}
+  {{- $arg1 := index . 0 }}
+  {{- $arg2 := index . 1 }}
+  {{- $result :=  dict }}
+  {{- range $arg2 }}
+  {{- if eq .taskName $arg1.taskName }}
+  {{ $result := set $result "params" .params }}
+  {{ $result := set $result "workspaces" .workspaces }}
+  {{ $result := set $result "runAfter" .runAfter }}
   {{- end }}
   {{- end }}
-  {{- $defaultTaskSpec | toJson }}
+  {{- $result | toJson }}
 {{- end }}
