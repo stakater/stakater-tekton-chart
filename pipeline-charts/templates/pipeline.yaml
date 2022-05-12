@@ -29,16 +29,12 @@ spec:
   {{- end }}
   {{- if .Values.pipelines.finally }}
   finally:
-  {{- range .Values.pipelines.finally }}
-  {{- if pluck .taskName $.Values.default_pipelines.tasks }}
-  - name: {{ .taskName }}
-    taskRef:
+    {{- range .Values.pipelines.finally }}
+    {{- $default := include "pipeline-charts.get_default_task_values" (list . $.Values.default_pipelines.tasks ) | fromJson }}
     - name: {{ .taskName }}
-      kind: ClusterTask
-    {{- $var := pluck .taskName $.Values.default_pipelines.tasks | first }}
-    params:
-      {{- if $var.params -}}
-      {{- range $var.params }}
+      {{- if or $default.params .params }}
+      params:
+      {{- range $default.params }}
       - name: {{ .name }}
         {{- if .value }}
         value: {{ .value }}
@@ -46,39 +42,6 @@ spec:
         value: $(params.{{.name}})
         {{- end }}
       {{- end }}
-      {{- end -}}
-      {{- if .params -}}
-      {{- range .params }}
-      - name: {{ .name }}
-        {{- if .value }}
-        value: {{ .value }}
-        {{- else }}
-        value: $(params.{{.name}})
-        {{- end }}
-      {{- end }}
-      {{- end }}
-    workspaces:
-      {{- if $var.workspaces -}}
-      {{- range $var.workspaces }}
-      - name: {{ .name }}
-        {{- if .workspace }}
-        workspace: {{ .workspace }}
-        {{- end }}
-      {{- end }}
-      {{- end -}}
-      {{- if .workspaces -}}
-      {{- range .workspaces }}
-      - name: {{ .name }}
-        workspace: {{ .workspace }}
-      {{- end }}
-      {{- end }}
- {{- else }}
-  - name: {{ .taskName }}
-    taskRef:
-      - name : {{ .taskName }}
-        kind: ClusterTask
-    {{- if .params }}
-    params:
       {{- range .params }}
       - name: {{ .name }}
         {{- if .value }}
@@ -87,91 +50,77 @@ spec:
         value: $(params.{{.name}})
         {{- end }}    
       {{- end }}
-    {{- end }}
-  {{- end }}
-  {{- end }}  
-  {{- end }}
-  tasks: 
-    {{- range .Values.pipelines.tasks }}
-    {{- if pluck .taskName $.Values.default_pipelines.tasks }}
-    - name: {{ .taskName }}
-      taskRef:
-        - name: {{ .taskName }}
-          kind: ClusterTask
-      {{- $var := pluck .taskName $.Values.default_pipelines.tasks | first }}
-      params:
-        {{- if $var.params -}}
-        {{- range $var.params }}
-        - name: {{ .name }}
-          {{- if .value }}
-          value: {{ .value }}
-          {{- else }}
-          value: $(params.{{.name}})
-          {{- end }}
-        {{- end }}
-        {{- end -}}
-        {{- if .params -}}
-        {{- range .params }}
-        - name: {{ .name }}
-          {{- if .value }}
-          value: {{ .value }}
-          {{- else }}
-          value: $(params.{{.name}})
-          {{- end }}    
-        {{- end }}
-        {{- end }}
+      {{- end }}
+      {{- if or $default.workspaces .workspaces }}      
       workspaces:
-        {{- if $var.workspaces -}}
-        {{- range $var.workspaces }}
+        {{- range $default.workspaces }}
         - name: {{ .name }}
           {{- if .workspace }}
           workspace: {{ .workspace }}
           {{- end }}
         {{- end }}
-        {{- end -}}
-        {{- if .workspaces -}}
         {{- range .workspaces }}
         - name: {{ .name }}
           workspace: {{ .workspace }}
         {{- end }}
-        {{- end }}
-      {{- if or .runAfter $var.runAfter }}
+      {{- end }}
+      {{- if or .runAfter $default.runAfter }}
       runAfter:
         {{- if .runAfter }}
         - {{ first .runAfter }}
         {{- else }}
-          {{- if $var.runAfter }}
-        - {{ first $var.runAfter }}
+          {{- if $default.runAfter }}
+        - {{ first $default.runAfter }}
           {{- end }}
         {{- end -}}
       {{- end }}
-    {{- else }}
+    {{- end }}  
+  {{- end }}
+  tasks: 
+    {{- range .Values.pipelines.tasks }}
+    {{- $default := include "pipeline-charts.get_default_task_values" (list . $.Values.default_pipelines.tasks ) | fromJson }}
     - name: {{ .taskName }}
-      taskRef:
-        - name : {{ .taskName }}
-          kind: ClusterTask
-      {{- if .params }}
+      {{- if or $default.params .params }}
       params:
-        {{- range .params }}
-        - name: {{ .name }}
-          {{- if .value }}
-          value: {{ .value }}
-          {{- else }}
-          value: $(params.{{.name}})
-          {{- end }}    
+      {{- range $default.params }}
+      - name: {{ .name }}
+        {{- if .value }}
+        value: {{ .value }}
+        {{- else }}
+        value: $(params.{{.name}})
         {{- end }}
       {{- end }}
-      {{- if .workspaces }}
+      {{- range .params }}
+      - name: {{ .name }}
+        {{- if .value }}
+        value: {{ .value }}
+        {{- else }}
+        value: $(params.{{.name}})
+        {{- end }}    
+      {{- end }}
+      {{- end }}
+      {{- if or $default.workspaces .workspaces }}      
       workspaces:
+        {{- range $default.workspaces }}
+        - name: {{ .name }}
+          {{- if .workspace }}
+          workspace: {{ .workspace }}
+          {{- end }}
+        {{- end }}
         {{- range .workspaces }}
         - name: {{ .name }}
           workspace: {{ .workspace }}
         {{- end }}
-      {{- end }} 
-      {{- if .runAfter }}
-      runAfter:
-       - {{ first .runAfter }}
       {{- end }}
-    {{- end }}
+      {{- if or .runAfter $default.runAfter }}
+      runAfter:
+        {{- if .runAfter }}
+        - {{ first .runAfter }}
+        {{- else }}
+          {{- if $default.runAfter }}
+        - {{ first $default.runAfter }}
+          {{- end }}
+        {{- end -}}
+      {{- end }}
     {{- end }}
 {{- end }}

@@ -42,7 +42,7 @@ default_pipelines:
   workspaces:
     - name: source
   tasks:
-    stakater-set-commit-status-v1:
+    - taskName: stakater-set-commit-status-v1
       params:
       - name: webhook-payload
         value: $(params.webhook-payload)
@@ -54,7 +54,7 @@ default_pipelines:
         value: $(context.pipelineRun.name)
       - name: pipeline_namespace
         value: $(context.pipelineRun.namespace)
-    git-clone:
+    - taskName: git-clone
       params:
         - name: url
           value: $(params.gitrepositoryurl)
@@ -65,7 +65,7 @@ default_pipelines:
       workspaces:
         - name:  output
           workspace: source 
-    stakater-create-git-tag-v1:
+    - taskName: stakater-create-git-tag-v1
       params:
         - name: prnumber
         - name: gitrevision
@@ -74,7 +74,7 @@ default_pipelines:
           workspace: source
       runAfter:
       - git-clone
-    stakater-buildah-v1:
+    - taskName: stakater-buildah-v1
       params:
         - name: IMAGE
           value: $(params.image_registry_url):$(tasks.stakater-create-git-tag-v1.results.GIT_TAG)
@@ -87,7 +87,7 @@ default_pipelines:
           workspace: source
       runAfter:
       - stakater-create-git-tag-v1
-    stakater-comment-on-github-pr-v1:
+    - taskName: stakater-comment-on-github-pr-v1
       params:
         - name: prnumber
         - name: gitrepositoryurl
@@ -98,7 +98,7 @@ default_pipelines:
           workspace: source
       runAfter:
       - stakater-buildah-v1
-    stakater-helm-push-v1:
+    - taskName: stakater-helm-push-v1
       params:
         - name: prnumber
         - name: repoPath
@@ -112,7 +112,7 @@ default_pipelines:
           workspace: source
       runAfter:
       - stakater-comment-on-github-pr-v1
-    stakater-update-cd-repo-v1:
+    - taskName: stakater-update-cd-repo-v1
       params:
         - name: prnumber
         - name: environment
@@ -132,7 +132,7 @@ default_pipelines:
           workspace: source
       runAfter:
       - stakater-helm-push-v1
-    stakater-push-main-tag-v1:
+    - taskName: stakater-push-main-tag-v1
       params:
       - name: prnumber
       - name: gitrevision
@@ -158,7 +158,7 @@ pipelines:
   # Pipeline Tasks
   tasks:
     # Task Name, Params, Workspaces
-    - taskName: git-clone1
+    - taskName: git-clone
     # workspaces:
     #    - name:  output
     #      workspace: source

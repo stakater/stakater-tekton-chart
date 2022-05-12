@@ -18,17 +18,6 @@ pipelines:
   
   finally:
     - taskName: stakater-set-commit-status-v1
-      params:
-      - name: webhook-payload
-        value: $(params.webhook-payload)
-      - name: state
-        value: $(tasks.status)
-      - name: tekton-base-url
-        value: $(params.tekton-base-url)
-      - name: pipeline_name
-        value: $(context.pipelineRun.name)
-      - name: pipeline_namespace
-        value: $(context.pipelineRun.namespace)  
 
   # Pipeline Tasks
   tasks:
