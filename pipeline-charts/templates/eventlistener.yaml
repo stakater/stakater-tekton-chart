@@ -26,14 +26,16 @@ spec:
         {{- toYaml $default.interceptors_cel_overlays | nindent 10 }}     
         {{- end }}
     {{- end }}
-    {{- if .bindings }}
     bindings:
+    {{- if .bindings }}
     {{- range .bindings }}
     - ref: {{ . }}
     {{- end }}
     {{- else }}
+    {{- if $default.bindings }}
     {{- range $default.bindings }}
     - ref: {{ . }}
+    {{- end }}
     {{- end }}
     {{- end }}
     template:

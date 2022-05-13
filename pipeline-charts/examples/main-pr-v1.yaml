@@ -38,7 +38,10 @@ triggertemplate:
       volumeClaimTemplate:
         accessModes: ReadWriteOnce
         resourcesRequestsStorage: 1Gi
-
+  pipelineRunAnnotations: 
+    tekton.dev/git-status: "true"
+    tekton.dev/status-context: "pipeline-operator"
+    tekton.dev/status-description: "Pipeline running on Openshift"
 
 triggerbinding:
   # All Bindings to be Created are specified here

@@ -27,6 +27,7 @@ Expand the name of the chart.
   {{- if eq .triggerName $arg1.triggerName }}
   {{ $result := set $result "interceptors_cel_filter" .interceptors_cel_filter }}
   {{ $result := set $result "interceptors_cel_overlays" .interceptors_cel_overlays }}
+  {{ $result := set $result "bindings" .bindings }}
   {{- end }}
   {{- end }}
   {{- $result | toJson }}
