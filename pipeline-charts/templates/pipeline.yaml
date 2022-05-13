@@ -8,14 +8,10 @@ spec:
   {{- if or .Values.default_pipelines.params .Values.pipelines.params }}
   params:
     {{- range $.Values.pipelines.params }}
-    {{- if .name }}
     - name: {{ .name }} 
     {{- end }}
-    {{- end }}
     {{- range $.Values.default_pipelines.params }}
-    {{- if .name }}
     - name: {{ .name }}
-    {{- end }}
     {{- end }}
   {{- end }}
   {{- if or  .Values.pipelines.workspaces .Values.default_pipelines.workspaces }}
