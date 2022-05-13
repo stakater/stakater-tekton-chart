@@ -45,7 +45,7 @@ triggertemplate:
     description: PR number in case of pr else main
     default: main 
   # PipelineRun Name Prefix
-  pipelineRunNamePrefix: $(tt.params.repoName)-$(tt.params.prnumberBranch)
+  #pipelineRunNamePrefix: $(tt.params.repoName)-$(tt.params.prnumberBranch)
   # Service Account Name 
   serviceAccountName: stakater-tekton-builder
   # Workspace Definition
