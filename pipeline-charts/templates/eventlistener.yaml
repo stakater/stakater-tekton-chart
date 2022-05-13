@@ -32,12 +32,12 @@ spec:
     - ref: {{ . }}
     {{- end }}
     {{- else }}
-    {{- range .bindings }}
+    {{- range $default.bindings }}
     - ref: {{ . }}
     {{- end }}
     {{- end }}
     template:
-     - name: {{ include "pipeline-charts.name" $ }}
+      ref: {{ include "pipeline-charts.name" $ }}
   {{- end }}
   {{- end }}
 {{- end }}
