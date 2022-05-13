@@ -17,17 +17,13 @@ spec:
         {{- if .interceptors_cel_filter }}
         filter: {{ quote .interceptors_cel_filter }}
         {{- else if $default.interceptors_cel_filter }}
-        
         filter: {{ quote $default.interceptors_cel_filter }}
-        
         {{- end }}
         {{- if .interceptors_cel_overlays }}
         overlays:
         {{- toYaml .interceptors_cel_overlays | nindent 10 }}
         {{- else  if $default.interceptors_cel_overlays }}
-
-        {{- toYaml $default.interceptors_cel_overlays | nindent 10 }}
-        
+        {{- toYaml $default.interceptors_cel_overlays | nindent 10 }}     
         {{- end }}
     {{- end }}
     {{- if .bindings }}
