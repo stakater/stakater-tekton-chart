@@ -88,6 +88,8 @@ triggerbinding:
         value: https://nexus-repository-stakater-nexus.apps.binero-test.8sdzwd1l.kubeapp.cloud/repository/maven-public
       - name: tekton-base-url
         value: https://console-openshift-console.apps.binero-test.8sdzwd1l.kubeapp.cloud/k8s/
+      - name: webhook-payload
+        value: $(extensions.marshalled-body)
 
   - name: stakater-main-v1
     # Fields to Extracts from Event Body
