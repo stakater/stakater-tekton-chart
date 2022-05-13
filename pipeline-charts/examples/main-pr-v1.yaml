@@ -107,6 +107,6 @@ eventlistener:
 
     - triggerName: push-trigger
 
-#  route:
+  #route:
     # Port
     #targetPort: http-listener
