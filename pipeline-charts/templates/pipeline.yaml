@@ -28,6 +28,9 @@ spec:
     {{- range .Values.pipelines.finally }}
     {{- $default := include "pipeline-charts.get_default_task_values" (list . $.Values.default_pipelines.tasks ) | fromJson }}
     - name: {{ .taskName }}
+      taskRef:
+        - name: {{ .taskName }}
+          kind: ClusterTask
       {{- if or $default.params .params }}
       params:
       {{- range $default.params }}
@@ -76,6 +79,9 @@ spec:
     {{- range .Values.pipelines.tasks }}
     {{- $default := include "pipeline-charts.get_default_task_values" (list . $.Values.default_pipelines.tasks ) | fromJson }}
     - name: {{ .taskName }}
+      taskRef:
+        - name: {{ .taskName }}
+          kind: ClusterTask
       {{- if or $default.params .params }}
       params:
       {{- range $default.params }}
