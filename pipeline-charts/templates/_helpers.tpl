@@ -18,3 +18,16 @@ Expand the name of the chart.
   {{- end }}
   {{- $result | toJson }}
 {{- end }}
+
+{{- define "pipeline-charts.get_event_listener_default_trigger" }}
+  {{- $arg1 := index . 0 }}
+  {{- $arg2 := index . 1 }}
+  {{- $result :=  dict }}
+  {{- range $arg2 }}
+  {{- if eq .triggerName $arg1.triggerName }}
+  {{ $result := set $result "interceptors_cel_filter" .interceptors_cel_filter }}
+  {{ $result := set $result "interceptors_cel_overlays" .interceptors_cel_overlays }}
+  {{- end }}
+  {{- end }}
+  {{- $result | toJson }}
+{{- end }}

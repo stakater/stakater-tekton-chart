@@ -3,21 +3,28 @@ apiVersion: triggers.tekton.dev/v1alpha1
 kind: EventListener
 metadata:
   name: {{ include "pipeline-charts.name" . }}
+  name1: {{ include "pipeline-charts.name" . }}
   namespace: {{ .Release.Namespace }}
 spec:
   serviceAccountName: {{ .Values.eventlistener.serviceAccountName }}
   {{- if .Values.eventlistener.triggers }}
   triggers:
   {{- range .Values.eventlistener.triggers }}
-  {{- if .triggerName }}
   - name: {{ .triggerName }}
-    {{- if or .interceptors_cel_filter .interceptors_cel_overlays  }}
+    {{- $default := include "pipeline-charts.get_event_listener_default_trigger" (list . $.Values.default_triggers.triggers ) | fromJson }}
+    {{- if or  $default.interceptors_cel_filter $default.interceptors_cel_overlays .interceptors_cel_filter .interceptors_cel_overlays  }}
     interceptors:
     - cel:
+        {{- if .interceptors_cel_filter }}
         filter: {{ quote .interceptors_cel_filter }}
+        {{- else }}
+        filter: {{ quote $default.interceptors_cel_filter }}
+        {{- end }}
         {{- if .interceptors_cel_overlays }}
         overlays:
-        {{- toYaml .interceptors_cel_overlays | nindent 12 }}
+        {{- toYaml .interceptors_cel_overlays | nindent 10 }}
+        {{- else  }}
+        {{- toYaml $default.interceptors_cel_overlays | nindent 10 }}
         {{- end }}
     {{- end }}
     {{- if .bindings }}
@@ -25,12 +32,13 @@ spec:
     {{- range .bindings }}
     - ref: {{ . }}
     {{- end }}
+    {{- else }}
+    {{- range .bindings }}
+    - ref: {{ . }}
     {{- end }}
-    {{- if .templateName }}
+    {{- end }}
     template:
-      name: {{ .templateName }}
-    {{- end }}
-  {{- end }}
+     - name: {{ include "pipeline-charts.name" $ }}
   {{- end }}
   {{- end }}
 {{- end }}
