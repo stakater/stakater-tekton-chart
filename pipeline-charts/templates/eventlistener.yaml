@@ -3,7 +3,6 @@ apiVersion: triggers.tekton.dev/v1alpha1
 kind: EventListener
 metadata:
   name: {{ include "pipeline-charts.name" . }}
-  name1: {{ include "pipeline-charts.name" . }}
   namespace: {{ .Release.Namespace }}
 spec:
   serviceAccountName: {{ .Values.eventlistener.serviceAccountName }}
