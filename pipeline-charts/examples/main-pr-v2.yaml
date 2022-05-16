@@ -25,14 +25,6 @@ pipelines:
       params:
       - name: state
         value: pending
-      - name: webhook-payload
-        value: $(params.webhook-payload)
-      - name: tekton-base-url
-        value: $(params.tekton-base-url)
-      - name: pipeline_name
-        value: $(context.pipelineRun.name)
-      - name: pipeline_namespace
-        value: $(context.pipelineRun.namespace)
     - taskName: git-clone
     - taskName: stakater-create-git-tag-v1
     - taskName: stakater-buildah-v1

@@ -84,21 +84,26 @@ spec:
           kind: ClusterTask
       {{- if or $default.params .params }}
       params:
-      {{- range $default.params }}
-      - name: {{ .name }}
-        {{- if .value }}
-        value: {{ .value }}
-        {{- else }}
-        value: $(params.{{.name}})
-        {{- end }}
-      {{- end }}
+      {{- $addedParams := dict }}
       {{- range .params }}
+      {{- $addedParams := set $addedParams .name "e" }}
       - name: {{ .name }}
         {{- if .value }}
         value: {{ .value }}
         {{- else }}
         value: $(params.{{.name}})
         {{- end }}    
+      {{- end }}
+      {{- range $default.params }}
+      {{- if hasKey $addedParams .name }}
+      {{- else }}
+      - name: {{ .name }}
+        {{- if .value }}
+        value: {{ .value }}
+        {{- else }}
+        value: $(params.{{.name}})
+      {{- end }}
+      {{- end }}
       {{- end }}
       {{- end }}
       {{- if or $default.workspaces .workspaces }}      
