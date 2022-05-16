@@ -31,28 +31,12 @@ pipelines:
     - taskName: stakater-comment-on-github-pr-v1
     - taskName: stakater-helm-push-v1
     - taskName: stakater-create-environment-provisioner-v1
-      runAfter:
-      - stakater-helm-push-v1
-      params:
-      - name: repoName
-      - name: prNumber
-        value: $(params.prnumber)
-      - name: gitUrl
-        value: $(params.gitrepositoryurl)
-      - name: gitBranch
-      - name: imageTag
-        value: $(tasks.create-git-tag.results.GIT_TAG)
-      - name: imageRepo
-        value: $(params.image_registry_url)
-      workspaces:
-        - name: output
-          workspace: source    
     - taskName: stakater-update-cd-repo-v3
       params:
       - name: prnumber
         value: $(params.prnumber)
       - name: IMAGE_TAG
-        value: $(tasks.create-git-tag.results.GIT_TAG)
+        value: $(tasks.stakater-create-git-tag-v1.results.GIT_TAG)
       - name: IMAGE_NAME
         value: $(params.image_registry_url)
       - name: environment
@@ -83,7 +67,7 @@ pipelines:
         - stakater-update-cd-repo-v3
 
 triggertemplate:
-  pipelineRunAnnotations: 
+  pipelineRunAnnotations:
     "tekton.dev/git-status": "true"
     "tekton.dev/status-context": "pipeline-operator"
     "tekton.dev/status-description": "Pipeline running on Openshift"

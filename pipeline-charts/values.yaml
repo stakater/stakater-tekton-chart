@@ -143,6 +143,23 @@ default_pipelines:
           workspace: source
       runAfter:
       - stakater-update-cd-repo-v1
+    - taskName: stakater-create-environment-provisioner-v1
+      runAfter:
+      - stakater-helm-push-v1
+      params:
+      - name: repoName
+      - name: prNumber
+        value: $(params.prnumber)
+      - name: gitUrl
+        value: $(params.gitrepositoryurl)
+      - name: gitBranch
+      - name: imageTag
+        value: $(tasks.stakater-create-git-tag-v1.results.GIT_TAG)
+      - name: imageRepo
+        value: $(params.image_registry_url)
+      workspaces:
+        - name: output
+          workspace: source    
 
 default_triggers:
   triggers:
