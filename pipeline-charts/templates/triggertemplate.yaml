@@ -5,8 +5,17 @@ metadata:
   name: {{ include "pipeline-charts.name" . }}
   namespace: {{ .Release.Namespace }}
 spec:
-  {{- if or .Values.pipelines.params .Values.triggertemplate.additionalParams }}
+  {{- if or .Values.default_pipelines.params .Values.pipelines.params .Values.triggertemplate.additionalParams }}
   params:
+    {{- range .Values.default_pipelines.params }}
+    - name: {{ .name }}   
+      {{- if .description }}
+      description: {{ .description }} 
+      {{- end }}
+      {{- if .default }}
+      default: {{ .default }} 
+      {{- end }}
+    {{- end }}
     {{- range .Values.pipelines.params }}
     - name: {{ .name }}   
       {{- if .description }}
@@ -30,11 +39,7 @@ spec:
     - apiVersion: tekton.dev/v1beta1
       kind: PipelineRun
       metadata:
-        {{- if .Values.triggertemplate.pipelineRunNamePrefix }}
-        generateName: {{ .Values.triggertemplate.pipelineRunNamePrefix }}-
-        {{- else }}
-        generateName: {{ include "pipeline-charts.name" . }}-
-        {{- end }}
+        generateName: {{ .Values.triggertemplate.pipelineRunNamePrefix | default "$(tt.params.repoName)-$(tt.params.prnumberBranch)" }}-
         namespace: {{ .Release.Namespace }}
         {{- if .Values.triggertemplate.pipelineRunAnnotations }}
         annotations:
@@ -44,11 +49,15 @@ spec:
         {{- if .Values.triggertemplate.serviceAccountName }}
         serviceAccountName: {{ .Values.triggertemplate.serviceAccountName }}
         {{- end }}
-        {{- if .Values.pipelines.params }}
+        {{- if or .Values.pipelines.params .Values.default_pipelines.params }}
         params:
           {{- range .Values.pipelines.params }}
           - name: {{ .name }}
             value: $(tt.params.{{.name}})  
+          {{- end }}
+          {{- range .Values.default_pipelines.params }}
+          - name: {{ .name }}
+            value: $(tt.params.{{.name}})
           {{- end }}
         {{- end }}
         pipelineRef:

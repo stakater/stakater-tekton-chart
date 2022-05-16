@@ -5,48 +5,129 @@ metadata:
   name: {{ include "pipeline-charts.name" . }}
   namespace: {{ .Release.Namespace }}
 spec:
-  {{- if .Values.pipelines.params }}
+  {{- if or .Values.default_pipelines.params .Values.pipelines.params }}
   params:
     {{- range $.Values.pipelines.params }}
-    {{- if .name }}
     - name: {{ .name }} 
     {{- end }}
+    {{- range $.Values.default_pipelines.params }}
+    - name: {{ .name }}
     {{- end }}
   {{- end }}
-  {{- if .Values.pipelines.workspaces }}
+  {{- if or  .Values.pipelines.workspaces .Values.default_pipelines.workspaces }}
   workspaces:
+    {{- range $.Values.default_pipelines.workspaces }}
+    - name: {{ .name }} 
+    {{- end }}
     {{- range $.Values.pipelines.workspaces }}
     - name: {{ .name }} 
     {{- end }}
   {{- end }}
-  tasks: 
-    {{- range $.Values.pipelines.tasks }}
+  {{- if .Values.pipelines.finally }}
+  finally:
+    {{- range .Values.pipelines.finally }}
+    {{- $default := include "pipeline-charts.get_default_task_values" (list . $.Values.default_pipelines.tasks ) | fromJson }}
     - name: {{ .taskName }}
       taskRef:
-        - name : {{ .taskName }}
-      {{- if .params }}
+        - name: {{ .taskName }}
+          kind: ClusterTask
+      {{- if or $default.params .params }}
       params:
-        {{- range .params }}
-        - name: {{ .name }}
-          {{- if .value }}
-          value: {{ .value }}
-          {{- else }}
-          value: $(params.{{.name}})
-          {{- end }}    
+      {{- range $default.params }}
+      - name: {{ .name }}
+        {{- if .value }}
+        value: {{ .value }}
+        {{- else }}
+        value: $(params.{{.name}})
         {{- end }}
       {{- end }}
-      {{- if .workspaces }}
+      {{- range .params }}
+      - name: {{ .name }}
+        {{- if .value }}
+        value: {{ .value }}
+        {{- else }}
+        value: $(params.{{.name}})
+        {{- end }}    
+      {{- end }}
+      {{- end }}
+      {{- if or $default.workspaces .workspaces }}      
       workspaces:
+        {{- range $default.workspaces }}
+        - name: {{ .name }}
+          {{- if .workspace }}
+          workspace: {{ .workspace }}
+          {{- end }}
+        {{- end }}
         {{- range .workspaces }}
         - name: {{ .name }}
           workspace: {{ .workspace }}
         {{- end }}
-      {{- end }} 
-      {{- if .runAfter }}
-      runAfter:
-      {{- range .runAfter }}
-       - {{ . }}
       {{- end }}
+      {{- if or .runAfter $default.runAfter }}
+      runAfter:
+        {{- if .runAfter }}
+        - {{ first .runAfter }}
+        {{- else }}
+          {{- if $default.runAfter }}
+        - {{ first $default.runAfter }}
+          {{- end }}
+        {{- end -}}
+      {{- end }}
+    {{- end }}  
+  {{- end }}
+  tasks: 
+    {{- range .Values.pipelines.tasks }}
+    {{- $default := include "pipeline-charts.get_default_task_values" (list . $.Values.default_pipelines.tasks ) | fromJson }}
+    - name: {{ .taskName }}
+      taskRef:
+        - name: {{ .taskName }}
+          kind: ClusterTask
+      {{- if or $default.params .params }}
+      params:
+      {{- $addedParams := dict }}
+      {{- range .params }}
+      {{- $addedParams := set $addedParams .name "e" }}
+      - name: {{ .name }}
+        {{- if .value }}
+        value: {{ .value }}
+        {{- else }}
+        value: $(params.{{.name}})
+        {{- end }}    
+      {{- end }}
+      {{- range $default.params }}
+      {{- if hasKey $addedParams .name }}
+      {{- else }}
+      - name: {{ .name }}
+        {{- if .value }}
+        value: {{ .value }}
+        {{- else }}
+        value: $(params.{{.name}})
+      {{- end }}
+      {{- end }}
+      {{- end }}
+      {{- end }}
+      {{- if or $default.workspaces .workspaces }}      
+      workspaces:
+        {{- range $default.workspaces }}
+        - name: {{ .name }}
+          {{- if .workspace }}
+          workspace: {{ .workspace }}
+          {{- end }}
+        {{- end }}
+        {{- range .workspaces }}
+        - name: {{ .name }}
+          workspace: {{ .workspace }}
+        {{- end }}
+      {{- end }}
+      {{- if or .runAfter $default.runAfter }}
+      runAfter:
+        {{- if .runAfter }}
+        - {{ first .runAfter }}
+        {{- else }}
+          {{- if $default.runAfter }}
+        - {{ first $default.runAfter }}
+          {{- end }}
+        {{- end -}}
       {{- end }}
     {{- end }}
 {{- end }}

@@ -1,32 +1,34 @@
-{{- if .Values.route.enabled }}
+{{ if .Values.eventlistener.enabled }}
+{{- if .Values.eventlistener.route.enabled }}
 apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
   name: {{ include "pipeline-charts.name" . }}
   namespace: {{ .Release.Namespace }}
-  {{- if .Values.route.routeLabels }}
+  {{- if .Values.eventlistener.route.routeLabels }}
   labels:
-    {{- toYaml .Values.route.routeLabels | nindent 4 }}
+    {{- toYaml .Values.eventlistener.route.routeLabels | nindent 4 }}
   {{- end }}
 spec:
-  {{- if .Values.route.port }}
+  {{- if .Values.eventlistener.route.targetPort }}
   port:
-    {{- toYaml .Values.route.port | nindent 4 }}
+    targetPort: {{ .Values.eventlistener.route.targetPort }}
   {{- end }}
   to:
     kind: Service
     name: el-{{ include "pipeline-charts.name" . }}
     weight: 100
-  {{- if .Values.route.tls }}
+  {{- if .Values.eventlistener.route.tls }}
   tls:
-    {{- if .Values.route.tls.termination }}
-    termination: {{ .Values.route.tls.termination }}
+    {{- if .Values.eventlistener.route.tls.termination }}
+    termination: {{ .Values.eventlistener.route.tls.termination }}
     {{- end }}
-    {{- if .Values.route.tls.insecureEdgeTerminationPolicy }}
-    insecureEdgeTerminationPolicy: {{ .Values.route.tls.insecureEdgeTerminationPolicy }}
+    {{- if .Values.eventlistener.route.tls.insecureEdgeTerminationPolicy }}
+    insecureEdgeTerminationPolicy: {{ .Values.eventlistener.route.tls.insecureEdgeTerminationPolicy }}
     {{- end }}
   {{- end -}}
-  {{- if .Values.route.wildcardPolicy }}
-  wildcardPolicy: {{ .Values.route.wildcardPolicy }}
+  {{- if .Values.eventlistener.route.wildcardPolicy }}
+  wildcardPolicy: {{ .Values.eventlistener.route.wildcardPolicy }}
   {{- end }}
+{{- end -}}
 {{- end -}}
