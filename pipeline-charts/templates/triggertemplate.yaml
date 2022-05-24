@@ -5,7 +5,7 @@ metadata:
   name: {{ include "pipeline-charts.name" . }}
   namespace: {{ .Release.Namespace }}
 spec:
-  {{- if or .Values.default_pipelines.params .Values.pipelines.params .Values.triggertemplate.additionalParams }}
+  {{- if or .Values.default_pipelines.params .Values.additionalParams }}
   params:
     {{- range .Values.default_pipelines.params }}
     - name: {{ .name }}   
@@ -16,16 +16,7 @@ spec:
       default: {{ .default }} 
       {{- end }}
     {{- end }}
-    {{- range .Values.pipelines.params }}
-    - name: {{ .name }}   
-      {{- if .description }}
-      description: {{ .description }} 
-      {{- end }}
-      {{- if .default }}
-      default: {{ .default }} 
-      {{- end }}
-    {{- end }}
-    {{- range .Values.triggertemplate.additionalParams }}
+    {{- range .Values.additionalParams }}
     - name: {{ .name }}   
       {{- if .description }}
       description: {{ .description }} 
@@ -49,9 +40,9 @@ spec:
         {{- if .Values.triggertemplate.serviceAccountName }}
         serviceAccountName: {{ .Values.triggertemplate.serviceAccountName }}
         {{- end }}
-        {{- if or .Values.pipelines.params .Values.default_pipelines.params }}
+        {{- if or .Values.additionalParams .Values.default_pipelines.params }}
         params:
-          {{- range .Values.pipelines.params }}
+          {{- range .Values.additionalParams }}
           - name: {{ .name }}
             value: $(tt.params.{{.name}})  
           {{- end }}

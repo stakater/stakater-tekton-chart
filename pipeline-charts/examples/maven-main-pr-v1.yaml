@@ -1,14 +1,21 @@
 
 name: stakater-maven-main-pr-v1
 
+#Additional Params for pipelines & trigger template
+additionalParams:
+    - name: nexus_url
+      description: URL of nexus repository
+    - name: repoName
+      description: Repository name
+      default: "NA"
+    - name: prnumberBranch
+      description: PR number in case of pr else main
+      default: main 
+
 pipelines:  
   # Pipeline Workspaces
   workspaces:
     ##- name: source
-  # Pipeline Params
-  params:
-    - name: nexus_url
-      description: URL of nexus repository
   # Pipeline Tasks
   tasks:
     - taskName: git-clone
@@ -36,14 +43,6 @@ triggertemplate:
     "tekton.dev/status-context": "pipeline-operator"
     "tekton.dev/status-description": "Pipeline running on Openshift"
     "tekton.dev/status-target-url": "https://console-openshift-console.apps.pilot.l84u0fhj.kubeapp.cloud/k8s/ns/$(tt.params.namespace)/tekton.dev~v1beta1~PipelineRun/$(tt.params.repoName)-$(tt.params.prnumberBranch)-$(uid)"    
-  # Additional Params
-  additionalParams:
-  - name: repoName
-    description: Repository name
-    default: "NA"
-  - name: prnumberBranch
-    description: PR number in case of pr else main
-    default: main 
   # PipelineRun Name Prefix
   #pipelineRunNamePrefix: $(tt.params.repoName)-$(tt.params.prnumberBranch)
   # Service Account Name 
