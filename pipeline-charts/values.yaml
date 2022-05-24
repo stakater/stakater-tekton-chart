@@ -182,7 +182,7 @@ additionalParams:
 #   default: "templateparam-default"
 
  # Workspace Definition
- workspaces:
+workspaces:
 #  - name: source
 #    volumeClaimTemplate:
 #      accessModes: ReadWriteOnce
