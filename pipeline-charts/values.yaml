@@ -70,8 +70,6 @@ default_pipelines:
       workspaces:
         - name:  source
           workspace: source
-      runAfter:
-      - git-clone
     - taskName: stakater-buildah-v1
       params:
         - name: IMAGE
@@ -83,8 +81,6 @@ default_pipelines:
       workspaces:
         - name:  source
           workspace: source
-      runAfter:
-      - stakater-create-git-tag-v1
     - taskName: stakater-comment-on-github-pr-v1
       params:
         - name: prnumber
@@ -94,8 +90,6 @@ default_pipelines:
       workspaces:
         - name:  source
           workspace: source
-      runAfter:
-      - stakater-buildah-v1
     - taskName: stakater-helm-push-v1
       params:
         - name: prnumber
@@ -108,8 +102,6 @@ default_pipelines:
       workspaces:
         - name:  source
           workspace: source
-      runAfter:
-      - stakater-comment-on-github-pr-v1
     - taskName: stakater-update-cd-repo-v1
       params:
         - name: prnumber
@@ -128,8 +120,6 @@ default_pipelines:
       workspaces:
         - name:  source
           workspace: source
-      runAfter:
-      - stakater-helm-push-v1
     - taskName: stakater-push-main-tag-v1
       params:
       - name: prnumber
@@ -139,11 +129,7 @@ default_pipelines:
       workspaces:
         - name:  source
           workspace: source
-      runAfter:
-      - stakater-update-cd-repo-v1
     - taskName: stakater-create-environment-provisioner-v1
-      runAfter:
-      - stakater-helm-push-v1
       params:
       - name: repoName
       - name: prNumber

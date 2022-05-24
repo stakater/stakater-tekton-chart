@@ -67,11 +67,7 @@ pipelines:
       workspaces:
       - name: source
         workspace: source
-      runAfter: 
-        - stakater-create-environment-provisioner-v1
     - taskName: stakater-push-main-tag-v1
-      runAfter: 
-        - stakater-update-cd-repo-v3
 
 triggertemplate:
   pipelineRunAnnotations:

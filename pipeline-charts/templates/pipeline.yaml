@@ -107,9 +107,15 @@ spec:
           workspace: {{ .workspace }}
         {{- end }}
       {{- end }}
-      {{- if $previoustask }}
+      {{- if or $previoustask .runAfter }}
       runAfter:
+        {{- if .runAfter }}
+        - {{ first .runAfter }}
+        {{- else }}
+        {{- if $previoustask }}
         - {{ $previoustask }}
+        {{- end }}
+        {{- end -}}
       {{- end }}
       {{- $previoustask = .taskName }}
     {{- end }}
