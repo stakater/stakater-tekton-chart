@@ -39,8 +39,6 @@ default_pipelines:
       description: Helm registry url 
     - name: environment
       description: Name of environment
-  workspaces:
-    - name: source
   tasks:
     - taskName: stakater-set-commit-status-v1
       params:
@@ -183,12 +181,23 @@ additionalParams:
 #   description: templateparam description
 #   default: "templateparam-default"
 
+ # Workspace Definition
+ workspaces:
+#  - name: source
+#    volumeClaimTemplate:
+#      accessModes: ReadWriteOnce
+#      resourcesRequestsStorage: 1Gi
+#  - name: source1
+#    persistentVolumeClaim:
+#      claimName: my-pvc
+#  - name: source2
+#    configMap: 
+#      configMapName: my-cm
+#  - name: source3
+#    emptyDir: "true"
+
 pipelines:
   enabled: true
-  # Pipeline Workspaces
-  workspaces:
-    #- name: source
-
   # Pipeline Tasks
   tasks:
     # Task Name, Params, Workspaces
@@ -217,27 +226,12 @@ pipelines:
 triggertemplate:
 
  enabled: true
- 
+
  # PipelineRun Name Prefix
  pipelineRunNamePrefix: 
 
  # Service Account Name 
  serviceAccountName: 
-
- # Workspace Definition
- workspaces:
-#  - name: source
-#    volumeClaimTemplate:
-#      accessModes: ReadWriteOnce
-#      resourcesRequestsStorage: 1Gi
-#  - name: source1
-#    persistentVolumeClaim:
-#      claimName: my-pvc
-#  - name: source2
-#    configMap: 
-#      configMapName: my-cm
-#  - name: source3
-#    emptyDir: "true"
 
  # Annotations for pipeline run
  pipelineRunAnnotations: 

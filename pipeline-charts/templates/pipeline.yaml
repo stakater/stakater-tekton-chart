@@ -14,12 +14,9 @@ spec:
     - name: {{ .name }}
     {{- end }}
   {{- end }}
-  {{- if or  .Values.pipelines.workspaces .Values.default_pipelines.workspaces }}
+  {{- if .Values.workspaces }}
   workspaces:
-    {{- range $.Values.default_pipelines.workspaces }}
-    - name: {{ .name }} 
-    {{- end }}
-    {{- range $.Values.pipelines.workspaces }}
+    {{- range $.Values.workspaces }}
     - name: {{ .name }} 
     {{- end }}
   {{- end }}

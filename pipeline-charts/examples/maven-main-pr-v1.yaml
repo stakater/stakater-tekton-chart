@@ -12,10 +12,15 @@ additionalParams:
       description: PR number in case of pr else main
       default: main 
 
+# Workspace Definition
+workspaces:
+  - name: source
+    volumeClaimTemplate:
+      accessModes: ReadWriteOnce
+      resourcesRequestsStorage: 1Gi
+
 pipelines:  
-  # Pipeline Workspaces
-  workspaces:
-    ##- name: source
+
   # Pipeline Tasks
   tasks:
     - taskName: git-clone
@@ -47,12 +52,6 @@ triggertemplate:
   #pipelineRunNamePrefix: $(tt.params.repoName)-$(tt.params.prnumberBranch)
   # Service Account Name 
   serviceAccountName: stakater-tekton-builder
-  # Workspace Definition
-  workspaces:
-    - name: source
-      volumeClaimTemplate:
-        accessModes: ReadWriteOnce
-        resourcesRequestsStorage: 1Gi
 
 
 triggerbinding:

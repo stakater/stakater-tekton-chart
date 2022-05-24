@@ -53,9 +53,9 @@ spec:
         {{- end }}
         pipelineRef:
           name: {{ include "pipeline-charts.name" . }}
-        {{- if .Values.triggertemplate.workspaces }}
+        {{- if .Values.workspaces }}
         workspaces:
-          {{- range .Values.triggertemplate.workspaces -}}
+          {{- range .Values.workspaces -}}
           {{- if and .volumeClaimTemplate .name }}
           - name: {{ .name }}
             {{- if and .volumeClaimTemplate.accessModes .volumeClaimTemplate.resourcesRequestsStorage }}

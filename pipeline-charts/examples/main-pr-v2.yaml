@@ -15,10 +15,13 @@ additionalParams:
     description: PR number in case of pr else main
     default: main 
 
+workspaces:
+  - name: source
+    volumeClaimTemplate:
+      accessModes: ReadWriteOnce
+      resourcesRequestsStorage: 1Gi
+
 pipelines:  
-  # Pipeline Workspaces
-  workspaces:
-    ##- name: source
   
   finally:
     - taskName: stakater-set-commit-status-v1
@@ -81,13 +84,6 @@ triggertemplate:
   #pipelineRunNamePrefix: $(tt.params.repoName)-$(tt.params.prnumberBranch)
   # Service Account Name 
   serviceAccountName: stakater-tekton-builder
-  # Workspace Definition
-  workspaces:
-    - name: source
-      volumeClaimTemplate:
-        accessModes: ReadWriteOnce
-        resourcesRequestsStorage: 1Gi
-
 
 triggerbinding:
   # All Bindings to be Created are specified here
