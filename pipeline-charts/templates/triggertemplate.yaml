@@ -31,7 +31,7 @@ spec:
       kind: PipelineRun
       metadata:
         generateName: {{ .Values.triggertemplate.pipelineRunNamePrefix | default "$(tt.params.repoName)-$(tt.params.prnumberBranch)" }}-
-        namespace: {{ .Release.Namespace }}
+        namespace: $(tt.params.namespace)
         {{- if .Values.triggertemplate.pipelineRunAnnotations }}
         annotations:
           {{- toYaml .Values.triggertemplate.pipelineRunAnnotations | nindent 10 }}

@@ -60,19 +60,10 @@ spec:
           workspace: {{ .workspace }}
         {{- end }}
       {{- end }}
-      {{- if or .runAfter $default.runAfter }}
-      runAfter:
-        {{- if .runAfter }}
-        - {{ first .runAfter }}
-        {{- else }}
-          {{- if $default.runAfter }}
-        - {{ first $default.runAfter }}
-          {{- end }}
-        {{- end -}}
-      {{- end }}
     {{- end }}  
   {{- end }}
   tasks: 
+    {{- $previoustask := "" }}
     {{- range .Values.pipelines.tasks }}
     {{- $default := include "pipeline-charts.get_default_task_values" (list . $.Values.default_pipelines.tasks ) | fromJson }}
     - name: {{ .taskName }}
@@ -116,15 +107,16 @@ spec:
           workspace: {{ .workspace }}
         {{- end }}
       {{- end }}
-      {{- if or .runAfter $default.runAfter }}
+      {{- if or $previoustask $default.runAfter }}
       runAfter:
-        {{- if .runAfter }}
-        - {{ first .runAfter }}
+        {{- if $previoustask }}
+        - {{ $previoustask }}
         {{- else }}
           {{- if $default.runAfter }}
         - {{ first $default.runAfter }}
           {{- end }}
         {{- end -}}
       {{- end }}
+      {{- $previoustask = .taskName }}
     {{- end }}
 {{- end }}
