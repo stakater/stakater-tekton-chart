@@ -175,17 +175,19 @@ default_triggers:
       - stakater-main-v1
       - common-bindings
 
+#Additional Params for pipelines & trigger template
+additionalParams:
+# - name: gitorganization
+#   description: my description
+# - name: templateparam
+#   description: templateparam description
+#   default: "templateparam-default"
 
 pipelines:
   enabled: true
   # Pipeline Workspaces
   workspaces:
     #- name: source
-  # Pipeline Params
-  params:
-#    - name: gitorganization
-#      description: my description
-    #- name: pipelineparam2
 
   # Pipeline Tasks
   tasks:

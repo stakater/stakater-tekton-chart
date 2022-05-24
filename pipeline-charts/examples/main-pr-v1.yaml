@@ -1,14 +1,20 @@
 
 name: stakater-main-pr-v1
 
+#Additional Params for pipelines & trigger template
+additionalParams:
+  - name: repoName
+    description: Repository name
+    default: "NA"
+  - name: prnumberBranch
+    description: PR number in case of pr else main
+    default: main 
+
 pipelines:  
   # Pipeline Workspaces
   workspaces:
     ##- name: source
-  # Pipeline Params
-  params:
-    ##- name: nexus_url
-    ##  description: nexus_url
+
   # Pipeline Tasks
   tasks:
     - taskName: git-clone
@@ -20,14 +26,7 @@ pipelines:
     - taskName: stakater-push-main-tag-v1
 
 triggertemplate:
-  # Additional Params
-  additionalParams:
-  - name: repoName
-    description: Repository name
-    default: "NA"
-  - name: prnumberBranch
-    description: PR number in case of pr else main
-    default: main 
+
   # PipelineRun Name Prefix
   #pipelineRunNamePrefix: $(tt.params.repoName)-$(tt.params.prnumberBranch)
   # Service Account Name 

@@ -1,12 +1,8 @@
 
 name: stakater-main-pr-v2
 
-pipelines:  
-  # Pipeline Workspaces
-  workspaces:
-    ##- name: source
-  # Pipeline Params
-  params:
+#Additional Params for pipelines & trigger template
+additionalParams:
   - name: gitbranch
     description: The git branch name
   - name: repoName
@@ -15,6 +11,14 @@ pipelines:
     description: Content of Webhook Payload
   - name: tekton-base-url
     description: Base Url of Tekton
+  - name: prnumberBranch
+    description: PR number in case of pr else main
+    default: main 
+
+pipelines:  
+  # Pipeline Workspaces
+  workspaces:
+    ##- name: source
   
   finally:
     - taskName: stakater-set-commit-status-v1
@@ -72,11 +76,7 @@ triggertemplate:
     "tekton.dev/status-context": "pipeline-operator"
     "tekton.dev/status-description": "Pipeline running on Openshift"
     "tekton.dev/status-target-url": "https://console-openshift-console.apps.pilot.l84u0fhj.kubeapp.cloud/k8s/ns/$(tt.params.namespace)/tekton.dev~v1beta1~PipelineRun/$(tt.params.repoName)-$(tt.params.prnumberBranch)-$(uid)"    
-  # Additional Params
-  additionalParams:
-  - name: prnumberBranch
-    description: PR number in case of pr else main
-    default: main 
+
   # PipelineRun Name Prefix
   #pipelineRunNamePrefix: $(tt.params.repoName)-$(tt.params.prnumberBranch)
   # Service Account Name 
