@@ -32,11 +32,7 @@ pipelines:
       workspaces:
       - name: source
         workspace: source
-      runAfter:
-      - stakater-create-git-tag-v1    
     - taskName: stakater-buildah-v1
-      runAfter: 
-      - maven-settings
     - taskName: stakater-comment-on-github-pr-v1
     - taskName: stakater-helm-push-v1
     - taskName: stakater-update-cd-repo-v1
