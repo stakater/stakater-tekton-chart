@@ -110,7 +110,9 @@ spec:
       {{- if or $previoustask .runAfter }}
       runAfter:
         {{- if .runAfter }}
-        - {{ first .runAfter }}
+        {{- range .runAfter }}
+        - {{ . }}
+        {{- end }}
         {{- else }}
         {{- if $previoustask }}
         - {{ $previoustask }}
