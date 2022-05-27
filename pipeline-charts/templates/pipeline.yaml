@@ -9,9 +9,11 @@ spec:
   params:
     {{- range $.Values.additionalParams }}
     - name: {{ .name }} 
+      type: {{ .type | default "string" }}
     {{- end }}
     {{- range $.Values.default_pipelines.params }}
     - name: {{ .name }}
+      type: {{ .type | default "string" }}
     {{- end }}
   {{- end }}
   {{- if .Values.workspaces }}

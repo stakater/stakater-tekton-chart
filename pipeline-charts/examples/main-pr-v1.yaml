@@ -18,6 +18,7 @@ workspaces:
       resourcesRequestsStorage: 1Gi
     
 pipelines:
+  enabled: true
   # Pipeline Tasks
   tasks:
     - taskName: git-clone
