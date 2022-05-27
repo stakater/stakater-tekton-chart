@@ -1,0 +1,33 @@
+{{- if .Values.triggers.enabled -}}
+{{- range .Values.triggers.eventlistenerTriggers -}}
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: Trigger
+metadata:
+    {{- if .triggerName }}
+    name: {{ include "pipeline-charts.name" $ }}-{{ .triggerName | default .defaultTriggerName }}
+    {{- else if .defaultTriggerName }}
+    name: {{ include "pipeline-charts.name" $ }}-{{ .defaultTriggerName }}
+    {{- end }}
+spec:
+    {{- $defaultTriggerValues:= include "pipeline-charts.get_event_listener_default_trigger" (list .defaultTriggerName $.Values.default_triggers.templates ) | fromJson  -}}
+    {{- if or .interceptors $defaultTriggerValues.interceptors }}
+    interceptors:
+    {{- if .interceptors }}
+    {{- toYaml .interceptors | nindent 6 }}
+    {{- else }}
+    {{- toYaml $defaultTriggerValues.interceptors | nindent 6 }}
+    {{- end }}
+    {{- end }}
+    {{- if or .bindings $defaultTriggerValues.bindings }}
+    bindings:
+    {{- if .bindings }}
+    {{- toYaml .bindings | nindent 6 }}
+    {{- else }}
+    {{- toYaml $defaultTriggerValues.bindings | nindent 6 }}
+    {{- end }}
+    {{- end }}
+    template: 
+        ref: {{ include "pipeline-charts.name" $ }}
+---
+{{- end -}}
+{{- end -}}

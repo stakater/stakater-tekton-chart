@@ -141,6 +141,32 @@ triggerbinding:
     - name: author
       value: $(body.pull_request.user.login)
 
+triggers:
+  enabled: true
+  eventlistenerTriggers:
+  - defaultTriggerName: pullrequest
+    interceptors:
+      - ref:
+          name: "cel"
+        params:
+          - name: "filter"
+            value: "(header.match('X-GitHub-Event', 'pull_request') && body.action == 'opened' || body.action == 'synchronize')"
+          - name: "overlays"
+            value:
+              - key: marshalled-body
+                expression: "body.marshalJSON()" 
+  - defaultTriggerName: push
+    interceptors:
+      - ref:
+          name: "cel"
+        params:
+          - name: "filter"
+            value: "(header.match('X-GitHub-Event', 'pull_request') && body.action == 'opened' || body.action == 'synchronize')"
+          - name: "overlays"
+            value:
+              - key: marshalled-body
+                expression: "body.marshalJSON()" 
+
 eventlistener:
   # Service Account
   serviceAccountName: stakater-tekton-builder

@@ -24,9 +24,8 @@ Expand the name of the chart.
   {{- $arg2 := index . 1 }}
   {{- $result :=  dict }}
   {{- range $arg2 }}
-  {{- if eq .triggerName $arg1.triggerName }}
-  {{ $result := set $result "interceptors_cel_filter" .interceptors_cel_filter }}
-  {{ $result := set $result "interceptors_cel_overlays" .interceptors_cel_overlays }}
+  {{- if eq .triggerName $arg1 }}
+  {{ $result := set $result "interceptors" .interceptors }}
   {{ $result := set $result "bindings" .bindings }}
   {{- end }}
   {{- end }}

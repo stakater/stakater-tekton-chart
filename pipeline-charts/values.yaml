@@ -146,17 +146,27 @@ default_pipelines:
           workspace: source    
 
 default_triggers:
-  triggers:
-    - triggerName: pullrequest-trigger
-      interceptors_cel_filter: "(header.match('X-GitHub-Event', 'pull_request') && body.action == 'opened' || body.action == 'synchronize')"
+  templates:
+    - triggerName: pullrequest
+      interceptors:
+      - ref:
+           name: "cel"
+        params: 
+         - name: "filter"
+           value: "(header.match('X-GitHub-Event', 'pull_request') && body.action == 'opened' || body.action == 'synchronize')" 
       bindings:
       - stakater-pr-v1
       - common-bindings
 
-    - triggerName: push-trigger
-      interceptors_cel_filter: "(header.match('X-GitHub-Event', 'push') && (body.ref == 'refs/heads/main' || body.ref == 'refs/heads/master') )"
+    - triggerName: push
+      interceptors:
+      - ref:
+           name: "cel"
+        params: 
+         - name: "filter"
+           value: "(header.match('X-GitHub-Event', 'push') && (body.ref == 'refs/heads/main' || body.ref == 'refs/heads/master') )"
       bindings:
-      - stakater-main-v1
+      - stakater-pr-v1
       - common-bindings
 
 #Additional Params for pipelines & trigger template
@@ -242,6 +252,10 @@ triggerbinding:
     bodyParams:
       - name: param1
         value: $(body.param1)
+
+triggers:
+  enabled: false
+#  eventlistenerTriggers:
 
 ##########################################################
 # Event Listener Definition
