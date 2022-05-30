@@ -193,7 +193,7 @@ workspaces:
 #    emptyDir: "true"
 
 pipelines:
-  enabled: false
+  enabled: true
   # Pipeline Tasks
   tasks:
     # Task Name, Params, Workspaces
@@ -221,7 +221,7 @@ pipelines:
 
 triggertemplate:
 
- enabled: false
+ enabled: true
 
  # PipelineRun Name Prefix
  pipelineRunNamePrefix: 
@@ -254,7 +254,7 @@ triggerbinding:
         value: $(body.param1)
 
 triggers:
-  enabled: false
+  enabled: true
 #  eventlistenerTriggers:
 
 ##########################################################
@@ -263,7 +263,7 @@ triggers:
 ##########################################################
 
 eventlistener:
-  enabled: false
+  enabled: true
   # Service Account
   serviceAccountName: pipeline-charts-service-account
   # All Event Triggers
@@ -278,7 +278,7 @@ eventlistener:
       - pipeline-charts-trigger-binding
 
   route:
-    enabled: false
+    enabled: true
 
     # Route Labels
     routeLabels: 
