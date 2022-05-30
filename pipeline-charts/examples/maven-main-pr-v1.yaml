@@ -110,6 +110,12 @@ triggerbinding:
     - name: author
       value: $(body.pull_request.user.login)
 
+triggers:
+  enabled: true
+  eventlistenerTriggers:
+  - defaultTriggerName: pullrequest
+  - defaultTriggerName: push
+
 eventlistener:
   # Service Account
   serviceAccountName: stakater-tekton-builder

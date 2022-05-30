@@ -17,8 +17,8 @@ workspaces:
       accessModes: ReadWriteOnce
       resourcesRequestsStorage: 1Gi
     
-pipelines:  
-
+pipelines:
+  enabled: true
   # Pipeline Tasks
   tasks:
     - taskName: git-clone
@@ -99,15 +99,20 @@ triggerbinding:
     - name: author
       value: $(body.pull_request.user.login)
 
+triggers:
+  eventlistenerTriggers:
+  - defaultTriggerName: pullrequest
+  - defaultTriggerName: push
+
 eventlistener:
   # Service Account
   serviceAccountName: stakater-tekton-builder
+  
   # All Event Triggers
-  triggers:
-    - triggerName: pullrequest-trigger
-
-    - triggerName: push-trigger
-
+  #triggers:
+  #  - pullrequest
+  #  - push
+  
   #route:
     # Port
     #targetPort: http-listener

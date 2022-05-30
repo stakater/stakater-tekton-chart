@@ -6,40 +6,14 @@ metadata:
   namespace: {{ .Release.Namespace }}
 spec:
   serviceAccountName: {{ .Values.eventlistener.serviceAccountName }}
-  {{- if .Values.eventlistener.triggers }}
+  {{- if .Values.triggers }}
   triggers:
-  {{- range .Values.eventlistener.triggers }}
-  - name: {{ .triggerName }}
-    {{- $default := include "pipeline-charts.get_event_listener_default_trigger" (list . $.Values.default_triggers.triggers ) | fromJson }}
-    {{- if or  $default.interceptors_cel_filter $default.interceptors_cel_overlays .interceptors_cel_filter .interceptors_cel_overlays  }}
-    interceptors:
-    - cel:
-        {{- if .interceptors_cel_filter }}
-        filter: {{ quote .interceptors_cel_filter }}
-        {{- else if $default.interceptors_cel_filter }}
-        filter: {{ quote $default.interceptors_cel_filter }}
-        {{- end }}
-        {{- if .interceptors_cel_overlays }}
-        overlays:
-        {{- toYaml .interceptors_cel_overlays | nindent 10 }}
-        {{- else  if $default.interceptors_cel_overlays }}
-        {{- toYaml $default.interceptors_cel_overlays | nindent 10 }}     
-        {{- end }}
-    {{- end }}
-    bindings:
-    {{- if .bindings }}
-    {{- range .bindings }}
-    - ref: {{ . }}
-    {{- end }}
-    {{- else }}
-    {{- if $default.bindings }}
-    {{- range $default.bindings }}
-    - ref: {{ . }}
-    {{- end }}
-    {{- end }}
-    {{- end }}
-    template:
-      ref: {{ include "pipeline-charts.name" $ }}
+  {{- range .Values.triggers.eventlistenerTriggers }}
+  {{- if .triggerName }}
+  - triggerRef: {{ include "pipeline-charts.name" $ }}-{{ .triggerName }}
+  {{- else }}
+  - triggerRef: {{ include "pipeline-charts.name" $ }}-{{ .defaultTriggerName }}
+  {{- end }}
   {{- end }}
   {{- end }}
 {{- end }}
