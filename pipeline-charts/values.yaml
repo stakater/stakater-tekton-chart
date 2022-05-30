@@ -256,7 +256,7 @@ triggerbinding:
 triggers:
   enabled: true
 #  eventlistenerTriggers:
-
+#
 ##########################################################
 # Event Listener Definition
 # 1 or more triggers can be specified
@@ -266,16 +266,6 @@ eventlistener:
   enabled: true
   # Service Account
   serviceAccountName: pipeline-charts-service-account
-  # All Event Triggers
-  triggers:
-    - templateName: pipeline-charts
-      triggerName: pipeline-chart-trigger
-      interceptors_cel_filter: "header.match('X-GitHub-Event', 'pull_request')"
-#      interceptors_cel_overlays:
-#        - key: marshalled-body
-#          expression: body.marshalJSON()
-      bindings:
-      - pipeline-charts-trigger-binding
 
   route:
     enabled: true

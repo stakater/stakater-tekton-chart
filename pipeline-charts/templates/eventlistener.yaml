@@ -8,7 +8,7 @@ spec:
   serviceAccountName: {{ .Values.eventlistener.serviceAccountName }}
   {{- if .Values.triggers }}
   triggers:
-  {{- range .Values.triggers }}
+  {{- range .Values.triggers.eventlistenerTriggers }}
   {{- if .triggerName }}
   - triggerRef: {{ include "pipeline-charts.name" $ }}-{{ .triggerName }}
   {{- else }}
