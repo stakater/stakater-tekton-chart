@@ -70,7 +70,7 @@ spec:
     {{- $default := include "pipeline-charts.get_default_task_values" (list . $.Values.default_pipelines.tasks ) | fromJson }}
     - name: {{ .taskName }}
       taskRef:
-        - name: {{ .taskName }}
+          name: {{ .taskName }}
           kind: ClusterTask
       {{- if or $default.params .params }}
       params:
@@ -79,7 +79,7 @@ spec:
       {{- $addedParams := set $addedParams .name "e" }}
       - name: {{ .name }}
         {{- if .value }}
-        value: {{ .value }}
+        value: {{ .value | quote }}
         {{- else }}
         value: $(params.{{.name}})
         {{- end }}    
@@ -89,7 +89,7 @@ spec:
       {{- else }}
       - name: {{ .name }}
         {{- if .value }}
-        value: {{ .value }}
+        value: {{ .value | quote }}
         {{- else }}
         value: $(params.{{.name}})
       {{- end }}
