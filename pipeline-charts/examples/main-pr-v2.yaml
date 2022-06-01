@@ -171,17 +171,7 @@ eventlistener:
   # Service Account
   serviceAccountName: stakater-tekton-builder
   # All Event Triggers
-  triggers:
-    - triggerName: pullrequest-trigger
-      interceptors_cel_overlays:
-        - key: marshalled-body
-          expression: body.marshalJSON()
-
-    - triggerName: push-trigger
-      interceptors_cel_overlays:
-        - key: marshalled-body
-          expression: body.marshalJSON()
-
+  
   #route: 
     # Port
     #targetPort: http-listener1

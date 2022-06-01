@@ -6,13 +6,19 @@ metadata:
   namespace: {{ .Release.Namespace }}
 spec:
   serviceAccountName: {{ .Values.eventlistener.serviceAccountName }}
-  {{- if .Values.triggers }}
+  {{- if or .Values.triggers.eventlistenerTriggers .Values.eventlistener.triggers }}
   triggers:
+  {{- if .Values.eventlistener.triggers }}
+  {{- range .Values.eventlistener.triggers }}
+  - triggerRef: {{ . }}
+  {{- end }}
+  {{- else if .Values.triggers.eventlistenerTriggers }}
   {{- range .Values.triggers.eventlistenerTriggers }}
   {{- if .triggerName }}
   - triggerRef: {{ include "pipeline-charts.name" $ }}-{{ .triggerName }}
   {{- else }}
   - triggerRef: {{ include "pipeline-charts.name" $ }}-{{ .defaultTriggerName }}
+  {{- end }}
   {{- end }}
   {{- end }}
   {{- end }}
