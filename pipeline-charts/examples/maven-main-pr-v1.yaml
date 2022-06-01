@@ -121,11 +121,6 @@ eventlistener:
   serviceAccountName: stakater-tekton-builder
   # All Event Triggers
   triggers:
-
-    - triggerName: pullrequest-trigger
-
-    - triggerName: push-trigger
-
   #route:
     # Port
     #port: http-listener
