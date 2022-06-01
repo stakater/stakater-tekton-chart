@@ -72,6 +72,9 @@ spec:
       taskRef:
           name: {{ .taskName }}
           kind: ClusterTask
+      {{- if .retries }}
+      retries: {{ .retries }}
+      {{- end }}
       {{- if or $default.params .params }}
       params:
       {{- $addedParams := dict }}

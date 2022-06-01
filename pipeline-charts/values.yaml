@@ -169,6 +169,16 @@ default_triggers:
       - stakater-pr-v1
       - common-bindings
 
+    - triggerName: pullrequest-merge
+      interceptors:
+      - ref:
+           name: "cel"
+        params: 
+         - name: "filter"
+           value: "(header.match('X-GitHub-Event', 'pull_request') && body.action == 'closed' )"
+      bindings:
+      - ref: stakater-pr-cleaner-v1
+
 #Additional Params for pipelines & trigger template
 additionalParams:
 # - name: gitorganization
