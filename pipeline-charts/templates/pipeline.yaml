@@ -26,9 +26,9 @@ spec:
   finally:
     {{- range .Values.pipelines.finally }}
     {{- $default := include "pipeline-charts.get_default_task_values" (list . $.Values.default_pipelines.tasks ) | fromJson }}
-    - name: {{ .taskName }}
+    - name: {{ .name | default .taskName }}
       taskRef:
-        - name: {{ .taskName }}
+          name: {{ .taskName }}
           kind: ClusterTask
       {{- if or $default.params .params }}
       params:
@@ -68,7 +68,7 @@ spec:
     {{- $previoustask := "" }}
     {{- range .Values.pipelines.tasks }}
     {{- $default := include "pipeline-charts.get_default_task_values" (list . $.Values.default_pipelines.tasks ) | fromJson }}
-    - name: {{ .taskName }}
+    - name: {{ .name | default .taskName }}
       taskRef:
           name: {{ .taskName }}
           kind: ClusterTask
@@ -124,6 +124,6 @@ spec:
         {{- end }}
         {{- end -}}
       {{- end }}
-      {{- $previoustask = .taskName }}
+      {{- $previoustask = .name | default .taskName }}
     {{- end }}
 {{- end }}
