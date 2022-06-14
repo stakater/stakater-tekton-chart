@@ -56,6 +56,24 @@ jobs:
         with:
           version: v3.7.0
 
+      # Set Up Python
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.7
+      # Set Up ct    
+      - name: Set up chart-testing
+        uses: helm/chart-testing-action@v2.2.1
+
+      - name: Run chart-testing (list-changed)
+        id: list-changed
+        run: |
+          changed=$(ct list-changed --config config.yml --print-config)
+          if [[ -n "$changed" ]]; then
+            echo "::set-output name=changed::true"
+          fi
+      - name: Run chart-testing (lint)
+        run: ct lint --config config.yml
+      
       # Lint
       - name: Helm Lint
         run: |
