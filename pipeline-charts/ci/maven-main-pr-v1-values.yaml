@@ -33,12 +33,12 @@ triggertemplate:
     serviceAccountName: stakater-tekton-builder
 triggers:
     eventlistenerTriggers:
-      - defaultTriggerName: pullrequest
-        bindings:
-        - ref: stakater-pr-v1
-      - defaultTriggerName: push
-        bindings:
-        - ref: stakater-main-v1
+        - defaultTriggerName: pullrequest
+          bindings:
+          - ref: stakater-pr-v1
+        - defaultTriggerName: push
+          bindings:
+          - ref: stakater-main-v1
 eventlistener:
     serviceAccountName: stakater-tekton-builder
     triggers:
