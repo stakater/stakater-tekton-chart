@@ -1,5 +1,5 @@
 name: stakater-main-pr-v1
-additionalParams:
+additio nalParams:
   - name: repoName
     description: Repository name
     default: "NA"
