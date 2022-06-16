@@ -8,7 +8,7 @@ spec:
   {{- if or .Values.default_pipelines.params .Values.additionalParams }}
   params:
     {{- range $.Values.additionalParams }}
-    - name: {{ .name }} 
+      name: {{ .name }} 
       type: {{ .type | default "string" }}
     {{- end }}
     {{- range $.Values.default_pipelines.params }}
