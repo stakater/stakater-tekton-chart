@@ -150,10 +150,10 @@ default_triggers:
     - triggerName: pullrequest
       interceptors:
       - ref:
-           name: "cel"
-        params: 
-         - name: "filter"
-           value: "(header.match('X-GitHub-Event', 'pull_request') && body.action == 'opened' || body.action == 'synchronize')" 
+          name: "cel"
+        params:
+        - name: "filter"
+          value: "(header.match('X-GitHub-Event', 'pull_request') && body.action == 'opened' || body.action == 'synchronize')"
       bindings:
       - stakater-pr-v1
       - common-bindings
@@ -161,10 +161,10 @@ default_triggers:
     - triggerName: push
       interceptors:
       - ref:
-           name: "cel"
-        params: 
-         - name: "filter"
-           value: "(header.match('X-GitHub-Event', 'push') && (body.ref == 'refs/heads/main' || body.ref == 'refs/heads/master') )"
+          name: "cel"
+        params:
+        - name: "filter"
+          value: "(header.match('X-GitHub-Event', 'push') && (body.ref == 'refs/heads/main' || body.ref == 'refs/heads/master') )"
       bindings:
       - stakater-pr-v1
       - common-bindings
@@ -172,10 +172,10 @@ default_triggers:
     - triggerName: pullrequest-merge
       interceptors:
       - ref:
-           name: "cel"
+          name: "cel"
         params:
-         - name: "filter"
-           value: "(header.match('X-GitHub-Event', 'pull_request') && body.action == 'closed' )"
+        - name: "filter"
+          value: "(header.match('X-GitHub-Event', 'pull_request') && body.action == 'closed' )"
       bindings:
       - ref: stakater-pr-cleaner-v1
 
@@ -234,7 +234,7 @@ triggertemplate:
   enabled: true
 
   # PipelineRun Name Prefix
-  pipelineRunNamePrefix: 
+  pipelineRunNamePrefix:
 
   # Service Account Name
   serviceAccountName:
