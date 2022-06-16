@@ -5,7 +5,7 @@ additionalParams:
     default: "NA"
   - name: prnumberBranch
     description: PR number in case of pr else main
-    default: main 
+    default: main
 workspaces:
   - name: source
     volumeClaimTemplate:
@@ -20,9 +20,9 @@ pipelines:
     - taskName: stakater-helm-push-v1
     - taskName: stakater-update-cd-repo-v1
     - taskName: stakater-push-main-tag-v1
-triggertemplate:                
+triggertemplate:
   serviceAccountName: stakater-tekton-builder
-triggers:                
+triggers:
   eventlistenerTriggers:
   - defaultTriggerName: pullrequest
     bindings:
@@ -36,3 +36,4 @@ eventlistener:
   - stakater-pr-cleaner-v1-pullrequest-merge
   - stakater-main-pr-v1-pullrequest
   - stakater-main-pr-v1-push
+  
