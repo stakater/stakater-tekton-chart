@@ -36,7 +36,7 @@ default_pipelines:
     - name: author
       description: Author of commit
     - name: helm_registry
-      description: Helm registry url 
+      description: Helm registry url
     - name: environment
       description: Name of environment
   tasks:
@@ -61,14 +61,14 @@ default_pipelines:
         - name: depth
           value: "0"
       workspaces:
-        - name:  output
-          workspace: source 
+        - name: output
+          workspace: source
     - taskName: stakater-create-git-tag-v1
       params:
         - name: prnumber
         - name: gitrevision
       workspaces:
-        - name:  source
+        - name: source
           workspace: source
     - taskName: stakater-buildah-v1
       params:
@@ -79,7 +79,7 @@ default_pipelines:
         - name: FORMAT
           value: "docker"
       workspaces:
-        - name:  source
+        - name: source
           workspace: source
     - taskName: stakater-comment-on-github-pr-v1
       params:
@@ -88,7 +88,7 @@ default_pipelines:
         - name: IMAGE
           value: $(params.image_registry_url):$(tasks.stakater-create-git-tag-v1.results.GIT_TAG)
       workspaces:
-        - name:  source
+        - name: source
           workspace: source
     - taskName: stakater-helm-push-v1
       params:
@@ -100,7 +100,7 @@ default_pipelines:
         - name: semVer
           value: $(tasks.stakater-create-git-tag-v1.results.GIT_TAG)
       workspaces:
-        - name:  source
+        - name: source
           workspace: source
     - taskName: stakater-update-cd-repo-v1
       params:
@@ -118,7 +118,7 @@ default_pipelines:
         - name: IMAGE_NAME
           value: $(params.image_registry_url)
       workspaces:
-        - name:  source
+        - name: source
           workspace: source
     - taskName: stakater-push-main-tag-v1
       params:
@@ -127,7 +127,7 @@ default_pipelines:
       - name: IMAGE_TAG
         value: $(tasks.stakater-create-git-tag-v1.results.GIT_TAG)
       workspaces:
-        - name:  source
+        - name: source
           workspace: source
     - taskName: stakater-create-environment-provisioner-v1
       params:
@@ -150,10 +150,10 @@ default_triggers:
     - triggerName: pullrequest
       interceptors:
       - ref:
-           name: "cel"
-        params: 
-         - name: "filter"
-           value: "(header.match('X-GitHub-Event', 'pull_request') && body.action == 'opened' || body.action == 'synchronize')" 
+          name: "cel"
+        params:
+        - name: "filter"
+          value: "(header.match('X-GitHub-Event', 'pull_request') && body.action == 'opened' || body.action == 'synchronize')"
       bindings:
       - stakater-pr-v1
       - common-bindings
@@ -161,10 +161,10 @@ default_triggers:
     - triggerName: push
       interceptors:
       - ref:
-           name: "cel"
-        params: 
-         - name: "filter"
-           value: "(header.match('X-GitHub-Event', 'push') && (body.ref == 'refs/heads/main' || body.ref == 'refs/heads/master') )"
+          name: "cel"
+        params:
+        - name: "filter"
+          value: "(header.match('X-GitHub-Event', 'push') && (body.ref == 'refs/heads/main' || body.ref == 'refs/heads/master') )"
       bindings:
       - stakater-pr-v1
       - common-bindings
@@ -172,14 +172,14 @@ default_triggers:
     - triggerName: pullrequest-merge
       interceptors:
       - ref:
-           name: "cel"
-        params: 
-         - name: "filter"
-           value: "(header.match('X-GitHub-Event', 'pull_request') && body.action == 'closed' )"
+          name: "cel"
+        params:
+        - name: "filter"
+          value: "(header.match('X-GitHub-Event', 'pull_request') && body.action == 'closed' )"
       bindings:
       - ref: stakater-pr-cleaner-v1
 
-#Additional Params for pipelines & trigger template
+# Additional Params for pipelines & trigger template
 additionalParams:
 # - name: gitorganization
 #   description: my description
@@ -197,7 +197,7 @@ workspaces:
 #    persistentVolumeClaim:
 #      claimName: my-pvc
 #  - name: source2
-#    configMap: 
+#    configMap:
 #      configMapName: my-cm
 #  - name: source3
 #    emptyDir: "true"
@@ -213,13 +213,13 @@ pipelines:
     #      workspace: source
 
     # Task Name, Params, Workspaces
-    #- taskName: task2
-    #  params:
+    # - taskName: task2
+    #   params:
     #    - name: pipelineparam2
-    #  workspaces:
+    #   workspaces:
     #    - name:  source
     #      workspace: source
-    #  runAfter:
+    #   runAfter:
     #  - git-clone
 
 
@@ -231,16 +231,16 @@ pipelines:
 
 triggertemplate:
 
- enabled: true
+  enabled: true
 
- # PipelineRun Name Prefix
- pipelineRunNamePrefix: 
+  # PipelineRun Name Prefix
+  pipelineRunNamePrefix:
 
- # Service Account Name 
- serviceAccountName: 
+  # Service Account Name
+  serviceAccountName:
 
  # Annotations for pipeline run
- pipelineRunAnnotations: 
+  pipelineRunAnnotations:
 #  tekton.dev/git-status: "true"
 #  tekton.dev/status-context: "pipeline-operator"
 # tekton.dev/status-description: "Pipeline running on Openshift"
@@ -281,7 +281,7 @@ eventlistener:
     enabled: true
 
     # Route Labels
-    routeLabels: 
+    routeLabels:
       category: route
       router: default
 
@@ -289,7 +289,7 @@ eventlistener:
     targetPort: http-listener
 
     # Wildcard policy
-#    wildcardPolicy: 
+#    wildcardPolicy:
 
     # tls settings
     tls:

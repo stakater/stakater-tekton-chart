@@ -10,16 +10,16 @@ additionalParams:
     description: Base Url of Tekton
   - name: prnumberBranch
     description: PR number in case of pr else main
-    default: main 
+    default: main
 workspaces:
   - name: source
     volumeClaimTemplate:
       accessModes: ReadWriteOnce
       resourcesRequestsStorage: 1Gi
-pipelines:  
+pipelines:
   finally:
     - taskName: stakater-set-commit-status-v1
-      name: set-commit-status-task-result                    
+      name: set-commit-status-task-result
   tasks:
     - taskName: stakater-set-commit-status-v1
       params:
@@ -30,16 +30,16 @@ pipelines:
     - taskName: stakater-unit-test-v1
       workspaces:
       - name: source
-        workspace: source    
-    - taskName: stakater-sonarqube-scanner-v1                    
+        workspace: source
+    - taskName: stakater-sonarqube-scanner-v1
       params:
-       - name: sonar_host_url
-         value: "http://sonarqube.stakater-sonarqube:9000"
-       - name: sonar_project_key
-         value: $(params.repoName)
+        - name: sonar_host_url
+          value: "http://sonarqube.stakater-sonarqube:9000"
+        - name: sonar_project_key
+          value: $(params.repoName)
       workspaces:
       - name: source
-        workspace: source 
+        workspace: source
     - taskName: stakater-buildah-v1
       runAfter:
       - stakater-unit-test-v1
@@ -63,7 +63,7 @@ pipelines:
         - name: output_format
           value: csv
         - name: image_digest
-          value: $(tasks.stakater-buildah-v1.results.IMAGE_DIGEST)    
+          value: $(tasks.stakater-buildah-v1.results.IMAGE_DIGEST)
       runAfter:
       - stakater-buildah-v1
     - taskName: rox-image-check
@@ -73,7 +73,7 @@ pipelines:
         - name: rox_api_token
           value: roxsecrets
         - name: rox_central_endpoint
-          value: roxsecrets    
+          value: roxsecrets
       runAfter:
       - stakater-buildah-v1
     - taskName: rox-deployment-check
@@ -164,7 +164,7 @@ triggers:
           - name: "overlays"
             value:
               - key: marshalled-body
-                expression: "body.marshalJSON()" 
+                expression: "body.marshalJSON()"
     bindings:
     - ref: stakater-pr-v1
   - defaultTriggerName: push
@@ -177,7 +177,7 @@ triggers:
           - name: "overlays"
             value:
               - key: marshalled-body
-                expression: "body.marshalJSON()" 
+                expression: "body.marshalJSON()"
     bindings:
     - ref: stakater-main-v1
 eventlistener:

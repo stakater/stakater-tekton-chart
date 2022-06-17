@@ -1,5 +1,6 @@
 {{- if .Values.triggers.enabled -}}
 {{- range .Values.triggers.eventlistenerTriggers -}}
+---
 apiVersion: triggers.tekton.dev/v1alpha1
 kind: Trigger
 metadata:
@@ -28,6 +29,5 @@ spec:
     {{- end }}
     template: 
         ref: {{ include "pipeline-charts.name" $ }}
----
 {{- end -}}
 {{- end -}}

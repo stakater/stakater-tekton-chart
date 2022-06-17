@@ -9,39 +9,39 @@ additionalParams:
       description: PR number in case of pr else main
       default: main
 workspaces:
-  - name: source
-    volumeClaimTemplate:
-      accessModes: ReadWriteOnce
-      resourcesRequestsStorage: 1Gi
+    - name: source
+      volumeClaimTemplate:
+          accessModes: ReadWriteOnce
+          resourcesRequestsStorage: 1Gi
 pipelines:
-  tasks:
-    - taskName: git-clone
-    - taskName: stakater-create-git-tag-v1
-    - taskName: maven-settings
-      params:
-      - name: NEXUS_URL
-        value: $(params.nexus_url)
-      workspaces:
-      - name: source
-        workspace: source
-    - taskName: stakater-buildah-v1
-    - taskName: stakater-comment-on-github-pr-v1
-    - taskName: stakater-helm-push-v1
-    - taskName: stakater-update-cd-repo-v1
-    - taskName: stakater-push-main-tag-v1
+    tasks:
+        - taskName: git-clone
+        - taskName: stakater-create-git-tag-v1
+        - taskName: maven-settings
+          params:
+          - name: NEXUS_URL
+            value: $(params.nexus_url)
+          workspaces:
+          - name: source
+            workspace: source
+        - taskName: stakater-buildah-v1
+        - taskName: stakater-comment-on-github-pr-v1
+        - taskName: stakater-helm-push-v1
+        - taskName: stakater-update-cd-repo-v1
+        - taskName: stakater-push-main-tag-v1
 triggertemplate:
-  serviceAccountName: stakater-tekton-builder
+    serviceAccountName: stakater-tekton-builder
 triggers:
-  eventlistenerTriggers:
-  - defaultTriggerName: pullrequest
-    bindings:
-    - ref: stakater-pr-v1
-  - defaultTriggerName: push
-    bindings:
-    - ref: stakater-main-v1
+    eventlistenerTriggers:
+        - defaultTriggerName: pullrequest
+          bindings:
+          - ref: stakater-pr-v1
+        - defaultTriggerName: push
+          bindings:
+          - ref: stakater-main-v1
 eventlistener:
-  serviceAccountName: stakater-tekton-builder
-  triggers:
-  - stakater-pr-cleaner-v1-pullrequest-merge
-  - stakater-main-pr-v1-pullrequest
-  - stakater-main-pr-v1-push
+    serviceAccountName: stakater-tekton-builder
+    triggers:
+    - stakater-pr-cleaner-v1-pullrequest-merge
+    - stakater-main-pr-v1-pullrequest
+    - stakater-main-pr-v1-push
