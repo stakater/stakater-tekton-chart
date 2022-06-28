@@ -5,9 +5,10 @@ metadata:
   name: {{ include "pipeline-charts.name" . }}
   namespace: {{ .Release.Namespace }}
 spec:
-  {{- if or .Values.default_pipelines.params .Values.additionalParams }}
+  {{- $dt := .Files.Get "default-config/tasks.yaml" | fromYaml }}
+  {{- if or $dt.default_pipelines.params .Values.additionalParams }}
   params:
-    {{- range .Values.default_pipelines.params }}
+    {{- range $dt.default_pipelines.params }}
     - name: {{ .name }}   
       {{- if .description }}
       description: {{ .description }} 
@@ -40,13 +41,13 @@ spec:
         {{- if .Values.triggertemplate.serviceAccountName }}
         serviceAccountName: {{ .Values.triggertemplate.serviceAccountName }}
         {{- end }}
-        {{- if or .Values.additionalParams .Values.default_pipelines.params }}
+        {{- if or .Values.additionalParams $dt.default_pipelines.params }}
         params:
           {{- range .Values.additionalParams }}
           - name: {{ .name }}
             value: $(tt.params.{{.name}})  
           {{- end }}
-          {{- range .Values.default_pipelines.params }}
+          {{- range $dt.default_pipelines.params }}
           - name: {{ .name }}
             value: $(tt.params.{{.name}})
           {{- end }}

@@ -5,13 +5,14 @@ metadata:
   name: {{ include "pipeline-charts.name" . }}
   namespace: {{ .Release.Namespace }}
 spec:
-  {{- if or .Values.default_pipelines.params .Values.additionalParams }}
+  {{- $dt := .Files.Get "default-config/tasks.yaml" | fromYaml }}
+  {{- if or $dt.default_pipelines.params .Values.additionalParams }}
   params:
     {{- range $.Values.additionalParams }}
     - name: {{ .name }} 
       type: {{ .type | default "string" }}
     {{- end }}
-    {{- range $.Values.default_pipelines.params }}
+    {{- range $dt.default_pipelines.params }}
     - name: {{ .name }}
       type: {{ .type | default "string" }}
     {{- end }}
@@ -25,7 +26,7 @@ spec:
   {{- if .Values.pipelines.finally }}
   finally:
     {{- range .Values.pipelines.finally }}
-    {{- $default := include "pipeline-charts.get_default_task_values" (list . $.Values.default_pipelines.tasks ) | fromJson }}
+    {{- $default := include "pipeline-charts.get_default_task_values" (list . $dt.default_pipelines.tasks ) | fromJson }}
     - name: {{ .name | default .taskName }}
       taskRef:
           name: {{ .taskName }}
@@ -67,7 +68,7 @@ spec:
   tasks: 
     {{- $previoustask := "" }}
     {{- range .Values.pipelines.tasks }}
-    {{- $default := include "pipeline-charts.get_default_task_values" (list . $.Values.default_pipelines.tasks ) | fromJson }}
+    {{- $default := include "pipeline-charts.get_default_task_values" (list . $dt.default_pipelines.tasks ) | fromJson }}
     - name: {{ .name | default .taskName }}
       taskRef:
           name: {{ .taskName }}
