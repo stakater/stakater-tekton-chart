@@ -6,11 +6,11 @@ Expand the name of the chart.
 {{- end }}
 
 {{- define "pipeline-charts.get_default_task_values" }}
-  {{- $arg1 := index . 0 }}
-  {{- $arg2 := index . 1 }}
+  {{- $task_to_search := index . 0 }}
+  {{- $default_tasks := index . 1 }}
   {{- $result :=  dict }}
-  {{- range $arg2 }}
-  {{- if eq .taskName $arg1.taskName }}
+  {{- range $default_tasks }}
+  {{- if eq .taskName $task_to_search.taskName }}
   {{ $result := set $result "params" .params }}
   {{ $result := set $result "workspaces" .workspaces }}
   {{ $result := set $result "runAfter" .runAfter }}
@@ -30,4 +30,34 @@ Expand the name of the chart.
   {{- end }}
   {{- end }}
   {{- $result | toJson }}
+{{- end }}
+
+{{- define "pipeline-charts.get_pipeline_params" }}
+  {{- $task_list := index . 0 }}
+  {{- $default_task_list := index . 1 }}
+  {{- $result :=  dict }}
+  {{- range $task_list }}
+    {{- $default := include "pipeline-charts.get_default_task_values" (list . $default_task_list ) | fromJson }}
+    {{- range .params }}
+      {{- if .value }}
+      {{- $match := regexFindAll "\\$\\(params\\.[a-zA-Z0-9\\-]+\\)" .value -1 }}
+      {{- range $match }}
+      {{- $result := set $result . "E" }}
+      {{- end }}
+      {{- else }}
+      {{- $result := set $result .name "E" }}
+      {{- end }}
+    {{- end }}
+    {{- range $default.params }}
+      {{- if .value }}
+      {{- $match := regexFindAll "\\$\\(params\\.[a-zA-Z0-9\\-]+\\)" .value -1 }}
+      {{- range $match }}
+      {{- $result := set $result . "E" }}
+      {{- end }}
+      {{- else }}
+      {{- $result := set $result .name "E" }}
+      {{- end }}
+    {{- end }}
+  {{- end }}
+  {{ $result | toJson }}
 {{- end }}

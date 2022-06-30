@@ -6,12 +6,13 @@ metadata:
   namespace: {{ .Release.Namespace }}
 spec:
   {{- $dt := .Files.Get "default-config/tasks.yaml" | fromYaml }}
-  {{- if or $dt.default_pipelines.params .Values.additionalParams }}
+  {{ $default_params:=include "pipeline-charts.get_pipeline_params" (list .Values.pipelines.tasks $dt.default_pipelines.tasks ) | fromJson }}
+  {{- if or $default_params .Values.additionalParams }}
   params:
     {{- range $dt.default_pipelines.params }}
-    - name: {{ .name }}   
+    - name: {{ .name }}
       {{- if .description }}
-      description: {{ .description }} 
+      description: {{ .description }}
       {{- end }}
       {{- if .default }}
       default: {{ .default }} 
