@@ -1,16 +1,4 @@
 name: stakater-main-pr-v2
-additionalParams:
-  - name: gitbranch
-    description: The git branch name
-  - name: repoName
-    description: Repository name
-  - name: webhook-payload
-    description: Content of Webhook Payload
-  - name: tekton-base-url
-    description: Base Url of Tekton
-  - name: prnumberBranch
-    description: PR number in case of pr else main
-    default: main
 workspaces:
   - name: source
     volumeClaimTemplate:

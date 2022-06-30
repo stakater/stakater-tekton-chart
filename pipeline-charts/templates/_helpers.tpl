@@ -42,20 +42,22 @@ Expand the name of the chart.
       {{- if .value }}
       {{- $match := regexFindAll "\\$\\(params\\.[a-zA-Z0-9\\-]+\\)" .value -1 }}
       {{- range $match }}
-      {{- $result := set $result . "E" }}
+      {{ $p := . | replace "$(params." "" | replace ")" ""}}
+      {{- $result = set $result $p "E" }}
       {{- end }}
       {{- else }}
-      {{- $result := set $result .name "E" }}
+      {{- $result = set $result .name "E" }}
       {{- end }}
     {{- end }}
     {{- range $default.params }}
       {{- if .value }}
       {{- $match := regexFindAll "\\$\\(params\\.[a-zA-Z0-9\\-]+\\)" .value -1 }}
       {{- range $match }}
-      {{- $result := set $result . "E" }}
+      {{ $p := . | replace "$(params." "" | replace ")" ""}}      
+      {{- $result = set $result $p "E" }}
       {{- end }}
       {{- else }}
-      {{- $result := set $result .name "E" }}
+      {{- $result = set $result .name "E" }}
       {{- end }}
     {{- end }}
   {{- end }}

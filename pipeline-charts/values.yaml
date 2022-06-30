@@ -38,13 +38,6 @@ default_triggers:
       bindings:
       - ref: stakater-pr-cleaner-v1
 
-# Additional Params for pipelines & trigger template
-additionalParams:
-# - name: gitorganization
-#   description: my description
-# - name: templateparam
-#   description: templateparam description
-#   default: "templateparam-default"
 
  # Workspace Definition
 workspaces:

@@ -1,13 +1,4 @@
 name: stakater-maven-main-pr-v1
-additionalParams:
-    - name: nexus_url
-      description: URL of nexus repository
-    - name: repoName
-      description: Repository name
-      default: "NA"
-    - name: prnumberBranch
-      description: PR number in case of pr else main
-      default: main
 workspaces:
     - name: source
       volumeClaimTemplate:

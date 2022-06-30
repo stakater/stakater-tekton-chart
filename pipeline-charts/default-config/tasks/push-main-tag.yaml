@@ -1,0 +1,10 @@
+#
+taskName: stakater-push-main-tag-v1
+params:
+  - name: prnumber
+  - name: gitrevision
+  - name: IMAGE_TAG
+    value: $(tasks.stakater-create-git-tag-v1.results.GIT_TAG)
+workspaces:
+  - name: source
+    workspace: source

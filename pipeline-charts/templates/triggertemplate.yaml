@@ -5,27 +5,16 @@ metadata:
   name: {{ include "pipeline-charts.name" . }}
   namespace: {{ .Release.Namespace }}
 spec:
-  {{- $dt := .Files.Get "default-config/tasks.yaml" | fromYaml }}
-  {{ $default_params:=include "pipeline-charts.get_pipeline_params" (list .Values.pipelines.tasks $dt.default_pipelines.tasks ) | fromJson }}
-  {{- if or $default_params .Values.additionalParams }}
-  params:
-    {{- range $dt.default_pipelines.params }}
-    - name: {{ .name }}
-      {{- if .description }}
-      description: {{ .description }}
-      {{- end }}
-      {{- if .default }}
-      default: {{ .default }} 
-      {{- end }}
+    {{- $default_tasks := list }}
+    {{- range $path, $_ :=  .Files.Glob  "default-config/tasks/**.yaml" }}
+        {{- $dt1 := $.Files.Get $path | fromYaml }}
+        {{- $default_tasks = append $default_tasks $dt1 }}
     {{- end }}
-    {{- range .Values.additionalParams }}
-    - name: {{ .name }}   
-      {{- if .description }}
-      description: {{ .description }} 
-      {{- end }}
-      {{- if .default }}
-      default: {{ .default }} 
-      {{- end }}
+  {{- $default_params:=include "pipeline-charts.get_pipeline_params" (list .Values.pipelines.tasks $default_tasks ) | fromJson }}
+  {{- if $default_params }}
+  params:
+    {{- range $k,$v:=$default_params }}
+    - name: {{ $k }}
     {{- end }}
   {{- end }}
   resourcetemplates:
@@ -42,15 +31,11 @@ spec:
         {{- if .Values.triggertemplate.serviceAccountName }}
         serviceAccountName: {{ .Values.triggertemplate.serviceAccountName }}
         {{- end }}
-        {{- if or .Values.additionalParams $dt.default_pipelines.params }}
+        {{- if  $default_params }}
         params:
-          {{- range .Values.additionalParams }}
-          - name: {{ .name }}
-            value: $(tt.params.{{.name}})  
-          {{- end }}
-          {{- range $dt.default_pipelines.params }}
-          - name: {{ .name }}
-            value: $(tt.params.{{.name}})
+          {{- range $k,$v:=$default_params }}
+          - name: {{ $k }}
+            value: $(tt.params.{{ $k }})
           {{- end }}
         {{- end }}
         pipelineRef:
