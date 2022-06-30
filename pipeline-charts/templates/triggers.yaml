@@ -10,7 +10,8 @@ metadata:
     name: {{ include "pipeline-charts.name" $ }}-{{ .defaultTriggerName }}
     {{- end }}
 spec:
-    {{- $defaultTriggerValues:= include "pipeline-charts.get_event_listener_default_trigger" (list .defaultTriggerName $.Values.default_triggers.templates ) | fromJson  -}}
+    {{- $triggers := "default-config/triggers.yaml" | $.Files.Get | fromYaml }}
+    {{- $defaultTriggerValues:= include "pipeline-charts.get_event_listener_default_trigger" (list .defaultTriggerName $triggers.default_triggers.templates ) | fromJson  -}}
     {{- if or .interceptors $defaultTriggerValues.interceptors }}
     interceptors:
     {{- if .interceptors }}
