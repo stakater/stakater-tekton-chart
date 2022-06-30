@@ -4,40 +4,6 @@
 
 name: pipeline-charts
 
-default_triggers:
-  templates:
-    - triggerName: pullrequest
-      interceptors:
-      - ref:
-          name: "cel"
-        params:
-        - name: "filter"
-          value: "(header.match('X-GitHub-Event', 'pull_request') && body.action == 'opened' || body.action == 'synchronize')"
-      bindings:
-      - stakater-pr-v1
-      - common-bindings
-
-    - triggerName: push
-      interceptors:
-      - ref:
-          name: "cel"
-        params:
-        - name: "filter"
-          value: "(header.match('X-GitHub-Event', 'push') && (body.ref == 'refs/heads/main' || body.ref == 'refs/heads/master') )"
-      bindings:
-      - stakater-pr-v1
-      - common-bindings
-
-    - triggerName: pullrequest-merge
-      interceptors:
-      - ref:
-          name: "cel"
-        params:
-        - name: "filter"
-          value: "(header.match('X-GitHub-Event', 'pull_request') && body.action == 'closed' )"
-      bindings:
-      - ref: stakater-pr-cleaner-v1
-
 # Additional Params for pipelines & trigger template
 additionalParams:
 # - name: gitorganization
