@@ -15,17 +15,14 @@ pipelines:
     - taskName: stakater-push-main-tag-v1
 triggertemplate:
   serviceAccountName: stakater-tekton-builder
-triggers:
-  eventlistenerTriggers:
-  - defaultTriggerName: pullrequest
-    bindings:
-    - ref: stakater-pr-v1
-  - defaultTriggerName: push
-    bindings:
-    - ref: stakater-main-v1
 eventlistener:
   serviceAccountName: stakater-tekton-builder
   triggers:
-  - stakater-pr-cleaner-v1-pullrequest-merge
-  - stakater-main-pr-v1-pullrequest
-  - stakater-main-pr-v1-push
+  - name : stakater-pr-cleaner-v1-pullrequest-merge
+    create: false
+  - name: pullrequest
+    bindings:
+    - ref: stakater-pr-v1    
+  - name: push
+    bindings:
+    - ref: stakater-main-v1

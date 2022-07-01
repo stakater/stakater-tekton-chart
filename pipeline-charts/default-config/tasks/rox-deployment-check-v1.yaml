@@ -1,0 +1,13 @@
+taskName: rox-deployment-check
+params:
+  - name: rox_api_token
+    value: roxsecrets
+  - name: rox_central_endpoint
+    value: roxsecrets
+  - name: file
+    value: values.yaml
+  - name: deployment_files_path
+    value: deploy
+workspaces:
+- name: source
+  workspace: sources

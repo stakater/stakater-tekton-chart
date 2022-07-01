@@ -4,41 +4,6 @@
 
 name: pipeline-charts
 
-default_triggers:
-  templates:
-    - triggerName: pullrequest
-      interceptors:
-      - ref:
-          name: "cel"
-        params:
-        - name: "filter"
-          value: "(header.match('X-GitHub-Event', 'pull_request') && body.action == 'opened' || body.action == 'synchronize')"
-      bindings:
-      - stakater-pr-v1
-      - common-bindings
-
-    - triggerName: push
-      interceptors:
-      - ref:
-          name: "cel"
-        params:
-        - name: "filter"
-          value: "(header.match('X-GitHub-Event', 'push') && (body.ref == 'refs/heads/main' || body.ref == 'refs/heads/master') )"
-      bindings:
-      - stakater-pr-v1
-      - common-bindings
-
-    - triggerName: pullrequest-merge
-      interceptors:
-      - ref:
-          name: "cel"
-        params:
-        - name: "filter"
-          value: "(header.match('X-GitHub-Event', 'pull_request') && body.action == 'closed' )"
-      bindings:
-      - ref: stakater-pr-cleaner-v1
-
-
  # Workspace Definition
 workspaces:
 #  - name: source
@@ -115,10 +80,6 @@ triggerbinding:
       - name: param1
         value: $(body.param1)
 
-triggers:
-  enabled: true
-#  eventlistenerTriggers:
-#
 ##########################################################
 # Event Listener Definition
 # 1 or more triggers can be specified
@@ -147,3 +108,8 @@ eventlistener:
     tls:
       termination: edge
       insecureEdgeTerminationPolicy: Redirect
+
+#    triggers:
+#      - name: pullrequest
+#      - name: push
+#        bindings:

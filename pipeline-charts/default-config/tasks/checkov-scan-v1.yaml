@@ -1,0 +1,4 @@
+taskName: stakater-checkov-scan-v1
+workspaces:
+  - name: source
+    workspace: source

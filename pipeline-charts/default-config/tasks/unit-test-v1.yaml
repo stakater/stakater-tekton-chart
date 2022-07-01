@@ -1,0 +1,4 @@
+taskName: stakater-unit-test-v1
+workspaces:
+- name: source
+  workspace: source
