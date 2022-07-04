@@ -7,13 +7,13 @@ metadata:
 spec:
   {{- $default_tasks := list }}
   {{- range $path, $_ :=  .Files.Glob  "default-config/tasks/**.yaml" }}
-      {{- $taskfile := $.Files.Get $path | fromYaml }}
-      {{- $default_tasks = append $default_tasks $taskfile }}
+      {{- $task_file := $.Files.Get $path | fromYaml }}
+      {{- $default_tasks = append $default_tasks $task_file }}
   {{- end }}
-  {{- $pipeline_params:=include "pipeline-charts.get_pipeline_params" (list .Values.pipelines.tasks $default_tasks ) | fromJson }}
+  {{- $pipeline_params := include "pipeline-charts.get_pipeline_params" (list .Values.pipelines.tasks $default_tasks ) | fromJson }}
   {{- if $pipeline_params }}
   params:
-    {{- range $k,$v:=$pipeline_params }}
+    {{- range $k,$v := $pipeline_params }}
     - name: {{ $k }}
       type: string
     {{- end }}

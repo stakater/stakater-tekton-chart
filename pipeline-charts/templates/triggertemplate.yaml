@@ -7,13 +7,13 @@ metadata:
 spec:
     {{- $default_tasks := list }}
     {{- range $path, $_ :=  .Files.Glob  "default-config/tasks/**.yaml" }}
-        {{- $dt1 := $.Files.Get $path | fromYaml }}
-        {{- $default_tasks = append $default_tasks $dt1 }}
+        {{- $task_file := $.Files.Get $path | fromYaml }}
+        {{- $default_tasks = append $default_tasks $task_file }}
     {{- end }}
-  {{- $default_params:=include "pipeline-charts.get_pipeline_params" (list .Values.pipelines.tasks $default_tasks ) | fromJson }}
+  {{- $default_params := include "pipeline-charts.get_pipeline_params" (list .Values.pipelines.tasks $default_tasks ) | fromJson }}
   {{- if $default_params }}
   params:
-    {{- range $k,$v:=$default_params }}
+    {{- range $k,$v := $default_params }}
     - name: {{ $k }}
     {{- end }}
   {{- end }}
@@ -33,7 +33,7 @@ spec:
         {{- end }}
         {{- if  $default_params }}
         params:
-          {{- range $k,$v:=$default_params }}
+          {{- range $k,$v := $default_params }}
           - name: {{ $k }}
             value: $(tt.params.{{ $k }})
           {{- end }}
