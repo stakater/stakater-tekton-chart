@@ -25,14 +25,10 @@ pipelines:
   tasks:
     # Task Name, Params, Workspaces
     - taskName: git-clone
-    # workspaces:
-    #    - name: output
-    #      workspace: source
-
-    # Task Name, Params, Workspaces
     # - taskName: task2
     #   params:
     #    - name: pipelineparam2
+    #      value: value
     #   workspaces:
     #    - name: source
     #      workspace: source
@@ -111,6 +107,14 @@ eventlistener:
 #    triggers:
 #      - name: stakater-pr-cleaner-v1
 #        create: false
-#      - name: pullrequest
 #      - name: push
 #        bindings:
+#      - name: some trigger
+#        interceptors:
+#          - ref:
+#              name: "cel"
+#            params:
+#              - name: "filter"
+#                value: "(header.match('X-GitHub-Event', 'pull_request') && body.action == 'opened' || body.action == 'synchronize')"
+#        bindings:
+#        - bname
