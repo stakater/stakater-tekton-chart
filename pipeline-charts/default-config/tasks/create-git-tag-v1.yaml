@@ -1,0 +1,7 @@
+taskName: stakater-create-git-tag-v1
+params:
+  - name: prnumber
+  - name: gitrevision
+workspaces:
+  - name: source
+    workspace: source

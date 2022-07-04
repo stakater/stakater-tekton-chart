@@ -1,0 +1,12 @@
+taskName: rox-image-scan
+params:
+  - name: image
+    value: '$(params.image_registry_url):$(tasks.stakater-create-git-tag-v1.results.GIT_TAG)'
+  - name: rox_api_token
+    value: roxsecrets
+  - name: rox_central_endpoint
+    value: roxsecrets
+  - name: output_format
+    value: csv
+  - name: image_digest
+    value: $(tasks.stakater-buildah-v1.results.IMAGE_DIGEST)

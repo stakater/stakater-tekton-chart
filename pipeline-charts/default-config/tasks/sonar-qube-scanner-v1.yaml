@@ -1,0 +1,9 @@
+taskName: stakater-sonarqube-scanner-v1
+params:
+  - name: sonar_host_url
+    value: "http://sonarqube.stakater-sonarqube:9000"
+  - name: sonar_project_key
+    value: $(params.repoName)
+workspaces:
+- name: source
+  workspace: source

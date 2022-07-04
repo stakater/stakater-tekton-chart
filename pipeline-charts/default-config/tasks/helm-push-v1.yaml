@@ -1,0 +1,12 @@
+taskName: stakater-helm-push-v1
+params:
+  - name: prnumber
+  - name: repoPath
+  - name: gitrevision
+  - name: registry
+    value: $(params.helm_registry)
+  - name: semVer
+    value: $(tasks.stakater-create-git-tag-v1.results.GIT_TAG)
+workspaces:
+  - name: source
+    workspace: source

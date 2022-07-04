@@ -1,0 +1,17 @@
+taskName: stakater-create-environment-v1
+params:
+  - name: repoName
+    value: $(params.repoName)
+  - name: prNumber
+    value: $(params.prnumber)
+  - name: gitUrl
+    value: $(params.gitrepositoryurl)
+  - name: gitBranch
+    value: $(params.gitbranch)
+  - name: imageTag
+    value: $(tasks.stakater-create-git-tag-v1.results.GIT_TAG)
+  - name: imageRepo
+    value: $(params.image_registry_url)
+workspaces:
+  - name: output
+    workspace: source

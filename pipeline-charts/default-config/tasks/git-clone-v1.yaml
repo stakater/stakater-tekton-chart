@@ -1,0 +1,11 @@
+taskName: git-clone
+params:
+  - name: url
+    value: $(params.gitrepositoryurl)
+  - name: revision
+    value: $(params.gitrevision)
+  - name: depth
+    value: "0"
+workspaces:
+  - name: output
+    workspace: source

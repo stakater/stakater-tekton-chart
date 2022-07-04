@@ -1,0 +1,11 @@
+taskName: stakater-buildah-v1
+params:
+  - name: IMAGE
+    value: $(params.image_registry_url):$(tasks.stakater-create-git-tag-v1.results.GIT_TAG)
+  - name: TLSVERIFY
+    value: "false"
+  - name: FORMAT
+    value: "docker"
+workspaces:
+  - name: source
+    workspace: source

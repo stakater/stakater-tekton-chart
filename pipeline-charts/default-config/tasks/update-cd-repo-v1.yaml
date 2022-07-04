@@ -1,0 +1,18 @@
+taskName: stakater-update-cd-repo-v1
+params:
+  - name: prnumber
+  - name: environment
+  - name: repoPath
+  - name: gitrevision
+  - name: gitorganization
+  - name: gitcdrepo
+  - name: clusterName
+  - name: team
+  - name: namespace
+  - name: IMAGE_TAG
+    value: $(tasks.stakater-create-git-tag-v1.results.GIT_TAG)
+  - name: IMAGE_NAME
+    value: $(params.image_registry_url)
+workspaces:
+  - name: source
+    workspace: source
