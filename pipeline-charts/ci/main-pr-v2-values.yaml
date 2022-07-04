@@ -49,11 +49,11 @@ triggertemplate:
 eventlistener:
   serviceAccountName: stakater-tekton-builder
   triggers:
-  - name : stakater-pr-cleaner-v2-pullrequest-merge
+  - name: stakater-pr-cleaner-v2-pullrequest-merge
     create: false
   - name: pullrequest
     bindings:
-    - ref: stakater-pr-v1    
+    - ref: stakater-pr-v1
   - name: push
     bindings:
     - ref: stakater-main-v1
