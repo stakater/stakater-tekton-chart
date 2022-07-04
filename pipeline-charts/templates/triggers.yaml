@@ -1,5 +1,5 @@
 {{- range .Values.eventlistener.triggers -}}
-{{- if not .ignoreManifest }}
+{{- if ne .create false }}
 ---
 apiVersion: triggers.tekton.dev/v1alpha1
 kind: Trigger
