@@ -37,7 +37,7 @@ Expand the name of the chart.
   {{- $default_task_list := index . 1 }}
   {{- $result :=  dict }}
   {{- range $task_list }}
-    {{- $default := include "pipeline-charts.get_default_task_values" (list . $default_task_list ) | fromJson }}
+    {{- $default_task := include "pipeline-charts.get_default_task_values" (list . $default_task_list ) | fromJson }}
     {{- range .params }}
       {{- if .value }}
       {{- $match := regexFindAll "\\$\\(params\\.[a-zA-Z0-9\\-_]+\\)" .value -1 }}
@@ -49,7 +49,7 @@ Expand the name of the chart.
       {{- $result = set $result .name "" }}
       {{- end }}
     {{- end }}
-    {{- range $default.params }}
+    {{- range $default_task.params }}
       {{- if .value }}
       {{- $match := regexFindAll "\\$\\(params\\.[a-zA-Z0-9\\-_]+\\)" .value -1 }}
       {{- range $match }}
