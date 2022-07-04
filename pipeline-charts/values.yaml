@@ -110,7 +110,7 @@ eventlistener:
       insecureEdgeTerminationPolicy: Redirect
 #    triggers:
 #      - name: stakater-pr-cleaner-v1
-#        ignoreManifest: true
+#        create: false
 #      - name: pullrequest
 #      - name: push
 #        bindings:
