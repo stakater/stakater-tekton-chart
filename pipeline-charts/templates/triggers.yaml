@@ -1,5 +1,5 @@
 {{- range .Values.eventlistener.triggers -}}
-{{- if ne .create false }}
+{{- if ne ( .create | toString ) "false" }}  
 ---
 apiVersion: triggers.tekton.dev/v1alpha1
 kind: Trigger
