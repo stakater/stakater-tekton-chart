@@ -117,4 +117,4 @@ eventlistener:
 #              - name: "filter"
 #                value: "(header.match('X-GitHub-Event', 'pull_request') && body.action == 'opened' || body.action == 'synchronize')"
 #        bindings:
-#        - bname
+#        - binding1
