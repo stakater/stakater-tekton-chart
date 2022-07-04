@@ -10,7 +10,7 @@ spec:
       {{- $taskfile := $.Files.Get $path | fromYaml }}
       {{- $default_tasks = append $default_tasks $taskfile }}
   {{- end }}
-  {{- $pipeline_params:=include "pipeline-charts.get_pipeline_params" (list .Values.pipelines.tasks $default_tasks ) | fromJson }}  
+  {{- $pipeline_params:=include "pipeline-charts.get_pipeline_params" (list .Values.pipelines.tasks $default_tasks ) | fromJson }}
   {{- if $pipeline_params }}
   params:
     {{- range $k,$v:=$pipeline_params }}
@@ -21,7 +21,7 @@ spec:
   {{- if .Values.workspaces }}
   workspaces:
     {{- range $.Values.workspaces }}
-    - name: {{ .name }} 
+    - name: {{ .name }}
     {{- end }}
   {{- end }}
   {{- if .Values.pipelines.finally }}
@@ -48,10 +48,10 @@ spec:
         value: {{ .value }}
         {{- else }}
         value: $(params.{{.name}})
-        {{- end }}    
+        {{- end }}
       {{- end }}
       {{- end }}
-      {{- if or $default.workspaces .workspaces }}      
+      {{- if or $default.workspaces .workspaces }}
       workspaces:
         {{- range $default.workspaces }}
         - name: {{ .name }}
@@ -64,7 +64,7 @@ spec:
           workspace: {{ .workspace }}
         {{- end }}
       {{- end }}
-    {{- end }}  
+    {{- end }}
   {{- end }}
   tasks:
     {{- $previoustask := "" }}
@@ -87,7 +87,7 @@ spec:
         value: {{ .value | quote }}
         {{- else }}
         value: $(params.{{.name}})
-        {{- end }}    
+        {{- end }}
       {{- end }}
       {{- range $default.params }}
       {{- if hasKey $addedParams .name }}
@@ -101,7 +101,7 @@ spec:
       {{- end }}
       {{- end }}
       {{- end }}
-      {{- if or $default.workspaces .workspaces }}      
+      {{- if or $default.workspaces .workspaces }}
       workspaces:
         {{- range $default.workspaces }}
         - name: {{ .name }}

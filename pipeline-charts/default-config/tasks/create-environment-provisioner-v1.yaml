@@ -12,4 +12,4 @@ params:
     value: $(params.image_registry_url)
 workspaces:
   - name: output
-    workspace: source 
+    workspace: source

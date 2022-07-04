@@ -24,7 +24,7 @@ spec:
     {{- toYaml $defaultTriggerValues.bindings | nindent 6 }}
     {{- end }}
     {{- end }}
-    template: 
+    template:
         ref: {{ include "pipeline-charts.name" $ }}
 {{- end -}}
 {{- end -}}

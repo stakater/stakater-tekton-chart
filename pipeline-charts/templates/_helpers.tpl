@@ -53,7 +53,7 @@ Expand the name of the chart.
       {{- if .value }}
       {{- $match := regexFindAll "\\$\\(params\\.[a-zA-Z0-9\\-_]+\\)" .value -1 }}
       {{- range $match }}
-      {{ $p := . | replace "$(params." "" | replace ")" ""}}      
+      {{ $p := . | replace "$(params." "" | replace ")" ""}}
       {{- $result = set $result $p "E" }}
       {{- end }}
       {{- else }}
