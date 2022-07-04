@@ -50,7 +50,7 @@ eventlistener:
   serviceAccountName: stakater-tekton-builder
   triggers:
   - name: stakater-pr-cleaner-v2-pullrequest-merge
-    create: false
+    ignoreManifest: true
   - name: pullrequest
     bindings:
     - ref: stakater-pr-v1
