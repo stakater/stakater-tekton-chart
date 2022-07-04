@@ -26,7 +26,7 @@ pipelines:
     # Task Name, Params, Workspaces
     - taskName: git-clone
     # workspaces:
-    #    - name:  output
+    #    - name: output
     #      workspace: source
 
     # Task Name, Params, Workspaces
@@ -34,7 +34,7 @@ pipelines:
     #   params:
     #    - name: pipelineparam2
     #   workspaces:
-    #    - name:  source
+    #    - name: source
     #      workspace: source
     #   runAfter:
     #  - git-clone
