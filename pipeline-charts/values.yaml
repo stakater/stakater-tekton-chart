@@ -108,7 +108,6 @@ eventlistener:
     tls:
       termination: edge
       insecureEdgeTerminationPolicy: Redirect
-
 #    triggers:
 #      - name: pullrequest
 #      - name: push

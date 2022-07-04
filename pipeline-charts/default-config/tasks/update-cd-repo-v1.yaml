@@ -1,4 +1,3 @@
-#
 taskName: stakater-update-cd-repo-v1
 params:
   - name: prnumber

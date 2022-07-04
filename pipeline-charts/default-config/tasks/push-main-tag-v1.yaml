@@ -1,4 +1,3 @@
-#
 taskName: stakater-push-main-tag-v1
 params:
   - name: prnumber

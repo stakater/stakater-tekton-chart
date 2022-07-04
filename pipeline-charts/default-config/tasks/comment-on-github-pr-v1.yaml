@@ -1,4 +1,3 @@
-#
 taskName: stakater-comment-on-github-pr-v1
 params:
   - name: prnumber
