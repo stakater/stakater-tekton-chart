@@ -10,7 +10,7 @@ spec:
   triggers:
   {{- if .Values.eventlistener.triggers }}
   {{- range .Values.eventlistener.triggers }}
-  {{- if eq .create false }}
+  {{- if eq .ignoreManifest true }}
   - triggerRef: {{ .name }}
   {{- else }}
   - triggerRef: {{ include "pipeline-charts.name" $ }}-{{ .name }}
