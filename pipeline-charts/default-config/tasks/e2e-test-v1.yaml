@@ -1,0 +1,13 @@
+taskName: stakater-e2e-test-v1
+params:
+- name: gitorganization
+  value: github.com/stakater-lab
+- name: gite2erepo
+  value: stakater-nordmart-review-e2e
+- name: repoName
+  value: $(params.repoName)
+- name: prNumber
+  value: $(params.prnumber)
+workspaces:
+- name: source
+  workspace: source
