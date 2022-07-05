@@ -10,4 +10,4 @@ params:
     value: deploy
 workspaces:
 - name: source
-  workspace: sources
+  workspace: source
