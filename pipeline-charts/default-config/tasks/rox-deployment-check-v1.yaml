@@ -1,13 +1,13 @@
 taskName: rox-deployment-check
 params:
   - name: rox_api_token
-    value: roxsecrets
+    value: rhacs-auth-forked
   - name: rox_central_endpoint
-    value: roxsecrets
+    value: rhacs-auth-forked
   - name: file
-    value: values.yaml
+    value: manifest.yaml
   - name: deployment_files_path
     value: deploy
 workspaces:
 - name: source
-  workspace: sources
+  workspace: source

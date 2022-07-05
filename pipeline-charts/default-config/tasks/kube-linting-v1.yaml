@@ -1,0 +1,9 @@
+taskName: stakater-kube-linting-v1
+params:
+- name: file
+  value: manifest.yaml
+- name: deployment_files_path
+  value: deploy
+workspaces:
+- name: source
+  workspace: source

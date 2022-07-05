@@ -4,10 +4,10 @@ workspaces:
     volumeClaimTemplate:
       accessModes: ReadWriteOnce
       resourcesRequestsStorage: 1Gi
-pipelines:
+pipelines:  
   finally:
     - taskName: stakater-set-commit-status-v1
-      name: set-commit-status-task-result
+      name: set-commit-status-task-result                    
   tasks:
     - taskName: stakater-set-commit-status-v1
       params:
@@ -15,35 +15,53 @@ pipelines:
         value: pending
     - taskName: git-clone
     - taskName: stakater-create-git-tag-v1
+    - taskName: stakater-code-linting-v1
+    - taskName: stakater-kube-linting-v1
+      runAfter:
+      - stakater-create-git-tag-v1
     - taskName: stakater-unit-test-v1
+      runAfter:
+      - stakater-kube-linting-v1
+      - stakater-code-linting-v1
     - taskName: stakater-sonarqube-scanner-v1
+      runAfter:
+        - stakater-unit-test-v1 
     - taskName: stakater-buildah-v1
-      name: build-and-push
       runAfter:
       - stakater-unit-test-v1
     - taskName: stakater-trivy-scan-v1
       runAfter:
       - stakater-buildah-v1
+      - stakater-sonarqube-scanner-v1
     - taskName: rox-image-scan
       runAfter:
       - stakater-buildah-v1
+      - stakater-sonarqube-scanner-v1
     - taskName: rox-image-check
       runAfter:
       - stakater-buildah-v1
+      - stakater-sonarqube-scanner-v1
     - taskName: rox-deployment-check
       runAfter:
       - stakater-buildah-v1
+      - stakater-sonarqube-scanner-v1
     - taskName: stakater-checkov-scan-v1
+      runAfter:
+      - stakater-buildah-v1
+      - stakater-sonarqube-scanner-v1
+    - taskName: stakater-comment-on-github-pr-v1
       runAfter:
       - stakater-trivy-scan-v1
       - rox-image-scan
       - rox-image-check
       - rox-deployment-check
-    - taskName: stakater-comment-on-github-pr-v1
+      - stakater-checkov-scan-v1
     - taskName: stakater-helm-push-v1
     - taskName: stakater-create-environment-v1
     - taskName: stakater-update-cd-repo-v3
     - taskName: stakater-push-main-tag-v1
+    - taskName: stakater-app-sync-and-wait-v1
+    - taskName: stakater-e2e-test-v1
 triggertemplate:
   serviceAccountName: stakater-tekton-builder
 eventlistener:
