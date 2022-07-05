@@ -4,10 +4,10 @@ workspaces:
     volumeClaimTemplate:
       accessModes: ReadWriteOnce
       resourcesRequestsStorage: 1Gi
-pipelines:  
+pipelines:
   finally:
     - taskName: stakater-set-commit-status-v1
-      name: set-commit-status-task-result                    
+      name: set-commit-status-task-result
   tasks:
     - taskName: stakater-set-commit-status-v1
       params:
@@ -25,7 +25,7 @@ pipelines:
       - stakater-code-linting-v1
     - taskName: stakater-sonarqube-scanner-v1
       runAfter:
-        - stakater-unit-test-v1 
+        - stakater-unit-test-v1
     - taskName: stakater-buildah-v1
       runAfter:
       - stakater-unit-test-v1
