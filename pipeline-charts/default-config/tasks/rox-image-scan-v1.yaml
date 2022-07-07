@@ -9,4 +9,4 @@ params:
   - name: output_format
     value: csv
   - name: image_digest
-    value: $(tasks.stakater-buildah-v1.results.IMAGE_DIGEST)
+    value: $(tasks.build-and-push.results.IMAGE_DIGEST)

@@ -13,6 +13,8 @@ Expand the name of the chart.
   {{- if eq .taskName $task_to_search.taskName }}
   {{ $result := set $result "params" .params }}
   {{ $result := set $result "workspaces" .workspaces }}
+  {{ $result := set $result "name" .name }}
+  {{ $result := set $result "when" .when }}
   {{ $result := set $result "runAfter" .runAfter }}
   {{- end }}
   {{- end }}
