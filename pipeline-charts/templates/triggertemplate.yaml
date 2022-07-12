@@ -10,7 +10,7 @@ spec:
         {{- $task_file := $.Files.Get $path | fromYaml }}
         {{- $default_tasks = append $default_tasks $task_file }}
     {{- end }}
-  {{- $default_params := include "pipeline-charts.get_pipeline_params" (list .Values.pipelines.tasks $default_tasks ) | fromJson }}
+  {{- $default_params := include "pipeline-charts.get_pipeline_params" (list .Values.pipelines.tasks .Values.pipelines.finally $default_tasks ) | fromJson }}
   {{- if $default_params }}
   params:
     {{- range $k,$v := $default_params }}

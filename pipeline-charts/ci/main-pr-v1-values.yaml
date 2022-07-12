@@ -5,6 +5,28 @@ workspaces:
       accessModes: ReadWriteOnce
       resourcesRequestsStorage: 1Gi
 pipelines:
+  finally:
+  - taskName: stakater-update-cd-repo-v3
+    name: stakater-rollback-cd-repo
+    when:
+    - input: $(tasks.stakater-e2e-test-v1.status)
+      operator: in
+      values: [“Failed”]
+    params:
+    - name: IMAGE_TAG
+      value: $(tasks.stakater-create-git-tag-v1.results.CURRENT_GIT_TAG)
+  - taskName: stakater-set-commit-status-v1
+    name: set-commit-status-task-result
+  - taskName: stakater-notify-slack-v1
+    name: notify-slack
+    params:
+    - name: namespace
+    - name: author
+    - name: gitrevision
+    - name: repo
+      value: $(params.repoName)
+    - name: gitrepositoryurl
+    - name: tekton-base-url
   tasks:
     - taskName: git-clone
     - taskName: stakater-create-git-tag-v1
