@@ -36,7 +36,8 @@ Expand the name of the chart.
 
 {{- define "pipeline-charts.get_pipeline_params" }}
   {{- $task_list := index . 0 }}
-  {{- $default_task_list := index . 1 }}
+  {{- $finally_task_list := index . 1}}
+  {{- $default_task_list := index . 2 }}
   {{- $result :=  dict }}
   {{- range $task_list }}
     {{- $default_task := include "pipeline-charts.get_default_task_values" (list . $default_task_list ) | fromJson }}
@@ -63,5 +64,30 @@ Expand the name of the chart.
       {{- end }}
     {{- end }}
   {{- end }}
+  {{- range $finally_task_list }}
+  {{- $default_task := include "pipeline-charts.get_default_task_values" (list . $default_task_list ) | fromJson }}
+  {{- range .params }}
+    {{- if .value }}
+    {{- $match := regexFindAll "\\$\\(params\\.[a-zA-Z0-9\\-_]+\\)" .value -1 }}
+    {{- range $match }}
+    {{ $p := . | replace "$(params." "" | replace ")" ""}}
+    {{- $result = set $result $p "" }}
+    {{- end }}
+    {{- else }}
+    {{- $result = set $result .name "" }}
+    {{- end }}
+  {{- end }}
+  {{- range $default_task.params }}
+    {{- if .value }}
+    {{- $match := regexFindAll "\\$\\(params\\.[a-zA-Z0-9\\-_]+\\)" .value -1 }}
+    {{- range $match }}
+    {{ $p := . | replace "$(params." "" | replace ")" ""}}
+    {{- $result = set $result $p "" }}
+    {{- end }}
+    {{- else }}
+    {{- $result = set $result .name "" }}
+    {{- end }}
+  {{- end }}
+{{- end }}
   {{ $result | toJson }}
 {{- end }}
