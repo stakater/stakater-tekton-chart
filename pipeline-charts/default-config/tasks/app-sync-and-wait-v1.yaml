@@ -1,14 +1,19 @@
 taskName: stakater-app-sync-and-wait-v1
 params:
+- name: gitrepositoryurl
+  value: $(params.gitrepositoryurl)
 - name: prNumber
   value: $(params.prnumber)
 - name: repoName
   value: $(params.repoName)
 - name: timeout
   value: "60"
-- name: argoAppPrefix
-  value: gabbar-dev
+- name: namespace
+  value: $(params.namespace)
 - name: IMAGE_TAG
   value: $(tasks.stakater-create-git-tag-v1.results.GIT_TAG)
 - name: IMAGE_NAME
   value: $(params.image_registry_url)
+workspaces:
+- name: source
+  workspace: source
