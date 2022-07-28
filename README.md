@@ -32,7 +32,7 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
 | ------------------------ | -------------------------------------------------------------------------------------------- | --------------- |
 | pipeline.enabled | Enable pipeline manifest on helm chart                                                               | `true`          |
 | pipeline.finally.tasks | Specify finally tasks.                                                              | ``          |
-| pipeline.tasks[].name | Defaults to taskName, if there are multiple tasks of same name specify               | `name`      |
+| pipeline.tasks[].name | Defaults to taskName, if there are multiple tasks of same name specify this field              | `name`      |
 | pipeline.tasks[].taskName | Name of already existing task, will be used as pipeline step name                           | `taskname`      |
 | pipeline.tasks[].params | Parameters required by the task for execution. default params combined with this field (will override default params) is used                                                | ``              |
 | pipeline.tasks[].workspace | Workspaces required by the task for execution. default workspace combined with this field is used | ``|
