@@ -22,7 +22,7 @@ To uninstall the chart:
 
 | Name | Description                                                                                | Value                                       |
 | ---| ---------------------------------------------------------------------------------------------|---------------------------------------------|
-| name | Name of the pipeline manifests (NOTE: Trigger will have this name as prefix)| ``                                          |
+| name | Name of the pipeline manifests | ``                                          |
 
 #### Pipeline Paramaters
 
