@@ -18,7 +18,7 @@ To uninstall the chart:
     helm delete <name-of-the-chart>
 
 
-## Paramaters
+## Chart Paramaters
 
 | Name | Description                                                                                | Value                                       |
 | ---| ---------------------------------------------------------------------------------------------|---------------------------------------------|
@@ -38,6 +38,7 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
 | pipeline.tasks[].workspace | Workspaces required by the task for execution. default workspace combined with this field is used | ``|
 | pipeline.tasks[].runAfter | Used to order task execution among tasks. default is previous task name, specify for complex flows. | ``              |
 | pipeline.tasks[].when | specify when condition for tasks. overrides when in default | ``              |
+| pipeline.tasks[].retries | specify task retries | ``              |
 
 
 #### Trigger Template
@@ -48,14 +49,6 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
 | triggertemplate.additionalParams | Parameters in addition to pipeline parameter in trigger template                     | `{}`            |
 | triggertemplate.pipelineRunNamePrefix | Prefix value for pipelineRun name                                               | ``              |
 | triggertemplate.serviceAccount | Service Account to be used for pipelineRun                                             | ``              |
-| triggertemplate.pipelineRunAnnotations | Annotations for pipelineRun                                                    | `{}`            |
-| triggertemplate.workspaces | Workspaces used by pipelines ie volumeClaimTemplate, volumeClaimRef, configMaps, secrets | `{}`       |
-| triggertemplate.workspaces.name | Name of the workspace                                                                 | ``            |
-| triggertemplate.workspaces.type | Type of workspace ie volume claim template, volume claim, config map, empty dir       | ``            |
-| triggertemplate.workspaces.accessModes | If type is volume claim template, define access mode                           | `ReadWriteOnce` |
-| triggertemplate.workspaces.resourcesRequestsStorage | If type is volume claim template, define resourcesRequestsStorage | `1Gi`           |
-| triggertemplate.workspaces.claimName | If type is volume claim, define already existing claimName                       | ``              |
-| triggertemplate.workspaces.configMapName | If type is config map, define already existing config map name               | ``              |
 
 
 #### Trigger Binding Parameters
@@ -73,9 +66,10 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
 | Name                     | Description                                                                                  | Value           |
 | ------------------------ | -------------------------------------------------------------------------------------------- | --------------- |
 | eventlistener.enabled    | Enable event listener manifest on helm chart                                                 | ``              |
-| eventlistener.triggers    | Define pipelines trigger templates in case of event, can use already existing trigger templates | `{}`        |
-| eventlistener.triggers.templateName    | Trigger Template Name to be evoked, Used as step name                          | ``              |
-| eventlistener.triggers.interceptors_cel_filter    | Specify Interceptors CEL filter                                     | ``              |
+| eventlistener.triggers    | Define pipelines trigger templates in case of event, can use already existing trigger templates. Matches name with default triggers and uses its interceptors if not specified | `{}`        |
+| eventlistener.triggers.name    | trigger name to find in default triggers. resulting name is prepended with pipeline-name | ``              |
+| eventlistener.triggers.interceptors    | Define interceptor if its not defined in default triggers or override default trigger intercept | ``              |
+| eventlistener.triggers.create    | If you dont want to create the trigger, set this false. useful for using predefined triggers.  | ``              |
 | eventlistener.triggers.bindings    | Trigger Bindings to be passed to trigger templates                                 | `{}`            |
 
  
@@ -89,6 +83,7 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
 | eventlistener.wildcardPolicy  | Wildcard Policy of the route.                                                           | ``              |
 | eventlistener.tls.termination    | tls termination criteria for route                                                   | `edge`          |
 | eventlistener.tls.insecureEdgeTerminationPolicy    | Policy for insecure traffic                                 | `Redirect`      |
+
 
 #### Add a Default Task
 - Navigate to pipeline-charts/default-config/tasks directory & Make a new file.
