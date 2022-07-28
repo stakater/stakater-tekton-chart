@@ -16,12 +16,13 @@ spec:
     {{- range $k,$v := $default_params }}
     - name: {{ $k }}
     {{- end }}
+    {{- .Values.triggertemplate.params | toYaml | nindent 4}}
   {{- end }}
   resourcetemplates:
     - apiVersion: tekton.dev/v1beta1
       kind: PipelineRun
       metadata:
-        generateName: {{ .Values.triggertemplate.pipelineRunNamePrefix | default "$(tt.params.repoName)-pr-$(tt.params.prnumber)" }}-
+        generateName: {{ .Values.triggertemplate.pipelineRunNamePrefix | default "$(tt.params.repoName)-$(tt.params.prnumberBranch)" }}-
         namespace: $(tt.params.namespace)
         {{- if .Values.triggertemplate.pipelineRunAnnotations }}
         annotations:

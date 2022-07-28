@@ -35,7 +35,6 @@ pipelines:
     #   runAfter:
     #   - git-clone
 
-
 ##########################################################
 # Trigger Template Definition
 # Creates a Single Trigger Template
@@ -45,6 +44,10 @@ pipelines:
 triggertemplate:
 
   enabled: true
+
+  params:
+    - name: prnumberBranch
+      default: "main"
 
   # PipelineRun Name Prefix
   pipelineRunNamePrefix:
