@@ -23,7 +23,7 @@ To uninstall the chart:
 | Name | Description                                                                                | Value                                       |
 | ---| ---------------------------------------------------------------------------------------------|---------------------------------------------|
 | name | Name of the pipeline manifests | ``                                          |
-
+| workspaces | Workspaces used by pipeline ie volumeClaimTemplate, volumeClaimRef, configMaps, secrets | `{}`       |
 #### Pipeline Paramaters
 
 Pipeline parameters will be defined using the task parameter & Pipeline workspaces (.spec.workspaces) will be defined using .Values.workspaces
