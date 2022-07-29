@@ -94,7 +94,7 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
 | eventlistener.triggers.bindings    | Trigger Bindings to be passed to trigger templates                                 | `{}`            |
 
 
-### Add a Default Task
+### Adding a Default Task
 - Navigate to pipeline-charts/default-config/tasks directory & Make a new yaml file.
 - Specify taskName ( taskRef of kind:ClusterTask ), params & workspaces as specifed below: 
     # ![1](assets/1.png)
@@ -132,7 +132,7 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
 - Resulting manifest:  
         # ![11](assets/11.png)
 
-### Add a trigger
+### Adding a trigger
 - Navigate to pipeline-charts/trigger.yaml
 - Specify triggerName & interceptors under default_triggers.templates
     # ![12](assets/12.png)
