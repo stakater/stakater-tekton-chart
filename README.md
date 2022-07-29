@@ -95,7 +95,7 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
 
 
 ### Add a Default Task
-- Navigate to pipeline-charts/default-config/tasks directory & Make a new file.
+- Navigate to pipeline-charts/default-config/tasks directory & Make a new yaml file.
 - Specify taskName ( taskRef of kind:ClusterTask ), params & workspaces as specifed below: 
     # ![1](assets/1.png)
 - Save this file.
