@@ -5,6 +5,8 @@ Jumbo chart for creating pipeline manifests
 - Define redundant configuration as default and create relatively smaller values files.
 - Generate pipeline manifest with minimal values & configuration
 
+## Notes
+- You can add tasks configs as default and use them by taskName
 ## Installing the Chart
 
 To install the chart:
@@ -97,7 +99,7 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
 - Specify taskName ( taskRef of kind:ClusterTask ), params & workspaces as specifed below: 
     # ![1](assets/1.png)
 - Save this file.
-- Now you can use this task in pipeline.spec.tasks[] in values.yaml as following:
+- Now you can use this task in .values.pipeline.tasks[] in values.yaml as following:
     # ![2](assets/2.png)
     Name is required if multiple same task appears twice in pipeline.
 
@@ -106,39 +108,40 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
 
 ### Overiding a Default Task
 - For overwriting a default tasks params: 
-    - specify it in spec.tasks[].params in values.yaml
+    - specify it in .values.pipeline.tasks[].params in values.yaml
         # ![5](assets/5.png)
     - Default Task in default-config/task
         # ![6](assets/1.png)
     - Resulting manifest after helm template
         # ![4](assets/4.png)
 - For adding a default tasks params: 
-    - specify it in spec.tasks[].params in values.yaml
+    - specify it in .values.pipelines.tasks[].params in values.yaml
         # ![8](assets/8.png)
     - Resulting manifest after helm template contains both default & defined params.
         # ![9](assets/9.png)
 
-- RunAfter by default is the previous task name, but for complex flows, it is advised to define it. specify it in spec.tasks[].runAfter in values.yaml
+- RunAfter by default is the previous task name, but for complex flows, it is advised to define it. specify it in .values.pipelines.tasks[].runAfter in values.yaml
 
-- For adding a default tasks workspace, specify it in spec.tasks[].workspace in values.yaml, Resulting manifest will contain workspaces from here and default tasks if defined
+- For adding a workspace to default, specify it in .values.pipelines.tasks[].workspace & in in values.yaml, Resulting manifest will contain workspaces from here and default tasks if defined
 
-- For overriding when clause, specify it in spec.tasks[].when in values.yaml
+- For overriding when clause, specify it in .values.pipelines.tasks[].when in values.yaml
 
 ### Adding a Custom Task
-- Specify the new custom task in .spec.tasks[] as follows:  
+- Specify the new custom task in .values.pipelines.tasks[] as follows:  
         # ![10](assets/10.png)
 - Resulting manifest:  
         # ![11](assets/11.png)
 
 ### Add a trigger
 - Navigate to pipeline-charts/trigger.yaml
-- Specify triggerName & interceptors under .default_triggers.templates
+- Specify triggerName & interceptors under default_triggers.templates
     # ![12](assets/12.png)
-- Now you can use this task in eventlistener.triggers[] in values.yaml as following:
+- Now you can use this task in .values.eventlistener.triggers[] in values.yaml as following:
     # ![2](assets/13.png)
     Note:
     When create field is set to false, trigger isnt created. 
     Trigger is created with name field prepended.
+
 - Resulting pipeline manifest
     # ![3](assets/14.png)
 
