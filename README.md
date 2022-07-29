@@ -156,10 +156,10 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
             pipelines:
                 tasks:
                 - taskName: stakater-buildah-v1
-                    name: build-and-push
-                    params:
+                  name: build-and-push
+                  params:
                     - name: FORMAT
-                    value: "buildah"
+                      value: "buildah"
 
     - Default Task in default-config/task
 
@@ -195,11 +195,11 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
                   name: stakater-buildah-v1
                   kind: ClusterTask
                 params:
-                  - name: IMAGE
+                - name: IMAGE
                   value: "$(params.image_registry_url)
-                  - name: TLSVERIFY
+                - name: TLSVERIFY
                   value: "false"
-                  - name: FORMAT
+                - name: FORMAT
                   value: "buildah"
                 workspaces:
                 - name: source
@@ -207,9 +207,49 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
 
 - For adding a default tasks params: 
     - specify it in .values.pipelines.tasks[].params in values.yaml
-        # ![8](assets/8.png)
+
+            pipelines:
+                tasks:
+                - taskName: stakater-buildah-v1
+                  name: build-and-push
+                  params:
+                    - name: new-param
+                      value: "new-value"
+
     - Resulting manifest after helm template contains both default & defined params.
-        # ![9](assets/9.png)
+
+
+            # Source: pipeline-charts/templates/pipeline.yaml
+            apiVersion: tekton.dev/v1beta1
+            kind: Pipeline
+            metadata:
+            name: stakater-main-pr-v2
+            namespace: default
+            spec:
+              params:
+              - name: image_registry_url
+                type: string
+              workspaces:
+                  - name: source
+              tasks:
+              - name: build-and-push
+                taskRef:
+                  name: stakater-buildah-v1
+                  kind: ClusterTask
+                params:
+                - name: IMAGE
+                  value: "$(params.image_registry_url)
+                - name: TLSVERIFY
+                  value: "false"
+                - name: FORMAT
+                  value: "docker"
+                - name: new-param
+                  value: "new-value"
+                workspaces:
+                - name: source
+                  workspace: source
+
+        
 
 - RunAfter by default is the previous task name, but for complex flows, it is advised to define it. specify it in .values.pipelines.tasks[].runAfter in values.yaml
 
@@ -219,23 +259,179 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
 
 ### Adding a Custom Task
 - Specify the new custom task in .values.pipelines.tasks[] as follows:  
-        # ![10](assets/10.png)
+
+        workspaces:
+        - name: source
+          volumeClaimTemplate:
+          accessModes: ReadWriteOnce
+          resourcesRequestsStorage: 1Gi
+        - name: my-workspace
+          volumeClaimTemplate:
+          accessModes: ReadWriteOnce
+          resourcesRequestsStorage: 0.5Gi
+        pipelines:
+        tasks:
+            - taskName: stakater-buildah-v1
+            - taskName: my-task
+            params: 
+            - name: "my-param"
+                value: "my-value"
+            workspaces:
+            - name: my-workspace
+                workspace: my-workspace
+
+
 - Resulting manifest:  
-        # ![11](assets/11.png)
+
+        # Source: pipeline-charts/templates/pipeline.yaml
+        apiVersion: tekton.dev/v1beta1
+        kind: Pipeline
+        metadata:
+          name: stakater-main-pr-v2
+          namespace: default
+        spec:
+          params:
+          - name: image_registry_url
+            type: string
+          workspaces:
+          - name: source
+          - name: my-workspace
+          tasks:
+          - name: stakater-buildah-v1
+            taskRef:
+                name: stakater-buildah-v1
+                kind: ClusterTask
+            params:
+            - name: IMAGE
+              value: "$(params.image_registry_url)
+            - name: TLSVERIFY
+              value: "false"
+            - name: FORMAT
+              value: "docker"
+            workspaces:
+              - name: source
+                workspace: source
+          - name: my-task
+            taskRef:
+                name: my-task
+                kind: ClusterTask
+            params:
+            - name: my-param
+              value: "my-value"
+            workspaces:
+              - name: my-workspace
+                workspace: my-workspace
+            runAfter:
+              - stakater-buildah-v1
 
 ### Adding a trigger
 - Navigate to pipeline-charts/trigger.yaml
 - Specify triggerName & interceptors under default_triggers.templates
-    # ![12](assets/12.png)
+
+        default_triggers:
+          templates:
+            - triggerName: pullrequest
+              interceptors:
+                - ref:
+                    name: "cel"
+                  params:
+                    - name: "filter"
+                      value: "(header.match('X-GitHub-Event', 'pull_request') && body.action == 'opened' || body.action == 'synchronize')"
+                    - name: "overlays"
+                      value:
+                        - key: marshalled-body
+                          expression: "body.marshalJSON()"
+            - triggerName: push
+              interceptors:
+              - ref:
+                  name: "cel"
+                params:
+                  - name: "filter"
+                    value: "(header.match('X-GitHub-Event', 'push') && (body.ref == 'refs/heads/main' || body.ref == 'refs/heads/master') )"
+                  - name: "overlays"
+                    value:
+                      - key: marshalled-body
+                        expression: "body.marshalJSON()"
+
+
+
+
 - Now you can use this task in .values.eventlistener.triggers[] in values.yaml as following:
-    # ![2](assets/13.png)
+
+      eventlistener:
+        serviceAccountName: stakater-tekton-builder
+        triggers:
+        - name: stakater-pr-cleaner-v2-pullrequest-merge
+          create: false
+        - name: pullrequest
+          bindings:
+          - ref: stakater-pr-v1
+        - name: push
+          bindings:
+          - ref: stakater-main-v1
+          
     Note:
     When create field is set to false, trigger isnt created. 
     Trigger is created with name field prepended.
 
 - Resulting pipeline manifest
-    # ![3](assets/14.png)
 
+      # Source: pipeline-charts/templates/triggers.yaml
+      apiVersion: triggers.tekton.dev/v1alpha1
+      kind: Trigger
+      metadata:
+          name: stakater-main-pr-v2-pullrequest
+      spec:
+          interceptors:
+            - params:
+              - name: filter
+                value: (header.match('X-GitHub-Event', 'pull_request') && body.action       == 'opened'
+                  || body.action == 'synchronize')
+              - name: overlays
+                value:
+                - expression: body.marshalJSON()
+                  key: marshalled-body
+              ref:
+                name: cel
+          bindings:
+            - ref: stakater-pr-v1
+          template:
+              ref: stakater-main-pr-v2
+      ---
+      # Source: pipeline-charts/templates/triggers.yaml
+      apiVersion: triggers.tekton.dev/v1alpha1
+      kind: Trigger
+      metadata:
+          name: stakater-main-pr-v2-push
+      spec:
+          interceptors:
+            - params:
+              - name: filter
+                value: (header.match('X-GitHub-Event', 'push') && (body.ref == 'refs/      heads/main'
+                  || body.ref == 'refs/heads/master') )
+              - name: overlays
+                value:
+                - expression: body.marshalJSON()
+                  key: marshalled-body
+              ref:
+                name: cel
+          bindings:
+            - ref: stakater-main-v1
+          template:
+              ref: stakater-main-pr-v2
+      --
+      # Source: pipeline-charts/templates/eventlistener.yaml
+      apiVersion: triggers.tekton.dev/v1alpha1
+      kind: EventListener
+      metadata:
+        name: stakater-main-pr-v2
+        namespace: default
+      spec:
+        serviceAccountName: stakater-tekton-builder
+        triggers:
+        - triggerRef: stakater-pr-cleaner-v2-pullrequest-merge
+        - triggerRef: stakater-main-pr-v2-pullrequest
+        - triggerRef: stakater-main-pr-v2-push     
 # Limitations
 
 All current limitations in this chart.
