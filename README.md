@@ -1,57 +1,74 @@
 # Pipeline-Charts
 Jumbo chart for creating pipeline manifests
 
+## Features
+- Define redundant configuration as default and create relatively smaller values files.
+- Generate pipeline manifest with minimal values & configuration
 
 ## Installing the Chart
 
-To install the chart with the release name my-application in namespace test:
+To install the chart:
 
-    helm repo add stakater https://stakater.github.io/stakater-charts
-    helm repo update
-    helm install pipeline-1 stakater/pipeline-charts --namespace test
+### Using Helm CLI:
 
+    `helm repo add stakater https://stakater.github.io/stakater-charts` or `helm repo update`
+    `helm install pipeline-1 stakater/pipeline-charts --namespace test`
+### Using Chart with dependencies  
+Chart.yaml  
 
-## Uninstall the Chart
+    apiVersion: v2
+    dependencies:
+    - name: pipeline-charts
+        repository: https://stakater.github.io/stakater-charts
+        version: 0.0.23
+    description: Helm chart for Tekton Pipelines
+    name: stakater-main-pr-v2
+    version: 0.0.2
+Values.yaml  
 
-To uninstall the chart:
+    pipeline-charts:
+        name: stakater-main-pr-v2
+        workspaces:
+            - name: source
+            volumeClaimTemplate:
+                accessModes: ReadWriteOnce
+                resourcesRequestsStorage: 1Gi
+        # other configs below   ▼
 
-    helm delete <name-of-the-chart>
-
-
-## Chart Paramaters
+## Paramaters
 
 | Name | Description                                                                                | Value                                       |
 | ---| ---------------------------------------------------------------------------------------------|---------------------------------------------|
-| name | Name of the pipeline manifests | ``                                          |
-| workspaces | Workspaces used by pipeline ie volumeClaimTemplate, volumeClaimRef, configMaps, secrets | `{}`       |
-#### Pipeline Paramaters
+| name | Name of the pipeline manifests i.e. pipeline,triggertemplate,route,eventlistener | ``                                          |
+| workspaces | Workspaces used by pipeline ie volumeClaimTemplate, volumeClaimRef, configMaps, secrets (See values.yaml ) | `{}`       |
+### Pipeline Paramaters
 
 Pipeline parameters will be defined using the task parameter & Pipeline workspaces (.spec.workspaces) will be defined using .Values.workspaces
 
 | Name                     | Description                                                                                  | Value           |
 | ------------------------ | -------------------------------------------------------------------------------------------- | --------------- |
 | pipeline.enabled | Enable pipeline manifest on helm chart                                                               | `true`          |
-| pipeline.finally.tasks | Specify finally tasks.                                                              | ``          |
+| pipeline.finally.tasks | Specify finally tasks.                                                               | `{}`          |
 | pipeline.tasks[].name | Defaults to taskName, if there are multiple tasks of same name specify this field              | `name`      |
-| pipeline.tasks[].taskName | Name of already existing task, will be used as pipeline step name by default                          | `taskname`      |
-| pipeline.tasks[].params | Parameters required by the task for execution. default params combined with this field (will override default params) is used                                                | ``              |
-| pipeline.tasks[].workspace | Workspaces required by the task for execution. default workspace combined with this field is used | ``|
-| pipeline.tasks[].runAfter | Used to order task execution among tasks. default is previous task name, specify for complex flows. | ``              |
-| pipeline.tasks[].when | specify when condition for tasks. overrides when in default | ``              |
+| pipeline.tasks[].taskName | Name of already existing task, will be used as pipeline step name by default , required                         | `taskname`      |
+| pipeline.tasks[].params | Parameters required by the task for execution. default params combined with this field (will override default params) is used                                                | `{}`              |
+| pipeline.tasks[].workspace | Workspaces required by the task for execution. default workspace combined with this field is used | `{}`|
+| pipeline.tasks[].runAfter | Used to order task execution among tasks. default is previous task name, specify for complex flows. | `{}`              |
+| pipeline.tasks[].when | specify when condition for tasks. overrides when field in default | `{}`              |
 | pipeline.tasks[].retries | specify task retries | ``              |
 
 
-#### Trigger Template
+### Trigger Template
 
 | Name                     | Description                                                                                  | Value           |
 | ------------------------ | -------------------------------------------------------------------------------------------- | --------------- |
 | triggertemplate.enabled | Enable trigger template manifest on helm chart                                                | `true`          |
-| triggertemplate.additionalParams | Parameters in addition to pipeline parameter in trigger template                     | `{}`            |
+| triggertemplate.pipelineRunAnnotations | Annotations for pipelineRun | ``            |
 | triggertemplate.pipelineRunNamePrefix | Prefix value for pipelineRun name                                               | ``              |
 | triggertemplate.serviceAccount | Service Account to be used for pipelineRun                                             | ``              |
 
 
-#### Trigger Binding Parameters
+### Trigger Binding Parameters
 
 | Name                     | Description                                                                                  | Value           |
 | ------------------------ | -------------------------------------------------------------------------------------------- | --------------- |
@@ -61,31 +78,21 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
 | triggerbinding.bindings.bodyParams | Trigger bindings parameters                                                 | `{}`            |
 
 
-#### Event listener Parameters
+### Event listener Parameters
 
 | Name                     | Description                                                                                  | Value           |
 | ------------------------ | -------------------------------------------------------------------------------------------- | --------------- |
 | eventlistener.enabled    | Enable event listener manifest on helm chart                                                 | ``              |
+| eventlistener.route    | Enable route manifest for event listener , targetPort,tls, routelabels configurable inside this field | ``              |
+| eventlistener.serviceAccountName    | Service account for | ``              |
 | eventlistener.triggers    | Define pipelines trigger templates in case of event, can use already existing trigger templates. Matches name with default triggers and uses its interceptors if not specified | `{}`        |
 | eventlistener.triggers.name    | trigger name to find in default triggers. resulting name is prepended with pipeline-name | ``              |
 | eventlistener.triggers.interceptors    | Define interceptor if its not defined in default triggers or override default trigger intercept | ``              |
 | eventlistener.triggers.create    | If you dont want to create the trigger, set this false. useful for using predefined triggers.  | ``              |
 | eventlistener.triggers.bindings    | Trigger Bindings to be passed to trigger templates                                 | `{}`            |
 
- 
-#### Event Listener Route Parameters
 
-| Name                     | Description                                                                                  | Value           |
-| ------------------------ | -------------------------------------------------------------------------------------------- | --------------- |
-| route.enabled    | Enable route manifest for event listener on helm chart                                               | ``              |
-| route.routeLabels    | Route labels to be added                                                                         | `{}`            |
-| route.port.targetPort    | Target port of the backend service                                                           | ``              |
-| eventlistener.wildcardPolicy  | Wildcard Policy of the route.                                                           | ``              |
-| eventlistener.tls.termination    | tls termination criteria for route                                                   | `edge`          |
-| eventlistener.tls.insecureEdgeTerminationPolicy    | Policy for insecure traffic                                 | `Redirect`      |
-
-
-#### Add a Default Task
+### Add a Default Task
 - Navigate to pipeline-charts/default-config/tasks directory & Make a new file.
 - Specify taskName ( taskRef of kind:ClusterTask ), params & workspaces as specifed below: 
     # ![1](assets/1.png)
@@ -97,7 +104,7 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
 - Resulting pipeline manifest
     # ![3](assets/3.png)
 
-#### Overiding a Default Task
+### Overiding a Default Task
 - For overwriting a default tasks params: 
     - specify it in spec.tasks[].params in values.yaml
         # ![5](assets/5.png)
@@ -117,14 +124,25 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
 
 - For overriding when clause, specify it in spec.tasks[].when in values.yaml
 
-#### Adding a Custom Task
+### Adding a Custom Task
 - Specify the new custom task in .spec.tasks[] as follows:  
         # ![10](assets/10.png)
 - Resulting manifest:  
         # ![11](assets/11.png)
 
+### Add a trigger
+- Navigate to pipeline-charts/trigger.yaml
+- Specify triggerName & interceptors under .default_triggers.templates
+    # ![12](assets/12.png)
+- Now you can use this task in eventlistener.triggers[] in values.yaml as following:
+    # ![2](assets/13.png)
+    Note:
+    When create field is set to false, trigger isnt created. 
+    Trigger is created with name field prepended.
+- Resulting pipeline manifest
+    # ![3](assets/14.png)
+
 # Limitations
 
 All current limitations in this chart.
 -  All default parameters will be included in pipeline manifests. Feature to remove default params isnt added 
-
