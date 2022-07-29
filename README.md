@@ -97,23 +97,114 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
 ### Adding a Default Task
 - Navigate to pipeline-charts/default-config/tasks directory & Make a new yaml file.
 - Specify taskName ( taskRef of kind:ClusterTask ), params & workspaces as specifed below: 
-    # ![1](assets/1.png)
+
+        taskName: stakater-buildah-v1
+        params:
+        - name: IMAGE
+            value: $(params.image_registry_url)
+        - name: TLSVERIFY
+            value: "false"
+        - name: FORMAT
+            value: "docker"
+        workspaces:
+        - name: source
+            workspace: source
+
 - Save this file.
 - Now you can use this task in .values.pipeline.tasks[] in values.yaml as following:
-    # ![2](assets/2.png)
+
+        pipelines:
+            tasks:
+              - taskName: stakater-buildah-v1
+                name: build-and-push
+
     Name is required if multiple same task appears twice in pipeline.
 
 - Resulting pipeline manifest
-    # ![3](assets/3.png)
 
+        # Source: pipeline-charts/templates/pipeline.yaml
+        apiVersion: tekton.dev/v1beta1
+        kind: Pipeline
+        metadata:
+        name: stakater-main-pr-v2
+        namespace: default
+        spec:
+        params:
+        - name: image_registry_url
+          type: string
+        workspaces:
+            - name: source
+        tasks:
+          - name: stakater-buildah-v1
+            taskRef:
+              name: stakater-buildah-v1
+              kind: ClusterTask
+            params:
+            - name: IMAGE
+              value: "$(params.image_registry_url)
+            - name: TLSVERIFY
+              value: "false"
+            - name: FORMAT
+              value: "docker"
+            workspaces:
+            - name: source
+              workspace: source
 ### Overiding a Default Task
 - For overwriting a default tasks params: 
     - specify it in .values.pipeline.tasks[].params in values.yaml
-        # ![5](assets/5.png)
+
+            pipelines:
+                tasks:
+                - taskName: stakater-buildah-v1
+                    name: build-and-push
+                    params:
+                    - name: FORMAT
+                    value: "buildah"
+
     - Default Task in default-config/task
-        # ![6](assets/1.png)
+
+            taskName: stakater-buildah-v1
+            params:
+            - name: IMAGE
+                value: $(params.image_registry_url)
+            - name: TLSVERIFY
+                value: "false"
+            - name: FORMAT
+                value: "docker"
+            workspaces:
+            - name: source
+                workspace: source
+
     - Resulting manifest after helm template
-        # ![4](assets/4.png)
+
+            # Source: pipeline-charts/templates/pipeline.yaml
+            apiVersion: tekton.dev/v1beta1
+            kind: Pipeline
+            metadata:
+            name: stakater-main-pr-v2
+            namespace: default
+            spec:
+              params:
+              - name: image_registry_url
+                type: string
+              workspaces:
+                  - name: source
+              tasks:
+              - name: build-and-push
+                taskRef:
+                  name: stakater-buildah-v1
+                  kind: ClusterTask
+                params:
+                  - name: IMAGE
+                  value: "$(params.image_registry_url)
+                  - name: TLSVERIFY
+                  value: "false"
+                  - name: FORMAT
+                  value: "buildah"
+                workspaces:
+                - name: source
+                  workspace: source
+
 - For adding a default tasks params: 
     - specify it in .values.pipelines.tasks[].params in values.yaml
         # ![8](assets/8.png)
@@ -148,4 +239,4 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
 # Limitations
 
 All current limitations in this chart.
--  All default parameters will be included in pipeline manifests. Feature to remove default params isnt added 
+-  All default parameters will be included in pipeline manifests. Feature to remove default params isnt added.
