@@ -2,7 +2,7 @@
 Jumbo chart for creating pipeline manifests
 
 ## Features
-- Define redundant configuration as default and create relatively smaller values files.
+- Define common configuration as default and create relatively smaller values files.
 - Generate pipeline manifest with minimal values & configuration
 
 ## Notes
@@ -56,8 +56,8 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
 | pipeline.tasks[].params | Parameters required by the task for execution. default params combined with this field (will override default params) is used                                                | `{}`              |
 | pipeline.tasks[].workspace | Workspaces required by the task for execution. default workspace combined with this field is used | `{}`|
 | pipeline.tasks[].runAfter | Used to order task execution among tasks. default is previous task name, specify for complex flows. | `{}`              |
-| pipeline.tasks[].when | specify when condition for tasks. overrides when field in default | `{}`              |
-| pipeline.tasks[].retries | specify task retries | ``              |
+| pipeline.tasks[].when | Specify when condition for tasks. overrides when field in default | `{}`              |
+| pipeline.tasks[].retries | Specify task retries | ``              |
 
 
 ### Trigger Template
@@ -94,31 +94,31 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
 | eventlistener.triggers.bindings    | Trigger Bindings to be passed to trigger templates                                 | `{}`            |
 
 
-### Adding a Default Task
-- Navigate to pipeline-charts/default-config/tasks directory & Make a new yaml file.
+### Add a Default Task
+- Navigate to pipeline-charts/default-config/tasks directory & make a new yaml file.
 - Specify taskName ( taskRef of kind:ClusterTask ), params & workspaces as specifed below: 
 
         taskName: stakater-buildah-v1
         params:
         - name: IMAGE
-            value: $(params.image_registry_url)
+          value: $(params.image_registry_url)
         - name: TLSVERIFY
-            value: "false"
+          value: "false"
         - name: FORMAT
-            value: "docker"
+          value: "docker"
         workspaces:
         - name: source
-            workspace: source
+          workspace: source
 
 - Save this file.
-- Now you can use this task in .values.pipeline.tasks[] in values.yaml as following:
+- Now you can use this task in .Values.pipeline.tasks[] in values.yaml as following:
 
         pipelines:
             tasks:
-              - taskName: stakater-buildah-v1
-                name: build-and-push
+            - taskName: stakater-buildah-v1
+              name: build-and-push
 
-    Name is required if multiple same task appears twice in pipeline.
+    Name is needed if multiple same task appears twice in pipeline or making 
 
 - Resulting pipeline manifest
 
@@ -133,15 +133,40 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
         - name: image_registry_url
           type: string
         workspaces:
-            - name: source
+        - name: source
         tasks:
-          - name: stakater-buildah-v1
-            taskRef:
-              name: stakater-buildah-v1
-              kind: ClusterTask
+        - name: stakater-buildah-v1
+          taskRef:
+            name: stakater-buildah-v1
+            kind: ClusterTask
+          params:
+          - name: IMAGE
+            value: "$(params.image_registry_url)
+          - name: TLSVERIFY
+            value: "false"
+          - name: FORMAT
+            value: "docker"
+          workspaces:
+          - name: source
+            workspace: source
+### Override a Default Task
+- For overriding a default task's params: 
+    - Specify it in .Values.pipeline.tasks[].params in values.yaml
+
+            pipelines:
+              tasks:
+              - taskName: stakater-buildah-v1
+                name: build-and-push
+                params:
+                - name: FORMAT
+                  value: "buildah"
+
+    - Default Task in default-config/task
+
+            taskName: stakater-buildah-v1
             params:
             - name: IMAGE
-              value: "$(params.image_registry_url)
+              value: $(params.image_registry_url)
             - name: TLSVERIFY
               value: "false"
             - name: FORMAT
@@ -149,31 +174,6 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
             workspaces:
             - name: source
               workspace: source
-### Overiding a Default Task
-- For overwriting a default tasks params: 
-    - specify it in .values.pipeline.tasks[].params in values.yaml
-
-            pipelines:
-                tasks:
-                - taskName: stakater-buildah-v1
-                  name: build-and-push
-                  params:
-                    - name: FORMAT
-                      value: "buildah"
-
-    - Default Task in default-config/task
-
-            taskName: stakater-buildah-v1
-            params:
-            - name: IMAGE
-                value: $(params.image_registry_url)
-            - name: TLSVERIFY
-                value: "false"
-            - name: FORMAT
-                value: "docker"
-            workspaces:
-            - name: source
-                workspace: source
 
     - Resulting manifest after helm template
 
@@ -188,7 +188,7 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
               - name: image_registry_url
                 type: string
               workspaces:
-                  - name: source
+              - name: source
               tasks:
               - name: build-and-push
                 taskRef:
@@ -205,18 +205,18 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
                 - name: source
                   workspace: source
 
-- For adding a default tasks params: 
-    - specify it in .values.pipelines.tasks[].params in values.yaml
+- For adding a new default task params: 
+    - specify it in .Values.pipelines.tasks[].params in values.yaml
 
             pipelines:
-                tasks:
-                - taskName: stakater-buildah-v1
-                  name: build-and-push
-                  params:
-                    - name: new-param
-                      value: "new-value"
+              tasks:
+              - taskName: stakater-buildah-v1
+                name: build-and-push
+                params:
+                - name: new-param
+                  value: "new-value"
 
-    - Resulting manifest after helm template contains both default & defined params.
+    - Resulting manifest after helm template contains both default & our newly added params.
 
 
             # Source: pipeline-charts/templates/pipeline.yaml
@@ -230,7 +230,7 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
               - name: image_registry_url
                 type: string
               workspaces:
-                  - name: source
+              - name: source
               tasks:
               - name: build-and-push
                 taskRef:
@@ -251,14 +251,14 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
 
         
 
-- RunAfter by default is the previous task name, but for complex flows, it is advised to define it. specify it in .values.pipelines.tasks[].runAfter in values.yaml
+- RunAfter by default is the previous task name, but for complex flows, it is advised to define it. specify it in .Values.pipelines.tasks[].runAfter in values.yaml
 
-- For adding a workspace to default, specify it in .values.pipelines.tasks[].workspace & in in values.yaml, Resulting manifest will contain workspaces from here and default tasks if defined
+- For adding a workspace to default, specify it in .Values.pipelines.tasks[].workspace & in .Values.workspaces values.yaml, Resulting task definition will contain workspaces from here and default tasks if defined
 
-- For overriding when clause, specify it in .values.pipelines.tasks[].when in values.yaml
+- For overriding when clause, specify it in .Values.pipelines.tasks[].when in values.yaml
 
 ### Adding a Custom Task
-- Specify the new custom task in .values.pipelines.tasks[] as follows:  
+- Specify the new custom task in .Values.pipelines.tasks[] as follows:  
 
         workspaces:
         - name: source
@@ -271,14 +271,14 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
           resourcesRequestsStorage: 0.5Gi
         pipelines:
         tasks:
-            - taskName: stakater-buildah-v1
-            - taskName: my-task
-            params: 
-            - name: "my-param"
-                value: "my-value"
-            workspaces:
-            - name: my-workspace
-                workspace: my-workspace
+        - taskName: stakater-buildah-v1
+        - taskName: my-task
+          params: 
+          - name: "my-param"
+              value: "my-value"
+          workspaces:
+          - name: my-workspace
+              workspace: my-workspace
 
 
 - Resulting manifest:  
@@ -299,8 +299,8 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
           tasks:
           - name: stakater-buildah-v1
             taskRef:
-                name: stakater-buildah-v1
-                kind: ClusterTask
+              name: stakater-buildah-v1
+              kind: ClusterTask
             params:
             - name: IMAGE
               value: "$(params.image_registry_url)
@@ -309,54 +309,54 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
             - name: FORMAT
               value: "docker"
             workspaces:
-              - name: source
-                workspace: source
+            - name: source
+              workspace: source
           - name: my-task
             taskRef:
-                name: my-task
-                kind: ClusterTask
+              name: my-task
+              kind: ClusterTask
             params:
             - name: my-param
               value: "my-value"
             workspaces:
-              - name: my-workspace
-                workspace: my-workspace
+            - name: my-workspace
+              workspace: my-workspace
             runAfter:
-              - stakater-buildah-v1
+            - stakater-buildah-v1
 
 ### Adding a trigger
 - Navigate to pipeline-charts/trigger.yaml
-- Specify triggerName & interceptors under default_triggers.templates
+- Specify triggerName & its interceptors under default_triggers.templates
 
         default_triggers:
           templates:
             - triggerName: pullrequest
               interceptors:
-                - ref:
-                    name: "cel"
-                  params:
-                    - name: "filter"
-                      value: "(header.match('X-GitHub-Event', 'pull_request') && body.action == 'opened' || body.action == 'synchronize')"
-                    - name: "overlays"
-                      value:
-                        - key: marshalled-body
-                          expression: "body.marshalJSON()"
+              - ref:
+                  name: "cel"
+                params:
+                - name: "filter"
+                  value: "(header.match('X-GitHub-Event', 'pull_request') && body.action == 'opened' || body.action == 'synchronize')"
+                - name: "overlays"
+                  value:
+                  - key: marshalled-body
+                    expression: "body.marshalJSON()"
             - triggerName: push
               interceptors:
               - ref:
                   name: "cel"
                 params:
-                  - name: "filter"
-                    value: "(header.match('X-GitHub-Event', 'push') && (body.ref == 'refs/heads/main' || body.ref == 'refs/heads/master') )"
-                  - name: "overlays"
-                    value:
-                      - key: marshalled-body
-                        expression: "body.marshalJSON()"
+                - name: "filter"
+                  value: "(header.match('X-GitHub-Event', 'push') && (body.ref == 'refs/heads/main' || body.ref == 'refs/heads/master') )"
+                - name: "overlays"
+                  value:
+                    - key: marshalled-body
+                      expression: "body.marshalJSON()"
 
 
 
 
-- Now you can use this task in .values.eventlistener.triggers[] in values.yaml as following:
+- Now you can use this task in .Values.eventlistener.triggers[] in values.yaml as following:
 
       eventlistener:
         serviceAccountName: stakater-tekton-builder
@@ -382,21 +382,20 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
       metadata:
           name: stakater-main-pr-v2-pullrequest
       spec:
-          interceptors:
-            - params:
-              - name: filter
-                value: (header.match('X-GitHub-Event', 'pull_request') && body.action       == 'opened'
-                  || body.action == 'synchronize')
-              - name: overlays
-                value:
-                - expression: body.marshalJSON()
-                  key: marshalled-body
-              ref:
-                name: cel
-          bindings:
-            - ref: stakater-pr-v1
-          template:
-              ref: stakater-main-pr-v2
+        interceptors:
+        - params:
+          - name: filter
+            value: (header.match('X-GitHub-Event', 'pull_request') && body.action == 'opened' || body.action == 'synchronize')
+          - name: overlays
+            value:
+            - expression: body.marshalJSON()
+              key: marshalled-body
+          ref:
+            name: cel
+        bindings:
+        - ref: stakater-pr-v1
+        template:
+          ref: stakater-main-pr-v2
       ---
       # Source: pipeline-charts/templates/triggers.yaml
       apiVersion: triggers.tekton.dev/v1alpha1
@@ -405,20 +404,20 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
           name: stakater-main-pr-v2-push
       spec:
           interceptors:
-            - params:
-              - name: filter
-                value: (header.match('X-GitHub-Event', 'push') && (body.ref == 'refs/      heads/main'
-                  || body.ref == 'refs/heads/master') )
-              - name: overlays
-                value:
-                - expression: body.marshalJSON()
-                  key: marshalled-body
-              ref:
-                name: cel
+          - params:
+            - name: filter
+              value: (header.match('X-GitHub-Event', 'push') && (body.ref == 'refs/      heads/main'
+                || body.ref == 'refs/heads/master') )
+            - name: overlays
+              value:
+              - expression: body.marshalJSON()
+                key: marshalled-body
+            ref:
+              name: cel
           bindings:
-            - ref: stakater-main-v1
+          - ref: stakater-main-v1
           template:
-              ref: stakater-main-pr-v2
+            ref: stakater-main-pr-v2
       --
       # Source: pipeline-charts/templates/eventlistener.yaml
       apiVersion: triggers.tekton.dev/v1alpha1
