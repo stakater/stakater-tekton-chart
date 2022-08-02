@@ -92,7 +92,7 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
 | eventlistener.triggers.bindings    | Trigger Bindings to be passed to trigger templates                                 | `{}`            |
 
 
-### Add a Default Task
+### Add a Default Task in pipeline
 - Navigate to pipeline-charts/default-config/tasks directory & make a new yaml file.
 - Specify taskName ( task name of kind:ClusterTask ), params & workspaces as specifed below: 
 
@@ -147,7 +147,7 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
           workspaces:
           - name: source
             workspace: source
-### Override a Default Task
+### Override a Default Task in pipeline
 - For overriding a default task's params: 
     - Specify it in .Values.pipeline.tasks[].params in values.yaml
 
