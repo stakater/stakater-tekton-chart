@@ -94,27 +94,27 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
 
 ### Add a Default Task
 - Navigate to pipeline-charts/default-config/tasks directory & make a new yaml file.
-- Specify taskName ( taskRef of kind:ClusterTask ), params & workspaces as specifed below: 
+- Specify taskName ( task name of kind:ClusterTask ), params & workspaces as specifed below: 
 
-        taskName: stakater-buildah-v1
-        params:
-        - name: IMAGE
-          value: $(params.image_registry_url)
-        - name: TLSVERIFY
-          value: "false"
-        - name: FORMAT
-          value: "docker"
-        workspaces:
-        - name: source
-          workspace: source
+      taskName: stakater-buildah-v1
+      params:
+      - name: IMAGE
+        value: $(params.image_registry_url)
+      - name: TLSVERIFY
+        value: "false"
+      - name: FORMAT
+        value: "docker"
+      workspaces:
+      - name: source
+        workspace: source
 
 - Save this file.
-- Now you can use this task in .Values.pipeline.tasks[] in values.yaml as following:
+- Now you can add this task in pipeline in .Values.pipeline.tasks[] in values.yaml as following:
 
-        pipelines:
-            tasks:
-            - taskName: stakater-buildah-v1
-              name: build-and-push
+      pipelines:
+        tasks:
+        - taskName: stakater-buildah-v1
+          name: build-and-push
 
     Name is needed if multiple same task appears twice in pipeline or making 
 
