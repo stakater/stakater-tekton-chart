@@ -116,7 +116,7 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
         - taskName: stakater-buildah-v1
           name: build-and-push
 
-    Specify name to make step name readable or avoid conflicting step name
+    Specify name to make step name readable or avoid conflicting step names
 
 - Resulting pipeline manifest
 
@@ -133,7 +133,7 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
         workspaces:
         - name: source
         tasks:
-        - name: stakater-buildah-v1
+        - name: build-and-push
           taskRef:
             name: stakater-buildah-v1
             kind: ClusterTask
@@ -203,8 +203,8 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
               - name: source
                 workspace: source
 
-- For adding a new default task params: 
-    - specify it in .Values.pipelines.tasks[].params in values.yaml
+- For adding a new param in existing default task: 
+    - Specify it in .Values.pipelines.tasks[].params in values.yaml
 
           pipelines:
             tasks:
@@ -249,7 +249,7 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
 
         
 
-- RunAfter by default is the previous task name, but for complex flows, it is advised to define it. specify it in .Values.pipelines.tasks[].runAfter in values.yaml
+- RunAfter by default is the previous task name, but for parallel flows, it is advised to define it. specify it in .Values.pipelines.tasks[].runAfter in values.yaml
 
 - For adding a workspace to default, specify it in .Values.pipelines.tasks[].workspace & in .Values.workspaces values.yaml, Resulting task definition will contain workspaces from here and default tasks if defined
 
