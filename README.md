@@ -122,18 +122,180 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
 
 - Resulting pipeline manifest
 
-        # Source: pipeline-charts/templates/pipeline.yaml
-        apiVersion: tekton.dev/v1beta1
-        kind: Pipeline
-        metadata:
+      # Source: pipeline-charts/templates/pipeline.yaml
+      apiVersion: tekton.dev/v1beta1
+      kind: Pipeline
+      metadata:
+      name: stakater-main-pr-v2
+      namespace: default
+      spec:
+      params:
+      - name: image_registry_url
+        type: string
+      workspaces:
+      - name: source
+      tasks:
+      - name: stakater-buildah-v1
+        taskRef:
+          name: stakater-buildah-v1
+          kind: ClusterTask
+        params:
+        - name: IMAGE
+          value: "$(params.image_registry_url)
+        - name: TLSVERIFY
+          value: "false"
+        - name: FORMAT
+          value: "docker"
+        workspaces:
+        - name: source
+          workspace: source
+### Override a Default Task
+- For overriding a default task's params: 
+    - Specify it in .Values.pipeline.tasks[].params in values.yaml
+
+          pipelines:
+            tasks:
+            - taskName: stakater-buildah-v1
+              name: build-and-push
+              params:
+              - name: FORMAT
+                value: "buildah"
+
+    - Default Task in default-config/task
+
+          taskName: stakater-buildah-v1
+          params:
+          - name: IMAGE
+            value: $(params.image_registry_url)
+          - name: TLSVERIFY
+            value: "false"
+          - name: FORMAT
+            value: "docker"
+          workspaces:
+          - name: source
+            workspace: source
+
+    - Resulting manifest after helm template
+
+          # Source: pipeline-charts/templates/pipeline.yaml
+          apiVersion: tekton.dev/v1beta1
+          kind: Pipeline
+          metadata:
+          name: stakater-main-pr-v2
+          namespace: default
+          spec:
+            params:
+            - name: image_registry_url
+              type: string
+            workspaces:
+            - name: source
+            tasks:
+            - name: build-and-push
+              taskRef:
+                name: stakater-buildah-v1
+                kind: ClusterTask
+              params:
+              - name: IMAGE
+                value: "$(params.image_registry_url)
+              - name: TLSVERIFY
+                value: "false"
+              - name: FORMAT
+                value: "buildah"
+              workspaces:
+              - name: source
+                workspace: source
+
+- For adding a new default task params: 
+    - specify it in .Values.pipelines.tasks[].params in values.yaml
+
+          pipelines:
+            tasks:
+            - taskName: stakater-buildah-v1
+              name: build-and-push
+              params:
+              - name: new-param
+                value: "new-value"
+
+    - Resulting manifest after helm template contains both default & our newly added params.
+
+
+          # Source: pipeline-charts/templates/pipeline.yaml
+          apiVersion: tekton.dev/v1beta1
+          kind: Pipeline
+          metadata:
+          name: stakater-main-pr-v2
+          namespace: default
+          spec:
+            params:
+            - name: image_registry_url
+              type: string
+            workspaces:
+            - name: source
+            tasks:
+            - name: build-and-push
+              taskRef:
+                name: stakater-buildah-v1
+                kind: ClusterTask
+              params:
+              - name: IMAGE
+                value: "$(params.image_registry_url)
+              - name: TLSVERIFY
+                value: "false"
+              - name: FORMAT
+                value: "docker"
+              - name: new-param
+                value: "new-value"
+              workspaces:
+              - name: source
+                workspace: source
+
+        
+
+- RunAfter by default is the previous task name, but for complex flows, it is advised to define it. specify it in .Values.pipelines.tasks[].runAfter in values.yaml
+
+- For adding a workspace to default, specify it in .Values.pipelines.tasks[].workspace & in .Values.workspaces values.yaml, Resulting task definition will contain workspaces from here and default tasks if defined
+
+- For overriding when clause, specify it in .Values.pipelines.tasks[].when in values.yaml
+
+### Add a custom task to pipeline
+- Specify the new custom task in .Values.pipelines.tasks[] as follows:  
+
+      workspaces:
+      - name: source
+        volumeClaimTemplate:
+        accessModes: ReadWriteOnce
+        resourcesRequestsStorage: 1Gi
+      - name: my-workspace
+        volumeClaimTemplate:
+        accessModes: ReadWriteOnce
+        resourcesRequestsStorage: 0.5Gi
+      pipelines:
+        tasks:
+        - taskName: stakater-buildah-v1
+        - taskName: my-task
+          params: 
+          - name: "my-param"
+              value: "my-value"
+          workspaces:
+          - name: my-workspace
+              workspace: my-workspace
+
+
+- Resulting manifest:  
+
+      # Source: pipeline-charts/templates/pipeline.yaml
+      apiVersion: tekton.dev/v1beta1
+      kind: Pipeline
+      metadata:
         name: stakater-main-pr-v2
         namespace: default
-        spec:
+      spec:
         params:
         - name: image_registry_url
           type: string
         workspaces:
         - name: source
+        - name: my-workspace
         tasks:
         - name: stakater-buildah-v1
           taskRef:
@@ -149,182 +311,20 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
           workspaces:
           - name: source
             workspace: source
-### Override a Default Task
-- For overriding a default task's params: 
-    - Specify it in .Values.pipeline.tasks[].params in values.yaml
-
-            pipelines:
-              tasks:
-              - taskName: stakater-buildah-v1
-                name: build-and-push
-                params:
-                - name: FORMAT
-                  value: "buildah"
-
-    - Default Task in default-config/task
-
-            taskName: stakater-buildah-v1
-            params:
-            - name: IMAGE
-              value: $(params.image_registry_url)
-            - name: TLSVERIFY
-              value: "false"
-            - name: FORMAT
-              value: "docker"
-            workspaces:
-            - name: source
-              workspace: source
-
-    - Resulting manifest after helm template
-
-            # Source: pipeline-charts/templates/pipeline.yaml
-            apiVersion: tekton.dev/v1beta1
-            kind: Pipeline
-            metadata:
-            name: stakater-main-pr-v2
-            namespace: default
-            spec:
-              params:
-              - name: image_registry_url
-                type: string
-              workspaces:
-              - name: source
-              tasks:
-              - name: build-and-push
-                taskRef:
-                  name: stakater-buildah-v1
-                  kind: ClusterTask
-                params:
-                - name: IMAGE
-                  value: "$(params.image_registry_url)
-                - name: TLSVERIFY
-                  value: "false"
-                - name: FORMAT
-                  value: "buildah"
-                workspaces:
-                - name: source
-                  workspace: source
-
-- For adding a new default task params: 
-    - specify it in .Values.pipelines.tasks[].params in values.yaml
-
-            pipelines:
-              tasks:
-              - taskName: stakater-buildah-v1
-                name: build-and-push
-                params:
-                - name: new-param
-                  value: "new-value"
-
-    - Resulting manifest after helm template contains both default & our newly added params.
-
-
-            # Source: pipeline-charts/templates/pipeline.yaml
-            apiVersion: tekton.dev/v1beta1
-            kind: Pipeline
-            metadata:
-            name: stakater-main-pr-v2
-            namespace: default
-            spec:
-              params:
-              - name: image_registry_url
-                type: string
-              workspaces:
-              - name: source
-              tasks:
-              - name: build-and-push
-                taskRef:
-                  name: stakater-buildah-v1
-                  kind: ClusterTask
-                params:
-                - name: IMAGE
-                  value: "$(params.image_registry_url)
-                - name: TLSVERIFY
-                  value: "false"
-                - name: FORMAT
-                  value: "docker"
-                - name: new-param
-                  value: "new-value"
-                workspaces:
-                - name: source
-                  workspace: source
-
-        
-
-- RunAfter by default is the previous task name, but for complex flows, it is advised to define it. specify it in .Values.pipelines.tasks[].runAfter in values.yaml
-
-- For adding a workspace to default, specify it in .Values.pipelines.tasks[].workspace & in .Values.workspaces values.yaml, Resulting task definition will contain workspaces from here and default tasks if defined
-
-- For overriding when clause, specify it in .Values.pipelines.tasks[].when in values.yaml
-
-### Adding a Custom Task
-- Specify the new custom task in .Values.pipelines.tasks[] as follows:  
-
-        workspaces:
-        - name: source
-          volumeClaimTemplate:
-          accessModes: ReadWriteOnce
-          resourcesRequestsStorage: 1Gi
-        - name: my-workspace
-          volumeClaimTemplate:
-          accessModes: ReadWriteOnce
-          resourcesRequestsStorage: 0.5Gi
-        pipelines:
-        tasks:
-        - taskName: stakater-buildah-v1
-        - taskName: my-task
-          params: 
-          - name: "my-param"
-              value: "my-value"
-          workspaces:
-          - name: my-workspace
-              workspace: my-workspace
-
-
-- Resulting manifest:  
-
-        # Source: pipeline-charts/templates/pipeline.yaml
-        apiVersion: tekton.dev/v1beta1
-        kind: Pipeline
-        metadata:
-          name: stakater-main-pr-v2
-          namespace: default
-        spec:
+        - name: my-task
+          taskRef:
+            name: my-task
+            kind: ClusterTask
           params:
-          - name: image_registry_url
-            type: string
+          - name: my-param
+            value: "my-value"
           workspaces:
-          - name: source
           - name: my-workspace
-          tasks:
-          - name: stakater-buildah-v1
-            taskRef:
-              name: stakater-buildah-v1
-              kind: ClusterTask
-            params:
-            - name: IMAGE
-              value: "$(params.image_registry_url)
-            - name: TLSVERIFY
-              value: "false"
-            - name: FORMAT
-              value: "docker"
-            workspaces:
-            - name: source
-              workspace: source
-          - name: my-task
-            taskRef:
-              name: my-task
-              kind: ClusterTask
-            params:
-            - name: my-param
-              value: "my-value"
-            workspaces:
-            - name: my-workspace
-              workspace: my-workspace
-            runAfter:
-            - stakater-buildah-v1
+            workspace: my-workspace
+          runAfter:
+          - stakater-buildah-v1
 
-### Adding a trigger
+### Add a trigger
 - Navigate to pipeline-charts/trigger.yaml
 - Specify triggerName & its interceptors under default_triggers.templates
 
