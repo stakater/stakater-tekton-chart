@@ -116,7 +116,7 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
         - taskName: stakater-buildah-v1
           name: build-and-push
 
-    Name is needed if multiple same task appears twice in pipeline or making 
+    Specify name to make step name readable or avoid conflicting step name
 
 - Resulting pipeline manifest
 
