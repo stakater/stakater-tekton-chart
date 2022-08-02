@@ -247,7 +247,7 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
               - name: source
                 workspace: source        
 
-- RunAfter by default is the previous task name, but for parallel flows, it is advised to define it. specify it in .Values.pipelines.tasks[].runAfter in values.yaml
+- RunAfter by default is the previous task name, all steps run in series, but for parallel task execution, define it. specify it in .Values.pipelines.tasks[].runAfter in values.yaml
 
 - For adding a workspace to default, specify it in .Values.pipelines.tasks[].workspace & in .Values.workspaces values.yaml, Resulting task definition will contain workspaces from here and default tasks if defined
 
@@ -275,7 +275,6 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
           workspaces:
           - name: my-workspace
               workspace: my-workspace
-
 
 - Resulting manifest:  
 
