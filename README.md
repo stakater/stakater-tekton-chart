@@ -245,9 +245,7 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
                 value: "new-value"
               workspaces:
               - name: source
-                workspace: source
-
-        
+                workspace: source        
 
 - RunAfter by default is the previous task name, but for parallel flows, it is advised to define it. specify it in .Values.pipelines.tasks[].runAfter in values.yaml
 
