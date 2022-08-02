@@ -148,7 +148,7 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
           - name: source
             workspace: source
 ### Override a Default Task in pipeline
-- For Overwriting a default task's params:
+- For overriding a default task's params:
     - Specify it in .Values.pipeline.tasks[].params in values.yaml
 
           pipelines:
