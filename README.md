@@ -5,8 +5,6 @@ Jumbo chart for creating pipeline manifests
 - Define common configuration as default and create relatively smaller values files.
 - Generate pipeline manifest with minimal values & configuration
 
-## Notes
-- You can add tasks configs as default and use them by taskName
 ## Installing the Chart
 
 To install the chart:
