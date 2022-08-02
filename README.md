@@ -126,29 +126,29 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
       apiVersion: tekton.dev/v1beta1
       kind: Pipeline
       metadata:
-      name: stakater-main-pr-v2
-      namespace: default
+        name: stakater-main-pr-v2
+        namespace: default
       spec:
-      params:
-      - name: image_registry_url
-        type: string
-      workspaces:
-      - name: source
-      tasks:
-      - name: stakater-buildah-v1
-        taskRef:
-          name: stakater-buildah-v1
-          kind: ClusterTask
         params:
-        - name: IMAGE
-          value: "$(params.image_registry_url)
-        - name: TLSVERIFY
-          value: "false"
-        - name: FORMAT
-          value: "docker"
+        - name: image_registry_url
+          type: string
         workspaces:
         - name: source
-          workspace: source
+        tasks:
+        - name: stakater-buildah-v1
+          taskRef:
+            name: stakater-buildah-v1
+            kind: ClusterTask
+          params:
+          - name: IMAGE
+            value: "$(params.image_registry_url)
+          - name: TLSVERIFY
+            value: "false"
+          - name: FORMAT
+            value: "docker"
+          workspaces:
+          - name: source
+            workspace: source
 ### Override a Default Task
 - For overriding a default task's params: 
     - Specify it in .Values.pipeline.tasks[].params in values.yaml
@@ -181,8 +181,8 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
           apiVersion: tekton.dev/v1beta1
           kind: Pipeline
           metadata:
-          name: stakater-main-pr-v2
-          namespace: default
+            name: stakater-main-pr-v2
+            namespace: default
           spec:
             params:
             - name: image_registry_url
@@ -223,8 +223,8 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
           apiVersion: tekton.dev/v1beta1
           kind: Pipeline
           metadata:
-          name: stakater-main-pr-v2
-          namespace: default
+            name: stakater-main-pr-v2
+            namespace: default
           spec:
             params:
             - name: image_registry_url
@@ -380,7 +380,7 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
       apiVersion: triggers.tekton.dev/v1alpha1
       kind: Trigger
       metadata:
-          name: stakater-main-pr-v2-pullrequest
+        name: stakater-main-pr-v2-pullrequest
       spec:
         interceptors:
         - params:
@@ -401,23 +401,23 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
       apiVersion: triggers.tekton.dev/v1alpha1
       kind: Trigger
       metadata:
-          name: stakater-main-pr-v2-push
+        name: stakater-main-pr-v2-push
       spec:
-          interceptors:
-          - params:
-            - name: filter
-              value: (header.match('X-GitHub-Event', 'push') && (body.ref == 'refs/      heads/main'
-                || body.ref == 'refs/heads/master') )
-            - name: overlays
-              value:
-              - expression: body.marshalJSON()
-                key: marshalled-body
-            ref:
-              name: cel
-          bindings:
-          - ref: stakater-main-v1
-          template:
-            ref: stakater-main-pr-v2
+        interceptors:
+        - params:
+          - name: filter
+            value: (header.match('X-GitHub-Event', 'push') && (body.ref == 'refs/      heads/main'
+              || body.ref == 'refs/heads/master') )
+          - name: overlays
+            value:
+            - expression: body.marshalJSON()
+              key: marshalled-body
+          ref:
+            name: cel
+        bindings:
+        - ref: stakater-main-v1
+        template:
+          ref: stakater-main-pr-v2
       --
       # Source: pipeline-charts/templates/eventlistener.yaml
       apiVersion: triggers.tekton.dev/v1alpha1
