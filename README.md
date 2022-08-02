@@ -51,10 +51,10 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
 | pipeline.finally.tasks | Specify finally tasks.                                                               | `{}`          |
 | pipeline.tasks[].name | Defaults to taskName, if there are multiple tasks of same name specify this field              | `name`      |
 | pipeline.tasks[].taskName | Name of already existing task, will be used as pipeline step name by default , required                         | `taskname`      |
-| pipeline.tasks[].params | Parameters required by the task for execution. default params combined with this field (will override default params) is used                                                | `{}`              |
+| pipeline.tasks[].params | Parameters required by the task for execution. default params combined with this field (will overwrite default params) is used                                                | `{}`              |
 | pipeline.tasks[].workspace | Workspaces required by the task for execution. default workspace combined with this field is used | `{}`|
 | pipeline.tasks[].runAfter | Used to order task execution among tasks. default is previous task name, specify for complex flows. | `{}`              |
-| pipeline.tasks[].when | Specify when condition for tasks. overrides when field in default | `{}`              |
+| pipeline.tasks[].when | Specify when condition for tasks. overwrite when field in default | `{}`              |
 | pipeline.tasks[].retries | Specify task retries | ``              |
 
 
@@ -87,7 +87,7 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
 | eventlistener.serviceAccountName    | Service account for | ``              |
 | eventlistener.triggers    | Define pipelines trigger templates in case of event, can use already existing trigger templates. Matches name with default triggers and uses its interceptors if not specified | `{}`        |
 | eventlistener.triggers.name    | trigger name to find in default triggers. resulting name is prepended with pipeline-name | ``              |
-| eventlistener.triggers.interceptors    | Define interceptor if its not defined in default triggers or override default trigger intercept | ``              |
+| eventlistener.triggers.interceptors    | Define interceptor if its not defined in default triggers or overwrite default trigger intercept | ``              |
 | eventlistener.triggers.create    | If you dont want to create the trigger, set this false. useful for using predefined triggers.  | ``              |
 | eventlistener.triggers.bindings    | Trigger Bindings to be passed to trigger templates                                 | `{}`            |
 
@@ -147,8 +147,8 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
           workspaces:
           - name: source
             workspace: source
-### Override a Default Task in pipeline
-- For overriding a default task's params: 
+### Overwrite a Default Task in pipeline
+- For Overwriting a default task's params:
     - Specify it in .Values.pipeline.tasks[].params in values.yaml
 
           pipelines:
@@ -247,7 +247,7 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
               - name: source
                 workspace: source        
 
-- RunAfter by default is the previous task name, all steps run in series, but for parallel task execution, define it. specify it in .Values.pipelines.tasks[].runAfter in values.yaml
+- RunAfter by default is the previous task name, All steps run in series, but for parallel task execution, define it. Overwrite it in .Values.pipelines.tasks[].runAfter in values.yaml
 
 - For adding a workspace to default, specify it in .Values.pipelines.tasks[].workspace & in .Values.workspaces values.yaml, Resulting task definition will contain workspaces from here and default tasks if defined
 
