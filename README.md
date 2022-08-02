@@ -11,8 +11,8 @@ To install the chart:
 
 ### Using Helm CLI:
 
-    `helm repo add stakater https://stakater.github.io/stakater-charts` or `helm repo update`
-    `helm install pipeline-1 stakater/pipeline-charts --namespace test`
+    helm repo add stakater https://stakater.github.io/stakater-charts or helm repo update
+    helm install pipeline-1 stakater/pipeline-charts --namespace test
 ### Using Chart with dependencies  
 Chart.yaml  
 
