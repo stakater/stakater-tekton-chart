@@ -109,7 +109,7 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
         workspace: source
 
 - Save this file.
-- Now you can add this task in pipeline in .Values.pipeline.tasks[] in values.yaml as following:
+- Now you can add this task in pipeline under .Values.pipeline.tasks[] in values.yaml as following:
 
       pipelines:
         tasks:
