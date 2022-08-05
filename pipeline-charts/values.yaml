@@ -118,7 +118,7 @@ eventlistener:
 #        - binding1
 
 serviceAccount:
-  # Specify already existing service account name with create:false, 
+  # Specify already existing service account name with create:false,
   # secrets,imagePullSecrets will be ignored
   # name: stakater-tekton-builder
   create: true
