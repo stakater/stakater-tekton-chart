@@ -1,3 +1,4 @@
+{{ if .Values.rbac.enabled }}
 kind: Role
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
@@ -49,7 +50,7 @@ rules:
   - apiGroups:
       - security.openshift.io
     resourceNames:
-      - tekton-pipelines-scc
+      - {{ include "pipeline-charts.name" . }}
     resources:
       - securitycontextconstraints
     verbs:
@@ -78,3 +79,4 @@ rules:
       - apps
     resources:
       - deployments
+{{- end }}

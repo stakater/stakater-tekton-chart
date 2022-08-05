@@ -1,12 +1,14 @@
+{{ if .Values.rbac.enabled }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: {{ include "pipeline-charts.name" . }}-{{ .Release.Namespace }}
 subjects:
   - kind: ServiceAccount
-    name: {{ include "pipeline-charts.name" . }}
+    name: {{ .Values.serviceAccount.name | default ( include "pipeline-charts.name" . ) }}
     namespace: {{ .Release.Namespace }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io 
   kind: ClusterRole
   name: openshift-pipelines-clusterinterceptors
+{{- end }}

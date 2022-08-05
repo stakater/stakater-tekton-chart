@@ -1,12 +1,14 @@
+{{- if .Values.rbac.enabled }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
-metadata:
+metadata: 
   name: {{ include "pipeline-charts.name" . }}
 subjects:
   - kind: ServiceAccount
-    name: {{ include "pipeline-charts.name" . }}
+    name: {{ .Values.serviceAccount.name | default (include "pipeline-charts.name" . ) }}
     namespace: {{ .Release.Namespace }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io 
   kind: Role
   name: {{ include "pipeline-charts.name" . }}
+{{- end }}

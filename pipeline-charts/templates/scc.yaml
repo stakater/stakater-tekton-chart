@@ -1,0 +1,36 @@
+{{- if .Values.rbac.enabled }}
+apiVersion: security.openshift.io/v1
+kind: SecurityContextConstraints
+metadata:
+  name: {{ include "pipeline-charts.name" . }}
+allowHostPorts: false
+priority: 10
+requiredDropCapabilities:
+  - MKNOD
+allowPrivilegedContainer: true
+runAsUser:
+  type: RunAsAny
+users: []
+allowHostDirVolumePlugin: false
+allowHostIPC: false
+seLinuxContext:
+  type: MustRunAs
+readOnlyRootFilesystem: false
+fsGroup:
+  type: MustRunAs
+groups: []
+defaultAddCapabilities: null
+supplementalGroups:
+  type: RunAsAny
+volumes:
+  - configMap
+  - downwardAPI
+  - emptyDir
+  - persistentVolumeClaim
+  - projected
+  - secret
+allowHostPID: false
+allowHostNetwork: false
+allowPrivilegeEscalation: true
+allowedCapabilities: null
+{{- end }}
