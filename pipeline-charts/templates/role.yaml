@@ -1,7 +1,7 @@
 kind: Role
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: stakater-tekton-builder
+  name: {{ include "pipeline-charts.name" . }}-{{ .Release.Namespace }}
 rules:
   - apiGroups:
       - tekton.dev
