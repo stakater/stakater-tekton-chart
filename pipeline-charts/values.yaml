@@ -87,7 +87,7 @@ triggerbinding:
 eventlistener:
   enabled: true
   # Service Account
-  serviceAccountName: pipeline-charts-service-account
+  serviceAccountName:
 
   route:
     enabled: true

@@ -4,7 +4,7 @@ metadata:
   name: {{ include "pipeline-charts.name" . }}-{{ .Release.Namespace }}
 subjects:
   - kind: ServiceAccount
-    name: {{ include "pipeline-charts.name" . }}-{{ .Release.Namespace }}
+    name: {{ include "pipeline-charts.name" . }}
     namespace: {{ .Release.Namespace }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io 

@@ -5,7 +5,8 @@ metadata:
   name: {{ include "pipeline-charts.name" . }}
   namespace: {{ .Release.Namespace }}
 spec:
-  serviceAccountName: {{ .Values.eventlistener.serviceAccountName }}
+  {{ $sa:= include "pipeline-charts.name" . }}
+  serviceAccountName: {{ .Values.eventlistener.serviceAccountName | default $sa }}
   {{- if .Values.eventlistener.triggers }}
   triggers:
   {{- if .Values.eventlistener.triggers }}
