@@ -29,9 +29,8 @@ spec:
           {{- toYaml .Values.triggertemplate.pipelineRunAnnotations | nindent 10 }}
         {{- end }}
       spec:
-        {{- if .Values.triggertemplate.serviceAccountName }}
-        serviceAccountName: {{ .Values.triggertemplate.serviceAccountName }}
-        {{- end }}
+        {{- $sa:= include "pipeline-charts.name" . }}
+        serviceAccountName: {{ .Values.triggertemplate.serviceAccountName | default $sa }}
         {{- if  $default_params }}
         params:
           {{- range $k,$v := $default_params }}
