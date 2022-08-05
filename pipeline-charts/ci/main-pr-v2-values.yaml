@@ -69,10 +69,7 @@ pipelines:
     - taskName: stakater-push-main-tag-v1
     - taskName: stakater-app-sync-and-wait-v1
     - taskName: stakater-e2e-test-v1
-triggertemplate:
-  serviceAccountName: stakater-tekton-builder
 eventlistener:
-  serviceAccountName: stakater-tekton-builder
   triggers:
   - name: stakater-pr-cleaner-v2-pullrequest-merge
     create: false
