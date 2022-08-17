@@ -22,7 +22,7 @@ spec:
     - apiVersion: tekton.dev/v1beta1
       kind: PipelineRun
       metadata:
-        generateName: {{ .Values.triggertemplate.pipelineRunNamePrefix | default "$(tt.params.repoName)-$(tt.params.prnumberBranch)" }}-
+        generateName: {{ .Values.triggertemplate.pipelineRunNamePrefix  }}-
         namespace: $(tt.params.namespace)
         {{- if .Values.triggertemplate.pipelineRunAnnotations }}
         annotations:

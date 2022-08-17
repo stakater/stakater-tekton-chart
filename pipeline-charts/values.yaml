@@ -48,9 +48,10 @@ triggertemplate:
   params:
     - name: prnumberBranch
       default: "main"
+    - name: repoName
 
   # PipelineRun Name Prefix
-  pipelineRunNamePrefix:
+  pipelineRunNamePrefix: "$(tt.params.repoName)-$(tt.params.prnumberBranch)"
 
  # Annotations for pipeline run
   pipelineRunAnnotations:
