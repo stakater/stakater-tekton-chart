@@ -16,6 +16,7 @@ Expand the name of the chart.
   {{ $result := set $result "name" .name }}
   {{ $result := set $result "when" .when }}
   {{ $result := set $result "runAfter" .runAfter }}
+  {{ $result := set $result "taskSpec" .taskSpec }}
   {{- end }}
   {{- end }}
   {{- $result | toJson }}
