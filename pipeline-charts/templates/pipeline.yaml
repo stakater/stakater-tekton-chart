@@ -33,9 +33,9 @@ spec:
       when: 
       {{- .when | default $default.when | toYaml | nindent 6 }}
       {{- end }}
-      {{- if and (or $default.taskSpec .taskSpec) .taskName }}
+      {{- if and .taskSpec .taskName }}
       taskSpec:
-        {{- .taskSpec | default $default.taskSpec | toYaml | nindent 8 }}
+        {{- .taskSpec | toYaml | nindent 8 }}
         params:
         {{- range .params }}
         - name: {{ .name }}
@@ -43,6 +43,36 @@ spec:
         workspaces:
         {{- range .workspaces }}
         - name: {{ .name }}
+        {{- end }}
+      {{- else if and $default.taskSpec .taskName }}
+      taskSpec:
+        {{- $default.taskSpec | toYaml | nindent 8 }}
+        {{- if or $default.params .params }}
+        params:
+        {{- $addedParams := dict }}
+        {{- range .params }}
+        {{- $addedParams := set $addedParams .name "e" }}
+        - name: {{ .name }}
+        {{- end }}
+        {{- range $default.params }}
+        {{- if hasKey $addedParams .name }}
+        {{- else }}
+        - name: {{ .name }}
+        {{- end }}
+        {{- end }}
+        {{- end }}
+        {{- if or $default.workspaces .workspaces }}
+        workspaces:
+          {{- range $default.workspaces }}
+          - name: {{ .name }}
+            {{- if .workspace }}
+            workspace: {{ .workspace }}
+            {{- end }}
+          {{- end }}
+          {{- range .workspaces }}
+          - name: {{ .name }}
+            workspace: {{ .workspace }}
+          {{- end }}
         {{- end }}
       {{- else if .taskRef }}
       taskRef:
@@ -117,9 +147,9 @@ spec:
       when: 
       {{- .when | default $default.when | toYaml | nindent 6 }}
       {{- end }}
-      {{- if and (or $default.taskSpec .taskSpec) .taskName }}
+      {{- if and .taskSpec .taskName }}
       taskSpec:
-        {{- .taskSpec | default $default.taskSpec | toYaml | nindent 8 }}
+        {{- .taskSpec | toYaml | nindent 8 }}
         params:
         {{- range .params }}
         - name: {{ .name }}
@@ -127,6 +157,36 @@ spec:
         workspaces:
         {{- range .workspaces }}
         - name: {{ .name }}
+        {{- end }}
+      {{- else if and $default.taskSpec .taskName }}
+      taskSpec:
+        {{- $default.taskSpec | toYaml | nindent 8 }}
+        {{- if or $default.params .params }}
+        params:
+        {{- $addedParams := dict }}
+        {{- range .params }}
+        {{- $addedParams := set $addedParams .name "e" }}
+        - name: {{ .name }}
+        {{- end }}
+        {{- range $default.params }}
+        {{- if hasKey $addedParams .name }}
+        {{- else }}
+        - name: {{ .name }}
+        {{- end }}
+        {{- end }}
+        {{- end }}
+        {{- if or $default.workspaces .workspaces }}
+        workspaces:
+          {{- range $default.workspaces }}
+          - name: {{ .name }}
+            {{- if .workspace }}
+            workspace: {{ .workspace }}
+            {{- end }}
+          {{- end }}
+          {{- range .workspaces }}
+          - name: {{ .name }}
+            workspace: {{ .workspace }}
+          {{- end }}
         {{- end }}
       {{- else if .taskRef }}
       taskRef:
