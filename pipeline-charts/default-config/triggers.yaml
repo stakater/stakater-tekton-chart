@@ -1,7 +1,7 @@
 
 default_triggers:
   templates:
-    - triggerName: pullrequest
+    - triggerName: pullrequest-create
       interceptors:
         - ref:
             name: "cel"
