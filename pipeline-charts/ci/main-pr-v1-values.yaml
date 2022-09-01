@@ -6,7 +6,7 @@ workspaces:
       resourcesRequestsStorage: 1Gi
 pipelines:
   finally:
-  - name: stakater-update-cd-repo-v3
+  - default_config_task_name: stakater-update-cd-repo-v3
     name: stakater-rollback-cd-repo
     when:
     - input: $(tasks.stakater-e2e-test-v1.status)
@@ -15,9 +15,9 @@ pipelines:
     params:
     - name: IMAGE_TAG
       value: $(tasks.stakater-create-git-tag-v1.results.CURRENT_GIT_TAG)
-  - name: stakater-set-commit-status-v1
+  - default_config_task_name: stakater-set-commit-status-v1
     name: set-commit-status-task-result
-  - name: stakater-notify-slack-v1
+  - default_config_task_name: stakater-notify-slack-v1
     name: notify-slack
     params:
     - name: namespace
