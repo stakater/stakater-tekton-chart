@@ -28,11 +28,11 @@ spec:
   finally:
     {{- range .Values.pipelines.finally }}
     {{- $default := include "pipeline-charts.get_default_task_values" (list . $default_tasks ) | fromJson }}
-    {{- $task_params := include "pipeline-charts.merge_params" (list $default.params .params false ) | nindent 4 }} 
-    {{- $task_workspaces := include "pipeline-charts.merge_workspaces" (list $default.workspaces .workspaces false) | nindent 4 }} 
-    {{- $task_params_name_only := include "pipeline-charts.merge_params" (list $default.params .params true) | nindent 4 }} 
-    {{- $task_workspaces_name_only := include "pipeline-charts.merge_workspaces" (list $default.workspaces .workspaces true) | nindent 4 }} 
-    - name: {{ .name }}
+    {{- $task_params := include "pipeline-charts.merge_params" (list $default.params .params false ) }} 
+    {{- $task_workspaces := include "pipeline-charts.merge_workspaces" (list $default.workspaces .workspaces false) }} 
+    {{- $task_params_name_only := include "pipeline-charts.merge_params" (list $default.params .params true) }} 
+    {{- $task_workspaces_name_only := include "pipeline-charts.merge_workspaces" (list $default.workspaces .workspaces true) }} 
+    - name: {{ .name | default .default_config_task_name }}
       {{- if or .when $default.when }}
       when:
       {{- .when | default $default.when | toYaml | nindent 6 }}
@@ -52,10 +52,10 @@ spec:
       taskSpec:
         {{- $default.taskSpec | toYaml | nindent 8 }}
         {{- if $task_params }}
-        params: {{ $task_params_name_only  | indent 4 }}
+        params: {{ $task_params_name_only  | nindent 4 }}
         {{- end }}
         {{- if $task_workspaces }}
-        workspaces: {{ $task_workspaces_name_only | indent 4 }}
+        workspaces: {{ $task_workspaces_name_only | nindent 4 }}
         {{- end }}
       {{- else if .taskRef }}
       taskRef:
@@ -86,11 +86,11 @@ spec:
       {{- end }}
       {{- end }}
       {{- else }}
-      {{- if $task_params }}
-      params: {{ $task_params | indent 4 }}
+      {{- if ne $task_params "[]" }}
+      params: {{ $task_params | nindent 6 }}
       {{- end }}
-      {{- if $task_workspaces }}
-      workspaces: {{ $task_workspaces | indent 4 }}
+      {{- if ne $task_workspaces "[]" }}
+      workspaces: {{ $task_workspaces | nindent 6 }}
       {{- end }}
       {{- end }}
     {{- end }}
@@ -99,11 +99,11 @@ spec:
     {{- $previoustask := "" }}
     {{- range .Values.pipelines.tasks }}
     {{- $default := include "pipeline-charts.get_default_task_values" (list . $default_tasks ) | fromJson -}}
-    {{- $task_params := include "pipeline-charts.merge_params" (list $default.params .params false ) | nindent 4 }} 
-    {{- $task_workspaces := include "pipeline-charts.merge_workspaces" (list $default.workspaces .workspaces false) | nindent 4 }} 
-    {{- $task_params_name_only := include "pipeline-charts.merge_params" (list $default.params .params true) | nindent 4 }} 
-    {{- $task_workspaces_name_only := include "pipeline-charts.merge_workspaces" (list $default.workspaces .workspaces true) | nindent 4 }} 
-    - name: {{ .name }}
+    {{- $task_params := include "pipeline-charts.merge_params" (list $default.params .params false ) }} 
+    {{- $task_workspaces := include "pipeline-charts.merge_workspaces" (list $default.workspaces .workspaces false) }} 
+    {{- $task_params_name_only := include "pipeline-charts.merge_params" (list $default.params .params true) }} 
+    {{- $task_workspaces_name_only := include "pipeline-charts.merge_workspaces" (list $default.workspaces .workspaces true) }} 
+    - name: {{ .name | default .default_config_task_name }}
       {{- if or .when $default.when }}
       when: 
       {{- .when | default $default.when | toYaml | nindent 6 }}
@@ -122,11 +122,11 @@ spec:
       {{- else if and $default.taskSpec .name }}
       taskSpec:
         {{- $default.taskSpec | toYaml | nindent 8 }}
-        {{- if $task_params }}
-        params: {{ $task_params_name_only  | indent 4 }}
+        {{- if ne $task_params "[]" }}
+        params: {{ $task_params_name_only  | nindent 4 }}
         {{- end }}
-        {{- if $task_workspaces }}
-        workspaces: {{ $task_workspaces_name_only | indent 4 }}
+        {{- if ne $task_workspaces "[]" }}
+        workspaces: {{ $task_workspaces_name_only | nindent 4 }}
         {{- end }}
       {{- else if .taskRef }}
       taskRef:
@@ -160,11 +160,11 @@ spec:
       {{- end }}
       {{- end }}
       {{- else }}
-      {{- if $task_params }}
-      params: {{ $task_params | indent 4 }}
+      {{- if ne $task_params "[]" }}
+      params: {{ $task_params | nindent 6 }}
       {{- end }}
-      {{- if $task_workspaces }}
-      workspaces: {{ $task_workspaces | indent 4 }}
+      {{- if ne $task_workspaces "[]" }}
+      workspaces: {{ $task_workspaces | nindent 6 }}
       {{- end }}
       {{- end }}
       {{- if or $previoustask .runAfter }}
