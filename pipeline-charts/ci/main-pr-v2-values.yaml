@@ -6,69 +6,69 @@ workspaces:
       resourcesRequestsStorage: 1Gi
 pipelines:
   finally:
-    - taskName: stakater-update-cd-repo-v3
+    - default_config_task_name: stakater-update-cd-repo-v3
       name: update-cd-repo
       when:
         - input: $(tasks.stakater-e2e-test-v1.status)
           operator: in
           values: [“Failed”]
-    - taskName: stakater-set-commit-status-v1
+    - default_config_task_name: stakater-set-commit-status-v1
       name: set-commit-status-task-result
   tasks:
-    - taskName: stakater-set-commit-status-v1
+    - name: stakater-set-commit-status-v1
       params:
       - name: state
         value: pending
-    - taskName: git-clone
-    - taskName: stakater-create-git-tag-v1
-    - taskName: stakater-code-linting-v1
-    - taskName: stakater-kube-linting-v1
+    - name: git-clone
+    - name: stakater-create-git-tag-v1
+    - name: stakater-code-linting-v1
+    - name: stakater-kube-linting-v1
       runAfter:
       - stakater-create-git-tag-v1
-    - taskName: stakater-unit-test-v1
+    - name: stakater-unit-test-v1
       runAfter:
       - stakater-kube-linting-v1
       - stakater-code-linting-v1
-    - taskName: stakater-sonarqube-scanner-v1
+    - name: stakater-sonarqube-scanner-v1
       runAfter:
         - stakater-unit-test-v1
-    - taskName: stakater-buildah-v1
+    - default_config_task_name: stakater-buildah-v1
       name: build-and-push
       runAfter:
       - stakater-unit-test-v1
-    - taskName: stakater-trivy-scan-v1
+    - name: stakater-trivy-scan-v1
       runAfter:
       - build-and-push
       - stakater-sonarqube-scanner-v1
-    - taskName: rox-image-scan
+    - name: rox-image-scan
       runAfter:
       - build-and-push
       - stakater-sonarqube-scanner-v1
-    - taskName: rox-image-check
+    - name: rox-image-check
       runAfter:
       - build-and-push
       - stakater-sonarqube-scanner-v1
-    - taskName: rox-deployment-check
+    - name: rox-deployment-check
       runAfter:
       - build-and-push
       - stakater-sonarqube-scanner-v1
-    - taskName: stakater-checkov-scan-v1
+    - name: stakater-checkov-scan-v1
       runAfter:
       - build-and-push
       - stakater-sonarqube-scanner-v1
-    - taskName: stakater-comment-on-github-pr-v1
+    - name: stakater-comment-on-github-pr-v1
       runAfter:
       - stakater-trivy-scan-v1
       - rox-image-scan
       - rox-image-check
       - rox-deployment-check
       - stakater-checkov-scan-v1
-    - taskName: stakater-helm-push-v1
-    - taskName: stakater-create-environment-v1
-    - taskName: stakater-update-cd-repo-v3
-    - taskName: stakater-push-main-tag-v1
-    - taskName: stakater-app-sync-and-wait-v1
-    - taskName: stakater-e2e-test-v1
+    - name: stakater-helm-push-v1
+    - name: stakater-create-environment-v1
+    - name: stakater-update-cd-repo-v3
+    - name: stakater-push-main-tag-v1
+    - name: stakater-app-sync-and-wait-v1
+    - name: stakater-e2e-test-v1
 eventlistener:
   triggers:
   - name: stakater-pr-cleaner-v2-pullrequest-merge

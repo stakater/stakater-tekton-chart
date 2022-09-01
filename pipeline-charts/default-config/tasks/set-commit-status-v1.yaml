@@ -1,4 +1,7 @@
-taskName: stakater-set-commit-status-v1
+name: stakater-set-commit-status-v1
+taskRef:
+  task: stakater-set-commit-status-v1
+  kind: ClusterTask
 params:
   - name: webhook-payload
     value: $(params.webhook-payload)

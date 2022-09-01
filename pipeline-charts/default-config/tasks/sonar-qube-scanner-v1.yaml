@@ -1,4 +1,7 @@
-taskName: stakater-sonarqube-scanner-v1
+name: stakater-sonarqube-scanner-v1
+taskRef:
+  task: stakater-sonarqube-scanner-v1
+  kind: ClusterTask
 params:
   - name: sonar_host_url
     value: "http://sonarqube.stakater-sonarqube:9000"

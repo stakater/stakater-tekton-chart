@@ -1,4 +1,7 @@
-taskName: rox-image-scan
+name: rox-image-scan
+taskRef:
+  task: rox-image-scan
+  kind: ClusterTask
 params:
   - name: image
     value: '$(params.image_registry_url):$(tasks.stakater-create-git-tag-v1.results.GIT_TAG)'

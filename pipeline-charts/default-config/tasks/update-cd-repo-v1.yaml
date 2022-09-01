@@ -1,4 +1,4 @@
-taskName: stakater-update-cd-repo-v1
+name: stakater-update-cd-repo-v1
 params:
   - name: prnumber
   - name: environment
@@ -16,3 +16,7 @@ params:
 workspaces:
   - name: source
     workspace: source
+taskRef: 
+  task: stakater-update-cd-repo-v1
+  kind: ClusterTask
+  

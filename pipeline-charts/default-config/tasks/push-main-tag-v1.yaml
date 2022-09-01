@@ -1,4 +1,7 @@
-taskName: stakater-push-main-tag-v1
+name: stakater-push-main-tag-v1
+taskRef:
+  task: stakater-push-main-tag-v1
+  kind: ClusterTask
 params:
   - name: prnumber
   - name: gitrevision

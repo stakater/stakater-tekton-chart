@@ -1,4 +1,7 @@
-taskName: git-clone
+name: git-clone
+taskRef:
+  task: git-clone
+  kind: ClusterTask
 params:
   - name: url
     value: $(params.gitrepositoryurl)

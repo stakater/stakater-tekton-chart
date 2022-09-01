@@ -1,4 +1,7 @@
-taskName: stakater-update-cd-repo-v3
+name: stakater-update-cd-repo-v3
+taskRef:
+  task: stakater-update-cd-repo-v3
+  kind: ClusterTask
 params:
 - name: prnumber
   value: $(params.prnumber)

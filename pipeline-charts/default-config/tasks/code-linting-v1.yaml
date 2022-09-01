@@ -1,4 +1,7 @@
-taskName: stakater-code-linting-v1
+name: stakater-code-linting-v1
 workspaces:
 - name: source
   workspace: source 
+taskRef: 
+  task: stakater-code-linting-v1
+  kind: ClusterTask

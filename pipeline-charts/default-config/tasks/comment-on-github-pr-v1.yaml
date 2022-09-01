@@ -1,4 +1,4 @@
-taskName: stakater-comment-on-github-pr-v1
+name: stakater-comment-on-github-pr-v1
 params:
   - name: prnumber
   - name: gitrepositoryurl
@@ -7,3 +7,6 @@ params:
 workspaces:
   - name: source
     workspace: source
+taskRef: 
+  task: stakater-comment-on-github-pr-v1
+  kind: ClusterTask

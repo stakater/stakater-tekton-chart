@@ -1,4 +1,7 @@
-taskName: stakater-e2e-test-v1
+name: stakater-e2e-test-v1
+taskRef:
+  task: stakater-e2e-test-v1
+  kind: ClusterTask
 params:
 - name: gitorganization
   value: github.com/stakater-lab

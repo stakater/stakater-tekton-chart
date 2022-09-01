@@ -1,4 +1,4 @@
-taskName: stakater-create-environment-provisioner-v1
+name: stakater-create-environment-provisioner-v1
 params:
   - name: repoName
   - name: prNumber
@@ -13,3 +13,6 @@ params:
 workspaces:
   - name: output
     workspace: source
+taskRef: 
+  task: stakater-create-environment-provisioner-v1
+  kind: ClusterTask

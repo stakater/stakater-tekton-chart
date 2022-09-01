@@ -1,4 +1,7 @@
-taskName: stakater-app-sync-and-wait-v1
+name: stakater-app-sync-and-wait-v1
+taskRef: 
+  task: stakater-app-sync-and-wait-v1
+  kind: ClusterTask
 params:
 - name: gitrepositoryurl
   value: $(params.gitrepositoryurl)
