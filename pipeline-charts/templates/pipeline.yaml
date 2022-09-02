@@ -48,7 +48,7 @@ spec:
         {{- range .workspaces }}
         - name: {{ .name }}
         {{- end }}
-      {{- else if and $default.taskSpec .name }}
+      {{- else if and $default.taskSpec .default_config_task_name }}
       taskSpec:
         {{- $default.taskSpec | toYaml | nindent 8 }}
         {{- if $task_params }}
@@ -57,11 +57,11 @@ spec:
         {{- if $task_workspaces }}
         workspaces: {{ $task_workspaces_name_only | nindent 4 }}
         {{- end }}
-      {{- else if .taskRef }}
+      {{- else if and .taskRef .name }}
       taskRef:
           name: {{ .taskRef.task }}
           kind: {{ .taskRef.kind }}
-      {{- else if $default.taskRef }}
+      {{- else if and $default.taskRef .default_config_task_name }}
       taskRef:
           name: {{ $default.taskRef.task }}
           kind: {{ $default.taskRef.kind }}
@@ -119,7 +119,7 @@ spec:
         {{- range .workspaces }}
         - name: {{ .name }}
         {{- end }}
-      {{- else if and $default.taskSpec .name }}
+      {{- else if and $default.taskSpec .default_config_task_name }}
       taskSpec:
         {{- $default.taskSpec | toYaml | nindent 8 }}
         {{- if ne $task_params "[]" }}
@@ -128,11 +128,11 @@ spec:
         {{- if ne $task_workspaces "[]" }}
         workspaces: {{ $task_workspaces_name_only | nindent 4 }}
         {{- end }}
-      {{- else if .taskRef }}
+      {{- else if and .taskRef .name }}
       taskRef:
           name: {{ .taskRef.task }}
           kind: {{ .taskRef.kind }}
-      {{- else if $default.taskRef }}
+      {{- else if and $default.taskRef .default_config_task_name }}
       taskRef:
           name: {{ $default.taskRef.task }}
           kind: {{ $default.taskRef.kind }}
