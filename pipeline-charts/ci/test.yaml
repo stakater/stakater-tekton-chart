@@ -18,9 +18,18 @@
           value: $(tasks.stakater-create-git-tag-v1.results.CURRENT_GIT_TAG)
       - default_task_name: stakater-set-commit-status-v1
         name: set-commit-status-task-result
-      - taskRef:
-          task: stakater-notify-slack-v1
-          kind: ClusterTask
+      - taskSpec:
+            steps:
+            - image: 'maven:3.6.3-openjdk-11-slim'
+              name: test
+              script: |
+                if [ -f "pom.xml" ]
+                then
+                mvn clean test
+                else
+                echo "No maven project found"
+                fi
+              workingDir: $(workspaces.source.path)
         name: notify-slack
         params:
         - name: namespace
