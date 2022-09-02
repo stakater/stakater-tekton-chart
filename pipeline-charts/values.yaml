@@ -24,9 +24,9 @@ pipelines:
   # Pipeline Tasks
   tasks:
     # Task Name, Params, Workspaces
-    - name: git-clone
+    - default_task_name: git-clone
     # - name: task1
-    #   default_config_task_name: kube-linting-v1
+    #   default_task_name: kube-linting-v1
     # - name: task2
     #   params:
     #    - name: pipelineparam2
@@ -36,6 +36,16 @@ pipelines:
     #      workspace: source
     #   runAfter:
     #   - git-clone
+    # - name: task3
+    #   params: 
+    #   - name: p1
+    #     value/: v1
+    #   workspaces:
+    #   - name: source
+    #     workspace: source
+    #   taskSpec:
+    #     steps:
+    #
 
 ##########################################################
 # Trigger Template Definition
