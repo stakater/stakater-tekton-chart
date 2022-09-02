@@ -6,20 +6,20 @@ workspaces:
           resourcesRequestsStorage: 1Gi
 pipelines:
     tasks:
-        - default_task_name: git-clone
-        - default_task_name: stakater-create-git-tag-v1
-        - default_task_name: maven-settings
+        - defaultTaskName: git-clone
+        - defaultTaskName: stakater-create-git-tag-v1
+        - defaultTaskName: maven-settings
           params:
           - name: NEXUS_URL
             value: $(params.nexus_url)
           workspaces:
           - name: source
             workspace: source
-        - default_task_name: stakater-buildah-v1
-        - default_task_name: stakater-comment-on-github-pr-v1
-        - default_task_name: stakater-helm-push-v1
-        - default_task_name: stakater-update-cd-repo-v1
-        - default_task_name: stakater-push-main-tag-v1
+        - defaultTaskName: stakater-buildah-v1
+        - defaultTaskName: stakater-comment-on-github-pr-v1
+        - defaultTaskName: stakater-helm-push-v1
+        - defaultTaskName: stakater-update-cd-repo-v1
+        - defaultTaskName: stakater-push-main-tag-v1
 triggertemplate:
     serviceAccountName: stakater-tekton-builder
 eventlistener:

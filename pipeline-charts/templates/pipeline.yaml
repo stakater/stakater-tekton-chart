@@ -32,7 +32,7 @@ spec:
     {{- $task_workspaces := include "pipeline-charts.merge_workspaces" (list $default.workspaces .workspaces false) }} 
     {{- $task_params_name_only := include "pipeline-charts.merge_params" (list $default.params .params true) }} 
     {{- $task_workspaces_name_only := include "pipeline-charts.merge_workspaces" (list $default.workspaces .workspaces true) }} 
-    - name: {{ .name | default .default_task_name }}
+    - name: {{ .name | default .defaultTaskName }}
       {{- if or .when $default.when }}
       when:
       {{- .when | default $default.when | toYaml | nindent 6 }}
@@ -52,7 +52,7 @@ spec:
         - name: {{ .name }}
         {{- end }}
         {{- end }}
-      {{- else if and $default.taskSpec .default_task_name }}
+      {{- else if and $default.taskSpec .defaultTaskName }}
       taskSpec:
         {{- $default.taskSpec | toYaml | nindent 8 }}
         {{- if $task_params }}
@@ -65,7 +65,7 @@ spec:
       taskRef:
           name: {{ .taskRef.task }}
           kind: {{ .taskRef.kind | default "ClusterTask" }}
-      {{- else if and $default.taskRef .default_task_name }}
+      {{- else if and $default.taskRef .defaultTaskName }}
       taskRef:
           name: {{ $default.taskRef.task }}
           kind: {{ $default.taskRef.kind }}
@@ -107,7 +107,7 @@ spec:
     {{- $task_workspaces := include "pipeline-charts.merge_workspaces" (list $default.workspaces .workspaces false) }} 
     {{- $task_params_name_only := include "pipeline-charts.merge_params" (list $default.params .params true) }} 
     {{- $task_workspaces_name_only := include "pipeline-charts.merge_workspaces" (list $default.workspaces .workspaces true) }} 
-    - name: {{ .name | default .default_task_name }}
+    - name: {{ .name | default .defaultTaskName }}
       {{- if or .when $default.when }}
       when: 
       {{- .when | default $default.when | toYaml | nindent 6 }}
@@ -127,7 +127,7 @@ spec:
         - name: {{ .name }}
         {{- end }}
         {{- end }}
-      {{- else if and $default.taskSpec .default_task_name }}
+      {{- else if and $default.taskSpec .defaultTaskName }}
       taskSpec:
         {{- $default.taskSpec | toYaml | nindent 8 }}
         {{- if ne $task_params "[]" }}
@@ -140,7 +140,7 @@ spec:
       taskRef:
           name: {{ .taskRef.task }}
           kind: {{ .taskRef.kind | default "ClusterTask" }}
-      {{- else if and $default.taskRef .default_task_name }}
+      {{- else if and $default.taskRef .defaultTaskName }}
       taskRef:
           name: {{ $default.taskRef.task }}
           kind: {{ $default.taskRef.kind }}
@@ -187,6 +187,6 @@ spec:
         {{- end }}
         {{- end -}}
       {{- end }}
-      {{- $previoustask = (.name | default .default_task_name) }}
+      {{- $previoustask = (.name | default .defaultTaskName) }}
     {{- end }}
 {{- end }}

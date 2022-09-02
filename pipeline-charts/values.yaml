@@ -24,9 +24,9 @@ pipelines:
   # Pipeline Tasks
   tasks:
     # Task Name, Params, Workspaces
-    - default_task_name: git-clone
+    - defaultTaskName: git-clone
     # - name: task1
-    #   default_task_name: kube-linting-v1
+    #   defaultTaskName: kube-linting-v1
     # - name: task2
     #   params:
     #    - name: pipelineparam2
