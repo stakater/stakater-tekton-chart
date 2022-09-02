@@ -64,7 +64,7 @@ spec:
       {{- else if and .taskRef .name }}
       taskRef:
           name: {{ .taskRef.task }}
-          kind: {{ .taskRef.kind }}
+          kind: {{ .taskRef.kind | default ClusterTask }}
       {{- else if and $default.taskRef .default_task_name }}
       taskRef:
           name: {{ $default.taskRef.task }}
@@ -139,7 +139,7 @@ spec:
       {{- else if and .taskRef .name }}
       taskRef:
           name: {{ .taskRef.task }}
-          kind: {{ .taskRef.kind }}
+          kind: {{ .taskRef.kind | default ClusterTask }}
       {{- else if and $default.taskRef .default_task_name }}
       taskRef:
           name: {{ $default.taskRef.task }}
