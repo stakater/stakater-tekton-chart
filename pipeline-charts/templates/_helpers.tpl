@@ -10,7 +10,7 @@ Expand the name of the chart.
   {{- $default_tasks := index . 1 }}
   {{- $result :=  dict }}
   {{- range $default_tasks }}
-  {{- if eq .name ( $task_to_search.default_config_task_name ) }}
+  {{- if eq .name ( $task_to_search.default_task_name ) }}
   {{ $result := set $result "params" .params }}
   {{ $result := set $result "workspaces" .workspaces }}
   {{ $result := set $result "name" .name }}

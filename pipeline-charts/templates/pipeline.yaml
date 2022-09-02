@@ -32,7 +32,7 @@ spec:
     {{- $task_workspaces := include "pipeline-charts.merge_workspaces" (list $default.workspaces .workspaces false) }} 
     {{- $task_params_name_only := include "pipeline-charts.merge_params" (list $default.params .params true) }} 
     {{- $task_workspaces_name_only := include "pipeline-charts.merge_workspaces" (list $default.workspaces .workspaces true) }} 
-    - name: {{ .name | default .default_config_task_name }}
+    - name: {{ .name | default .default_task_name }}
       {{- if or .when $default.when }}
       when:
       {{- .when | default $default.when | toYaml | nindent 6 }}
@@ -40,28 +40,32 @@ spec:
       {{- if and .taskSpec .name }}
       taskSpec:
         {{- .taskSpec | toYaml | nindent 8 }}
+        {{- if .params }}
         params:
         {{- range .params }}
         - name: {{ .name }}
         {{- end }}
+        {{- end }}
+        {{- if .workspaces }}
         workspaces:
         {{- range .workspaces }}
         - name: {{ .name }}
         {{- end }}
-      {{- else if and $default.taskSpec .default_config_task_name }}
+        {{- end }}
+      {{- else if and $default.taskSpec .default_task_name }}
       taskSpec:
         {{- $default.taskSpec | toYaml | nindent 8 }}
         {{- if $task_params }}
-        params: {{ $task_params_name_only  | nindent 4 }}
+        params: {{ $task_params_name_only  | nindent 8 }}
         {{- end }}
         {{- if $task_workspaces }}
-        workspaces: {{ $task_workspaces_name_only | nindent 4 }}
+        workspaces: {{ $task_workspaces_name_only | nindent 8 }}
         {{- end }}
       {{- else if and .taskRef .name }}
       taskRef:
           name: {{ .taskRef.task }}
           kind: {{ .taskRef.kind }}
-      {{- else if and $default.taskRef .default_config_task_name }}
+      {{- else if and $default.taskRef .default_task_name }}
       taskRef:
           name: {{ $default.taskRef.task }}
           kind: {{ $default.taskRef.kind }}
@@ -103,7 +107,7 @@ spec:
     {{- $task_workspaces := include "pipeline-charts.merge_workspaces" (list $default.workspaces .workspaces false) }} 
     {{- $task_params_name_only := include "pipeline-charts.merge_params" (list $default.params .params true) }} 
     {{- $task_workspaces_name_only := include "pipeline-charts.merge_workspaces" (list $default.workspaces .workspaces true) }} 
-    - name: {{ .name | default .default_config_task_name }}
+    - name: {{ .name | default .default_task_name }}
       {{- if or .when $default.when }}
       when: 
       {{- .when | default $default.when | toYaml | nindent 6 }}
@@ -111,28 +115,32 @@ spec:
       {{- if and .taskSpec .name }}
       taskSpec:
         {{- .taskSpec | toYaml | nindent 8 }}
+        {{- if .params }}
         params:
         {{- range .params }}
         - name: {{ .name }}
         {{- end }}
+        {{- end }}
+        {{- if .workspaces }}
         workspaces:
         {{- range .workspaces }}
         - name: {{ .name }}
         {{- end }}
-      {{- else if and $default.taskSpec .default_config_task_name }}
+        {{- end }}        
+      {{- else if and $default.taskSpec .default_task_name }}
       taskSpec:
         {{- $default.taskSpec | toYaml | nindent 8 }}
         {{- if ne $task_params "[]" }}
-        params: {{ $task_params_name_only  | nindent 4 }}
+        params: {{ $task_params_name_only  | nindent 8 }}
         {{- end }}
         {{- if ne $task_workspaces "[]" }}
-        workspaces: {{ $task_workspaces_name_only | nindent 4 }}
+        workspaces: {{ $task_workspaces_name_only | nindent 8 }}
         {{- end }}
       {{- else if and .taskRef .name }}
       taskRef:
           name: {{ .taskRef.task }}
           kind: {{ .taskRef.kind }}
-      {{- else if and $default.taskRef .default_config_task_name }}
+      {{- else if and $default.taskRef .default_task_name }}
       taskRef:
           name: {{ $default.taskRef.task }}
           kind: {{ $default.taskRef.kind }}
@@ -179,6 +187,6 @@ spec:
         {{- end }}
         {{- end -}}
       {{- end }}
-      {{- $previoustask = .name }}
+      {{- $previoustask = (.name | default .default_task_name) }}
     {{- end }}
 {{- end }}
