@@ -128,10 +128,7 @@
         - name: timeout
           value: "180"
       - default_task_name: stakater-e2e-test-v1
-  triggertemplate:
-    serviceAccountName: stakater-tekton-builder
   eventlistener:
-    serviceAccountName: stakater-tekton-builder
     triggers:
     - name: stakater-pr-cleaner-v2-pullrequest-merge
       create: false
