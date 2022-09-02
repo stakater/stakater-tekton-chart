@@ -1,13 +1,25 @@
 
 default_triggers:
   templates:
-    - triggerName: pullrequest
+    - triggerName: pullrequest-create
       interceptors:
         - ref:
             name: "cel"
           params:
             - name: "filter"
-              value: "(header.match('X-GitHub-Event', 'pull_request') && body.action == 'opened' || body.action == 'synchronize')"
+              value: "(header.match('X-GitHub-Event', 'pull_request') && body.action == 'opened')"
+            - name: "overlays"
+              value:
+                - key: marshalled-body
+                  expression: "body.marshalJSON()"
+
+    - triggerName: pullrequest-synchronize
+      interceptors:
+        - ref:
+            name: "cel"
+          params:
+            - name: "filter"
+              value: "(header.match('X-GitHub-Event', 'pull_request') && body.action == 'synchronize')"
             - name: "overlays"
               value:
                 - key: marshalled-body

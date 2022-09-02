@@ -126,7 +126,7 @@ spec:
         {{- range .workspaces }}
         - name: {{ .name }}
         {{- end }}
-        {{- end }}        
+        {{- end }}
       {{- else if and $default.taskSpec .default_task_name }}
       taskSpec:
         {{- $default.taskSpec | toYaml | nindent 8 }}
