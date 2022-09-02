@@ -1,163 +1,162 @@
-
-  name: stakater-nordmart-review-ui-pipeline
-  workspaces:
-    - name: source
-      volumeClaimTemplate:
-        accessModes: ReadWriteOnce
-        resourcesRequestsStorage: 1Gi
-  pipelines:
-    finally:
-      - default_task_name: stakater-update-cd-repo-v3
-        name: stakater-rollback-cd-repo
-        when:
-        - input: $(tasks.stakater-e2e-test-v1.status)
-          operator: in
-          values: [“Failed”]
-        params:
-        - name: IMAGE_TAG
+name: stakater-nordmart-review-ui-pipeline
+workspaces:
+  - name: source
+    volumeClaimTemplate:
+      accessModes: ReadWriteOnce
+      resourcesRequestsStorage: 1Gi
+pipelines:
+  finally:
+    - default_task_name: stakater-update-cd-repo-v3
+      name: stakater-rollback-cd-repo
+      when:
+      - input: $(tasks.stakater-e2e-test-v1.status)
+        operator: in
+        values: [“Failed”]
+      params:
+      - name: IMAGE_TAG
+        value: $(tasks.stakater-create-git-tag-v1.results.CURRENT_GIT_TAG)
+    - default_task_name: stakater-set-commit-status-v1
+      name: set-commit-status-task-result
+    - taskRef:
+        task: stakater-notify-slack-v1
+        kind: ClusterTask
+      name: notify-slack
+      params:
+      - name: namespace
+      - name: author
+      - name: gitrevision
+      - name: repo
+        value: $(params.repoName)
+      - name: gitrepositoryurl
+      - name: tekton-base-url
+      - name: prnumber
+  tasks:
+    - default_task_name: stakater-set-commit-status-v1
+      params:
+      - name: state
+        value: pending
+    - default_task_name: git-clone
+    - default_task_name: stakater-create-git-tag-v1
+      params:
+        - name: oldcommit
+        - name: action
+    - default_task_name: stakater-code-linting-v1
+    - default_task_name: stakater-kube-linting-v1
+      params:
+      - name: namespace
+        value: $(context.pipelineRun.namespace)
+      runAfter:
+      - stakater-create-git-tag-v1
+    - default_task_name: stakater-unit-test-v1
+      runAfter:
+      - stakater-kube-linting-v1
+      - stakater-code-linting-v1
+    - default_task_name: stakater-sonarqube-scanner-v1
+      runAfter:
+        - stakater-unit-test-v1
+    - default_task_name: stakater-build-image-flag-v1
+      runAfter:
+        - stakater-unit-test-v1
+      workspaces:
+        - name: source
+          workspace: source
+      params:
+        - name: oldcommit
+        - name: newcommit
+    - default_task_name: stakater-buildah-v1
+      name: build-and-push
+      runAfter:
+      - stakater-build-image-flag-v1
+      params:
+        - name: BUILD_IMAGE
+          value: $(tasks.stakater-build-image-flag-v1.results.build-image)
+        - name: IMAGE_REGISTRY
+          value: $(params.image_registry_url)
+        - name: CURRENT_GIT_TAG
           value: $(tasks.stakater-create-git-tag-v1.results.CURRENT_GIT_TAG)
-      - default_task_name: stakater-set-commit-status-v1
-        name: set-commit-status-task-result
-      - taskRef:
-          task: stakater-notify-slack-v1
-          kind: ClusterTask
-        name: notify-slack
-        params:
-        - name: namespace
-        - name: author
-        - name: gitrevision
-        - name: repo
-          value: $(params.repoName)
-        - name: gitrepositoryurl
-        - name: tekton-base-url
-        - name: prnumber
-    tasks:
-      - default_task_name: stakater-set-commit-status-v1
-        params:
-        - name: state
-          value: pending
-      - default_task_name: git-clone
-      - default_task_name: stakater-create-git-tag-v1
-        params:
-          - name: oldcommit
-          - name: action
-      - default_task_name: stakater-code-linting-v1
-      - default_task_name: stakater-kube-linting-v1
-        params:
-        - name: namespace
-          value: $(context.pipelineRun.namespace)
-        runAfter:
-        - stakater-create-git-tag-v1
-      - default_task_name: stakater-unit-test-v1
-        runAfter:
-        - stakater-kube-linting-v1
-        - stakater-code-linting-v1
-      - default_task_name: stakater-sonarqube-scanner-v1
-        runAfter:
-          - stakater-unit-test-v1
-      - default_task_name: stakater-build-image-flag-v1
-        runAfter:
-          - stakater-unit-test-v1
-        workspaces:
-          - name: source
-            workspace: source
-        params:
-          - name: oldcommit
-          - name: newcommit
-      - default_task_name: stakater-buildah-v1
-        name: build-and-push
-        runAfter:
-        - stakater-build-image-flag-v1
-        params:
-          - name: BUILD_IMAGE
-            value: $(tasks.stakater-build-image-flag-v1.results.build-image)
-          - name: IMAGE_REGISTRY
-            value: $(params.image_registry_url)
-          - name: CURRENT_GIT_TAG
-            value: $(tasks.stakater-create-git-tag-v1.results.CURRENT_GIT_TAG)
-      - default_task_name: stakater-trivy-scan-v1
-        params:
+    - default_task_name: stakater-trivy-scan-v1
+      params:
+      - name: BUILD_IMAGE
+        value: $(tasks.stakater-build-image-flag-v1.results.build-image)
+      runAfter:
+      - build-and-push
+      - stakater-sonarqube-scanner-v1
+    - default_task_name: rox-image-scan
+      params:
+      - name: image_digest
+        value: $(tasks.build-and-push.results.IMAGE_DIGEST)
+      - name: BUILD_IMAGE
+        value: $(tasks.stakater-build-image-flag-v1.results.build-image)
+      runAfter:
+      - build-and-push
+      - stakater-sonarqube-scanner-v1
+    - default_task_name: rox-image-check
+      params:
         - name: BUILD_IMAGE
           value: $(tasks.stakater-build-image-flag-v1.results.build-image)
-        runAfter:
-        - build-and-push
-        - stakater-sonarqube-scanner-v1
-      - default_task_name: rox-image-scan
-        params:
-        - name: image_digest
-          value: $(tasks.build-and-push.results.IMAGE_DIGEST)
-        - name: BUILD_IMAGE
-          value: $(tasks.stakater-build-image-flag-v1.results.build-image)
-        runAfter:
-        - build-and-push
-        - stakater-sonarqube-scanner-v1
-      - default_task_name: rox-image-check
-        params:
-          - name: BUILD_IMAGE
-            value: $(tasks.stakater-build-image-flag-v1.results.build-image)
-        runAfter:
-        - build-and-push
-        - stakater-sonarqube-scanner-v1
-      - default_task_name: rox-deployment-check
-        params:
-        - name: BUILD_IMAGE
-          value: $(tasks.stakater-build-image-flag-v1.results.build-image)
-        runAfter:
-        - build-and-push
-        - stakater-sonarqube-scanner-v1
-      - default_task_name: stakater-checkov-scan-v1
-        params:
-        - name: BUILD_IMAGE
-          value: $(tasks.stakater-build-image-flag-v1.results.build-image)
-        runAfter:
-        - build-and-push
-        - stakater-sonarqube-scanner-v1
-      - default_task_name: stakater-comment-on-github-pr-v1
-        runAfter:
-        - stakater-trivy-scan-v1
-        - rox-image-scan
-        - rox-image-check
-        - rox-deployment-check
-        - stakater-checkov-scan-v1
-      - default_task_name: stakater-helm-push-v1
-      - default_task_name: stakater-create-environment-v1
-      - default_task_name: stakater-update-cd-repo-v3
-      - default_task_name: stakater-push-main-tag-v1
-      - default_task_name: stakater-app-sync-and-wait-v1
-        params:
-        - name: timeout
-          value: "180"
-      - default_task_name: stakater-e2e-test-v1
-  eventlistener:
-    triggers:
-    - name: stakater-pr-cleaner-v2-pullrequest-merge
-      create: false
-    - name: pullrequest-create
-      create: true
-      bindings:
+      runAfter:
+      - build-and-push
+      - stakater-sonarqube-scanner-v1
+    - default_task_name: rox-deployment-check
+      params:
+      - name: BUILD_IMAGE
+        value: $(tasks.stakater-build-image-flag-v1.results.build-image)
+      runAfter:
+      - build-and-push
+      - stakater-sonarqube-scanner-v1
+    - default_task_name: stakater-checkov-scan-v1
+      params:
+      - name: BUILD_IMAGE
+        value: $(tasks.stakater-build-image-flag-v1.results.build-image)
+      runAfter:
+      - build-and-push
+      - stakater-sonarqube-scanner-v1
+    - default_task_name: stakater-comment-on-github-pr-v1
+      runAfter:
+      - stakater-trivy-scan-v1
+      - rox-image-scan
+      - rox-image-check
+      - rox-deployment-check
+      - stakater-checkov-scan-v1
+    - default_task_name: stakater-helm-push-v1
+    - default_task_name: stakater-create-environment-v1
+    - default_task_name: stakater-update-cd-repo-v3
+    - default_task_name: stakater-push-main-tag-v1
+    - default_task_name: stakater-app-sync-and-wait-v1
+      params:
+      - name: timeout
+        value: "180"
+    - default_task_name: stakater-e2e-test-v1
+eventlistener:
+  triggers:
+  - name: stakater-pr-cleaner-v2-pullrequest-merge
+    create: false
+  - name: pullrequest-create
+    create: true
+    bindings:
+    - ref: stakater-pr-v1
+    - name: oldcommit
+      value: $(body.pull_request.base.sha)
+    - name: newcommit
+      value: $(body.pull_request.head.sha)
+  - name: pullrequest-synchronize
+    create: true
+    bindings:
       - ref: stakater-pr-v1
       - name: oldcommit
-        value: $(body.pull_request.base.sha)
+        value: $(body.before)
       - name: newcommit
-        value: $(body.pull_request.head.sha)
-    - name: pullrequest-synchronize
-      create: true
-      bindings:
-        - ref: stakater-pr-v1
-        - name: oldcommit
-          value: $(body.before)
-        - name: newcommit
-          value: $(body.after)
-    - name: push
-      create: true
-      bindings:
-        - ref: stakater-main-v1
-        - name: oldcommit
-          value: $(body.before)
-        - name: newcommit
-          value: $(body.after)
-  rbac:
-    enabled: false
-  serviceAccount:
-    name: stakater-tekton-builder
-    create: false
+        value: $(body.after)
+  - name: push
+    create: true
+    bindings:
+      - ref: stakater-main-v1
+      - name: oldcommit
+        value: $(body.before)
+      - name: newcommit
+        value: $(body.after)
+rbac:
+  enabled: false
+serviceAccount:
+  name: stakater-tekton-builder
+  create: false
