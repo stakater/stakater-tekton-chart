@@ -54,7 +54,9 @@ pipelines:
     - defaultTaskName: stakater-sonarqube-scanner-v1
       runAfter:
         - stakater-unit-test-v1
-    - defaultTaskName: stakater-build-image-flag-v1
+    - name: stakater-build-image-flag-v1
+      taskRef: 
+        task: stakater-build-image-flag-v1
       runAfter:
         - stakater-unit-test-v1
       workspaces:

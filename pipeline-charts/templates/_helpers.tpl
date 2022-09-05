@@ -103,7 +103,8 @@ Expand the name of the chart.
       {{- range $list2 }}
       {{- $addedParams := set $addedParams .name "e" }}
         {{- if .value }}
-        {{- $result = (dict "name" .name "value" .value) | append $result  }}
+        {{- $v := quote .value }}
+        {{- $result = (dict "name" .name "value" $v) | append $result  }}
         {{- else }}
         {{- $v := printf "$(params.%s)" .name }}
         {{- $result = (dict "name" .name "value" $v) | append $result }}
@@ -113,7 +114,8 @@ Expand the name of the chart.
       {{- if hasKey $addedParams .name }}
       {{- else }}
         {{- if .value }}
-        {{- $result = (dict "name" .name "value" .value) | append $result }}
+        {{- $v := quote .value }}
+        {{- $result = (dict "name" .name "value" $v) | append $result }}
         {{- else }}
         {{- $v := printf "$(params.%s)" .name }}
         {{- $result = (dict "name" .name "value" $v) | append $result }}
