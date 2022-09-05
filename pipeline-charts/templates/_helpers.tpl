@@ -102,29 +102,21 @@ Expand the name of the chart.
       {{- $addedParams := dict }}
       {{- range $list2 }}
       {{- $addedParams := set $addedParams .name "e" }}
-        {{- if $name_only }}
-        {{- $result = (dict "name" .name ) | append $result  }}
-        {{- else }}
         {{- if .value }}
         {{- $result = (dict "name" .name "value" .value) | append $result  }}
         {{- else }}
         {{- $v := printf "$(params.%s)" .name }}
         {{- $result = (dict "name" .name "value" $v) | append $result }}
         {{- end }}
-        {{- end }}
       {{- end }}
       {{- range $list1 }}
       {{- if hasKey $addedParams .name }}
       {{- else }}
-        {{- if $name_only }}
-        {{- $result = (dict "name" .name ) | append $result  }}
-        {{- else }}
         {{- if .value }}
         {{- $result = (dict "name" .name "value" .value) | append $result }}
         {{- else }}
         {{- $v := printf "$(params.%s)" .name }}
         {{- $result = (dict "name" .name "value" $v) | append $result }}
-        {{- end }}
         {{- end }}
       {{- end }}
       {{- end }}
@@ -133,27 +125,19 @@ Expand the name of the chart.
 {{- end }}
 
 {{- define "pipeline-charts.merge_workspaces" }}
-  {{- $list1 := index . 0 }}   
+  {{- $list1 := index . 0 }}
   {{- $list2 := index . 1 }}
   {{- $result:= list }}
   {{- if or $list1 $list2 }}
       {{- $addedParams := dict }}
       {{- range $list2 }}
       {{- $addedParams := set $addedParams .name "e" }}
-      {{- if $name_only }}
-      {{- $result = (dict "name" .name ) | append $result  }}
-      {{- else }}
       {{- $result = (dict "name" .name "workspace" .workspace) | append $result }}
-      {{- end }}
       {{- end }}
       {{- range $list1 }}
       {{- if hasKey $addedParams .name }}
       {{- else }}
-      {{- if $name_only }}
-      {{- $result = (dict "name" .name ) | append $result  }}
-      {{- else }}
       {{- $result = (dict "name" .name "workspace" .workspace) | append $result }}
-      {{- end }}
       {{- end }}
       {{- end }}
   {{- end }}
