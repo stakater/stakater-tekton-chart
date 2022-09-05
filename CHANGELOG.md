@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 ## [0.0.26] - 2022-09-06
 
 - Feature : Add taskSpec support for defining tasks through default tasks and values.
-- Change: Renamed taskName field to default_task_name.
+- Change: Renamed taskName field to defaultTaskName.
 - Change: If task doesnt exists, defining ( taskRef or taskSpec ) and ( name ) is required.
 - Fix: Allow definition of kind in taskRef.
 - Fix: Remove redundant code by defining it in helpers.tpl

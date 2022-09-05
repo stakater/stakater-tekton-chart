@@ -185,7 +185,7 @@ spec:
       {{- end }}
       {{- else }}
       {{- if $task_params }}
-      params: 
+      params:
       {{- range $task_params }}
       - name: {{ .name }}
         value: {{ .value }}
