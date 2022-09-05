@@ -130,7 +130,7 @@ Expand the name of the chart.
       {{- end }}
       {{- end }}
   {{- end }}
-  {{- $result | toYaml }}
+  {{- $result | toJson }}
 {{- end }}
 
 {{- define "pipeline-charts.merge_workspaces" }}
@@ -159,5 +159,5 @@ Expand the name of the chart.
       {{- end }}
       {{- end }}
   {{- end }}
-  {{- $result | toYaml }}
+  {{- $result | toJson }}
 {{- end }}
