@@ -55,7 +55,7 @@ pipelines:
       runAfter:
         - stakater-unit-test-v1
     - name: stakater-build-image-flag-v1
-      taskRef: 
+      taskRef:
         task: stakater-build-image-flag-v1
       runAfter:
         - stakater-unit-test-v1
