@@ -12,7 +12,7 @@ All notable changes to this project will be documented in this file.
 
 ## [0.0.25] - 2022-08-31
 
-- Change: Seprate pull request for action == synchronize and action == open in default interceptors
+- Change: Seprate pullrequest trigger for action == synchronize and action == open in default interceptors
 
 ## [0.0.24] - 2022-08-05
 
