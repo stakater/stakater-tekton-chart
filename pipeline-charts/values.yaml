@@ -39,7 +39,7 @@ pipelines:
     # - name: task3
     #   params:
     #   - name: p1
-    #     value/: v1
+    #     value: v1
     #   workspaces:
     #   - name: source
     #     workspace: source
