@@ -27,13 +27,13 @@ spec:
   {{- if .Values.pipelines.finally }}
   finally:
     {{- range .Values.pipelines.finally }}
-    {{- $default := include "pipeline-charts.get_default_task_values" (list . $default_tasks ) | fromJson }}
-    {{- $task_params := include "pipeline-charts.merge_params" (list $default.params .params false ) | fromJsonArray }} 
-    {{- $task_workspaces := include "pipeline-charts.merge_workspaces" (list $default.workspaces .workspaces false) | fromJsonArray }} 
+    {{- $default_tasks := include "pipeline-charts.get_default_task_values" (list . $default_tasks ) | fromJson }}
+    {{- $task_params := include "pipeline-charts.merge_params" (list $default_tasks.params .params false ) | fromJsonArray }} 
+    {{- $task_workspaces := include "pipeline-charts.merge_workspaces" (list $default_tasks.workspaces .workspaces false) | fromJsonArray }} 
     - name: {{ .name | default .defaultTaskName }}
-      {{- if or .when $default.when }}
+      {{- if or .when $default_tasks.when }}
       when:
-      {{- .when | default $default.when | toYaml | nindent 6 }}
+      {{- .when | default $default_tasks.when | toYaml | nindent 6 }}
       {{- end }}
       {{- if and .taskSpec .name }}
       taskSpec:
@@ -50,9 +50,9 @@ spec:
         - name: {{ .name }}
         {{- end }}
         {{- end }}
-      {{- else if and $default.taskSpec .defaultTaskName }}
+      {{- else if and $default_tasks.taskSpec .defaultTaskName }}
       taskSpec:
-        {{- $default.taskSpec | toYaml | nindent 8 }}
+        {{- $default_tasks.taskSpec | toYaml | nindent 8 }}
         {{- if $task_params }}
         params:
         {{- range $task_params }}
@@ -69,10 +69,10 @@ spec:
       taskRef:
           name: {{ .taskRef.task }}
           kind: {{ .taskRef.kind | default "ClusterTask" }}
-      {{- else if and $default.taskRef .defaultTaskName }}
+      {{- else if and $default_tasks.taskRef .defaultTaskName }}
       taskRef:
-          name: {{ $default.taskRef.task }}
-          kind: {{ $default.taskRef.kind }}
+          name: {{ $default_tasks.taskRef.task }}
+          kind: {{ $default_tasks.taskRef.kind }}
       {{- end }}
       {{- if .taskSpec }}
       {{- if .params }}
@@ -114,13 +114,13 @@ spec:
   tasks:
     {{- $previoustask := "" }}
     {{- range .Values.pipelines.tasks }}
-    {{- $default := include "pipeline-charts.get_default_task_values" (list . $default_tasks ) | fromJson -}}
-    {{- $task_params := include "pipeline-charts.merge_params" (list $default.params .params false ) | fromJsonArray }} 
-    {{- $task_workspaces := include "pipeline-charts.merge_workspaces" (list $default.workspaces .workspaces false) | fromJsonArray }} 
+    {{- $default_tasks := include "pipeline-charts.get_default_task_values" (list . $default_tasks ) | fromJson -}}
+    {{- $task_params := include "pipeline-charts.merge_params" (list $default_tasks.params .params false ) | fromJsonArray }} 
+    {{- $task_workspaces := include "pipeline-charts.merge_workspaces" (list $default_tasks.workspaces .workspaces false) | fromJsonArray }} 
     - name: {{ .name | default .defaultTaskName }}
-      {{- if or .when $default.when }}
+      {{- if or .when $default_tasks.when }}
       when:
-      {{- .when | default $default.when | toYaml | nindent 6 }}
+      {{- .when | default $default_tasks.when | toYaml | nindent 6 }}
       {{- end }}
       {{- if and .taskSpec .name }}
       taskSpec:
@@ -137,9 +137,9 @@ spec:
         - name: {{ .name }}
         {{- end }}
         {{- end }}
-      {{- else if and $default.taskSpec .defaultTaskName }}
+      {{- else if and $default_tasks.taskSpec .defaultTaskName }}
       taskSpec:
-        {{- $default.taskSpec | toYaml | nindent 8 }}
+        {{- $default_tasks.taskSpec | toYaml | nindent 8 }}
         {{- if $task_params  }}
         params:
         {{- range $task_params }}
@@ -156,10 +156,10 @@ spec:
       taskRef:
           name: {{ .taskRef.task }}
           kind: {{ .taskRef.kind | default "ClusterTask" }}
-      {{- else if and $default.taskRef .defaultTaskName }}
+      {{- else if and $default_tasks.taskRef .defaultTaskName }}
       taskRef:
-          name: {{ $default.taskRef.task }}
-          kind: {{ $default.taskRef.kind }}
+          name: {{ $default_tasks.taskRef.task }}
+          kind: {{ $default_tasks.taskRef.kind }}
       {{- end }}
       {{- if .retries }}
       retries: {{ .retries }}
