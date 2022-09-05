@@ -74,7 +74,7 @@ spec:
           name: {{ $default_tasks.taskRef.task }}
           kind: {{ $default_tasks.taskRef.kind }}
       {{- end }}
-      {{- if .taskSpec }}
+      {{- if or .taskRef .taskSpec }}
       {{- if .params }}
       params:
       {{- range .params }}
@@ -164,7 +164,7 @@ spec:
       {{- if .retries }}
       retries: {{ .retries }}
       {{- end }}
-      {{- if .taskSpec }}
+      {{- if or .taskRef .taskSpec }}
       {{- if .params }}
       params:
       {{- range .params }}
