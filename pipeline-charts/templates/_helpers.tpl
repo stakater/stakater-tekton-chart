@@ -97,7 +97,6 @@ Expand the name of the chart.
 {{- define "pipeline-charts.merge_params" }}
   {{- $list1 := index . 0 }}
   {{- $list2 := index . 1}}
-  {{- $name_only := index . 2 }}
   {{- $result:= list }}
   {{- if or $list1 $list2 }}
       {{- $addedParams := dict }}
@@ -136,7 +135,6 @@ Expand the name of the chart.
 {{- define "pipeline-charts.merge_workspaces" }}
   {{- $list1 := index . 0 }}   
   {{- $list2 := index . 1 }}
-  {{- $name_only := index . 2 }}
   {{- $result:= list }}
   {{- if or $list1 $list2 }}
       {{- $addedParams := dict }}
