@@ -1,4 +1,7 @@
-taskName: stakater-buildah-v1
+name: stakater-buildah-v1
+taskRef: 
+  task: stakater-buildah-v1
+  kind: ClusterTask
 params:
   - name: IMAGE
     value: $(params.image_registry_url):$(tasks.stakater-create-git-tag-v1.results.GIT_TAG)

@@ -6,7 +6,7 @@ workspaces:
       resourcesRequestsStorage: 1Gi
 pipelines:
   finally:
-  - taskName: stakater-update-cd-repo-v3
+  - defaultTaskName: stakater-update-cd-repo-v3
     name: stakater-rollback-cd-repo
     when:
     - input: $(tasks.stakater-e2e-test-v1.status)
@@ -15,9 +15,11 @@ pipelines:
     params:
     - name: IMAGE_TAG
       value: $(tasks.stakater-create-git-tag-v1.results.CURRENT_GIT_TAG)
-  - taskName: stakater-set-commit-status-v1
+  - defaultTaskName: stakater-set-commit-status-v1
     name: set-commit-status-task-result
-  - taskName: stakater-notify-slack-v1
+  - taskRef:
+      task: stakater-notify-slack-v1
+      kind: ClusterTask
     name: notify-slack
     params:
     - name: namespace
@@ -28,13 +30,13 @@ pipelines:
     - name: gitrepositoryurl
     - name: tekton-base-url
   tasks:
-    - taskName: git-clone
-    - taskName: stakater-create-git-tag-v1
-    - taskName: stakater-buildah-v1
-    - taskName: stakater-comment-on-github-pr-v1
-    - taskName: stakater-helm-push-v1
-    - taskName: stakater-update-cd-repo-v1
-    - taskName: stakater-push-main-tag-v1
+    - defaultTaskName: git-clone
+    - defaultTaskName: stakater-create-git-tag-v1
+    - defaultTaskName: stakater-buildah-v1
+    - defaultTaskName: stakater-comment-on-github-pr-v1
+    - defaultTaskName: stakater-helm-push-v1
+    - defaultTaskName: stakater-update-cd-repo-v1
+    - defaultTaskName: stakater-push-main-tag-v1
 triggertemplate:
   serviceAccountName: stakater-tekton-builder
 eventlistener:

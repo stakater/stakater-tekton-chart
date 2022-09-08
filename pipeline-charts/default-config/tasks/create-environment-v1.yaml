@@ -1,4 +1,7 @@
-taskName: stakater-create-environment-v1
+name: stakater-create-environment-v1
+taskRef:
+  task: stakater-create-environment-v1
+  kind: ClusterTask
 params:
   - name: repoName
     value: $(params.repoName)

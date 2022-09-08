@@ -1,4 +1,7 @@
-taskName: rox-deployment-check
+name: rox-deployment-check
+taskRef:
+  task: rox-deployment-check
+  kind: ClusterTask
 params:
   - name: rox_api_token
     value: rhacs-auth-forked

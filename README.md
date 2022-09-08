@@ -13,8 +13,8 @@ To install the chart:
 
     helm repo add stakater https://stakater.github.io/stakater-charts or helm repo update
     helm install pipeline-1 stakater/pipeline-charts --namespace test
-### Using Chart with dependencies  
-Chart.yaml  
+### Using Chart with dependencies
+Chart.yaml
 
     apiVersion: v2
     dependencies:
@@ -24,7 +24,7 @@ Chart.yaml
     description: Helm chart for Tekton Pipelines
     name: stakater-main-pr-v2
     version: 0.0.2
-Values.yaml  
+Values.yaml
 
     pipeline-charts:
         name: stakater-main-pr-v2
@@ -33,7 +33,7 @@ Values.yaml
             volumeClaimTemplate:
                 accessModes: ReadWriteOnce
                 resourcesRequestsStorage: 1Gi
-        # other configs below   ▼
+        # other configs below   ▼▼▼▼
 
 ## Paramaters
 
@@ -49,8 +49,10 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
 | ------------------------ | -------------------------------------------------------------------------------------------- | --------------- |
 | pipeline.enabled | Enable pipeline manifest on helm chart                                                               | `true`          |
 | pipeline.finally.tasks | Specify finally tasks.                                                               | `{}`          |
-| pipeline.tasks[].name | Defaults to taskName, if there are multiple tasks of same name specify this field              | `name`      |
-| pipeline.tasks[].taskName | Name of already existing task, will be used as pipeline step name by default , required                         | `taskname`      |
+| pipeline.tasks[].name | Defaults to defaultTaskName, if there are multiple tasks of same name specify this field              | ``      |
+| pipeline.tasks[].defaultTaskName | Name of already existing task, will be used as pipeline step name by default , required                         | ``      |
+| pipeline.tasks[].taskRef | Specify taskref , if not defined it uses either taskRef or taskSpec in default task or define taskSpec  | `{}` |
+| pipeline.tasks[].taskSpec | Specify taskSpec (params and workspaces are extracted from tasks[].params and tasks[].workspaces), if not defined it uses either taskRef or taskSpec in default task or define taskRef | `{}` |
 | pipeline.tasks[].params | Parameters required by the task for execution. default params combined with this field (will override default params) is used                                                | `{}`              |
 | pipeline.tasks[].workspace | Workspaces required by the task for execution. default workspace combined with this field is used | `{}`|
 | pipeline.tasks[].runAfter | Used to order task execution among tasks. default is previous task name, specify for complex flows. | `{}`              |
@@ -65,7 +67,7 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
 | triggertemplate.enabled | Enable trigger template manifest on helm chart                                                | `true`          |
 | triggertemplate.pipelineRunAnnotations | Annotations for pipelineRun | ``            |
 | triggertemplate.pipelineRunNamePrefix | Prefix value for pipelineRun name                                               | ``              |
-| triggertemplate.serviceAccount | Service Account to be used for pipelineRun                                             | ``              |
+| triggertemplate.serviceAccount | Uses Service account defined in serviceaccount key | ``              |
 
 
 ### Trigger Binding Parameters
@@ -94,9 +96,12 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
 
 ### Add a Default Task in pipeline
 - Navigate to pipeline-charts/default-config/tasks directory & make a new yaml file.
-- Specify taskName ( task name of kind:ClusterTask ), params & workspaces as specifed below: 
+- Specify name (will be matched with defaulTaskName in pipeline.tasks),  taskRef or taskSpec , params & workspaces as specifed below:
 
-      taskName: stakater-buildah-v1
+      name: stakater-buildah-v1
+      taskRef:
+        task: stakater-buildah-v1
+        kind: ClusterTask
       params:
       - name: IMAGE
         value: $(params.image_registry_url)
@@ -113,7 +118,7 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
 
       pipelines:
         tasks:
-        - taskName: stakater-buildah-v1
+        - defaultTaskName: stakater-buildah-v1
           name: build-and-push
 
     Specify name to make step name readable or avoid conflicting step names
@@ -153,7 +158,7 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
 
           pipelines:
             tasks:
-            - taskName: stakater-buildah-v1
+            - defaultTaskName: stakater-buildah-v1
               name: build-and-push
               params:
               - name: FORMAT
@@ -161,7 +166,10 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
 
     - Default Task in default-config/task
 
-          taskName: stakater-buildah-v1
+          name: stakater-buildah-v1
+          taskRef:
+            task: stakater-buildah-v1
+            kind: ClusterTask
           params:
           - name: IMAGE
             value: $(params.image_registry_url)
@@ -203,7 +211,7 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
               - name: source
                 workspace: source
 
-- For adding a new param in existing default task: 
+- For adding a new param in existing default task:
     - Specify it in .Values.pipelines.tasks[].params in values.yaml
 
           pipelines:
@@ -245,7 +253,7 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
                 value: "new-value"
               workspaces:
               - name: source
-                workspace: source        
+                workspace: source
 
 - RunAfter by default is the previous task name, All steps run in series, but for parallel task execution, define it. Override it in .Values.pipelines.tasks[].runAfter in values.yaml
 
@@ -254,7 +262,7 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
 - For overriding when clause, specify it in .Values.pipelines.tasks[].when in values.yaml
 
 ### Add a custom task to pipeline
-- Specify the new custom task in .Values.pipelines.tasks[] as follows:  
+- Specify the new custom task in .Values.pipelines.tasks[] as follows:
 
       workspaces:
       - name: source
@@ -267,16 +275,19 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
         resourcesRequestsStorage: 0.5Gi
       pipelines:
         tasks:
-        - taskName: stakater-buildah-v1
-        - taskName: my-task
-          params: 
+        - defaultTaskName: stakater-buildah-v1
+        - name: my-task
+          taskRef:
+            task: my-task-name
+            kind: ClusterTask
+          params:
           - name: "my-param"
               value: "my-value"
           workspaces:
           - name: my-workspace
               workspace: my-workspace
 
-- Resulting manifest:  
+- Resulting manifest:
 
       # Source: pipeline-charts/templates/pipeline.yaml
       apiVersion: tekton.dev/v1beta1
@@ -308,7 +319,7 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
             workspace: source
         - name: my-task
           taskRef:
-            name: my-task
+            name: my-task-name
             kind: ClusterTask
           params:
           - name: my-param
@@ -364,9 +375,9 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
         - name: push
           bindings:
           - ref: stakater-main-v1
-          
+
     Note:
-    When create field is set to false, trigger isnt created. 
+    When create field is set to false, trigger isnt created.
     Trigger is created with name field prepended.
 
 - Resulting pipeline manifest
@@ -425,7 +436,7 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
         triggers:
         - triggerRef: stakater-pr-cleaner-v2-pullrequest-merge
         - triggerRef: stakater-main-pr-v2-pullrequest
-        - triggerRef: stakater-main-pr-v2-push     
+        - triggerRef: stakater-main-pr-v2-push
 # Limitations
 
 All current limitations in this chart.

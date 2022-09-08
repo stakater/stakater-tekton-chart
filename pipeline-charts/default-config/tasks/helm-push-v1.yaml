@@ -1,4 +1,7 @@
-taskName: stakater-helm-push-v1
+name: stakater-helm-push-v1
+taskRef:
+  task: stakater-helm-push-v1
+  kind: ClusterTask
 params:
   - name: prnumber
   - name: repoPath

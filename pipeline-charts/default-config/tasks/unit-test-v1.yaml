@@ -1,4 +1,7 @@
-taskName: stakater-unit-test-v1
+name: stakater-unit-test-v1
 workspaces:
 - name: source
   workspace: source
+taskRef: 
+  task: stakater-unit-test-v1
+  kind: ClusterTask

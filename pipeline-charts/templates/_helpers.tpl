@@ -10,12 +10,14 @@ Expand the name of the chart.
   {{- $default_tasks := index . 1 }}
   {{- $result :=  dict }}
   {{- range $default_tasks }}
-  {{- if eq .taskName $task_to_search.taskName }}
+  {{- if eq .name ( $task_to_search.defaultTaskName ) }}
   {{ $result := set $result "params" .params }}
   {{ $result := set $result "workspaces" .workspaces }}
   {{ $result := set $result "name" .name }}
   {{ $result := set $result "when" .when }}
   {{ $result := set $result "runAfter" .runAfter }}
+  {{ $result := set $result "taskSpec" .taskSpec }}
+  {{ $result := set $result "taskRef" .taskRef }}  
   {{- end }}
   {{- end }}
   {{- $result | toJson }}
@@ -90,4 +92,56 @@ Expand the name of the chart.
   {{- end }}
 {{- end }}
   {{ $result | toJson }}
+{{- end }}
+
+{{- define "pipeline-charts.merge_params" }}
+  {{- $list1 := index . 0 }}
+  {{- $list2 := index . 1}}
+  {{- $result:= list }}
+  {{- if or $list1 $list2 }}
+      {{- $addedParams := dict }}
+      {{- range $list2 }}
+      {{- $addedParams := set $addedParams .name "e" }}
+        {{- if .value }}
+        {{- $v := quote .value }}
+        {{- $result = (dict "name" .name "value" $v) | append $result  }}
+        {{- else }}
+        {{- $v := printf "$(params.%s)" .name }}
+        {{- $result = (dict "name" .name "value" $v) | append $result }}
+        {{- end }}
+      {{- end }}
+      {{- range $list1 }}
+      {{- if hasKey $addedParams .name }}
+      {{- else }}
+        {{- if .value }}
+        {{- $v := quote .value }}
+        {{- $result = (dict "name" .name "value" $v) | append $result }}
+        {{- else }}
+        {{- $v := printf "$(params.%s)" .name }}
+        {{- $result = (dict "name" .name "value" $v) | append $result }}
+        {{- end }}
+      {{- end }}
+      {{- end }}
+  {{- end }}
+  {{- $result | toJson }}
+{{- end }}
+
+{{- define "pipeline-charts.merge_workspaces" }}
+  {{- $list1 := index . 0 }}
+  {{- $list2 := index . 1 }}
+  {{- $result:= list }}
+  {{- if or $list1 $list2 }}
+      {{- $addedParams := dict }}
+      {{- range $list2 }}
+      {{- $addedParams := set $addedParams .name "e" }}
+      {{- $result = (dict "name" .name "workspace" .workspace) | append $result }}
+      {{- end }}
+      {{- range $list1 }}
+      {{- if hasKey $addedParams .name }}
+      {{- else }}
+      {{- $result = (dict "name" .name "workspace" .workspace) | append $result }}
+      {{- end }}
+      {{- end }}
+  {{- end }}
+  {{- $result | toJson }}
 {{- end }}

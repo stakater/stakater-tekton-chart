@@ -1,4 +1,7 @@
-taskName: stakater-kube-linting-v1
+name: stakater-kube-linting-v1
+taskRef:
+  task: stakater-kube-linting-v1
+  kind: ClusterTask
 params:
 - name: file
   value: manifest.yaml

@@ -27,69 +27,147 @@ spec:
   {{- if .Values.pipelines.finally }}
   finally:
     {{- range .Values.pipelines.finally }}
-    {{- $default := include "pipeline-charts.get_default_task_values" (list . $default_tasks ) | fromJson }}
-    - name: {{ .name | default $default.name |default .taskName }}
-      {{- if or .when $default.when }}
-      when: 
-      {{- .when | default $default.when | toYaml | nindent 6 }}
+    {{- $default_tasks := include "pipeline-charts.get_default_task_values" (list . $default_tasks ) | fromJson }}
+    {{- $task_params := include "pipeline-charts.merge_params" (list $default_tasks.params .params false ) | fromJsonArray }} 
+    {{- $task_workspaces := include "pipeline-charts.merge_workspaces" (list $default_tasks.workspaces .workspaces false) | fromJsonArray }} 
+    - name: {{ .name | default .defaultTaskName }}
+      {{- if or .when $default_tasks.when }}
+      when:
+      {{- .when | default $default_tasks.when | toYaml | nindent 6 }}
       {{- end }}
-      taskRef:
-          name: {{ .taskName }}
-          kind: ClusterTask
-      {{- if or $default.params .params }}
-      params:
-      {{- range $default.params }}
-      - name: {{ .name }}
-        {{- if .value }}
-        value: {{ .value }}
-        {{- else }}
-        value: $(params.{{.name}})
+      {{- if and .taskSpec .name }}
+      taskSpec:
+        {{- .taskSpec | toYaml | nindent 8 }}
+        {{- if .params }}
+        params:
+        {{- range .params }}
+        - name: {{ .name }}
         {{- end }}
+        {{- end }}
+        {{- if .workspaces }}
+        workspaces:
+        {{- range .workspaces }}
+        - name: {{ .name }}
+        {{- end }}
+        {{- end }}
+      {{- else if and $default_tasks.taskSpec .defaultTaskName }}
+      taskSpec:
+        {{- $default_tasks.taskSpec | toYaml | nindent 8 }}
+        {{- if $task_params }}
+        params:
+        {{- range $task_params }}
+        - name: {{ .name }}
+        {{- end }}
+        {{- end }}
+        {{- if $task_workspaces }}
+        workspaces:
+        {{- range $task_workspaces }}
+        - name: {{ .name }}
+        {{- end }}
+        {{- end }}
+      {{- else if and .taskRef .name }}
+      taskRef:
+          name: {{ .taskRef.task }}
+          kind: {{ .taskRef.kind | default "ClusterTask" }}
+      {{- else if and $default_tasks.taskRef .defaultTaskName }}
+      taskRef:
+          name: {{ $default_tasks.taskRef.task }}
+          kind: {{ $default_tasks.taskRef.kind }}
       {{- end }}
+      {{- if or .taskRef .taskSpec }}
+      {{- if .params }}
+      params:
       {{- range .params }}
       - name: {{ .name }}
         {{- if .value }}
-        value: {{ .value }}
+        value: {{ .value | quote }}
         {{- else }}
         value: $(params.{{.name}})
         {{- end }}
       {{- end }}
       {{- end }}
-      {{- if or $default.workspaces .workspaces }}
+      {{- if .workspaces }}
       workspaces:
-        {{- range $default.workspaces }}
-        - name: {{ .name }}
-          {{- if .workspace }}
-          workspace: {{ .workspace }}
-          {{- end }}
-        {{- end }}
-        {{- range .workspaces }}
-        - name: {{ .name }}
-          workspace: {{ .workspace }}
-        {{- end }}
+      {{- range .workspaces }}
+      - name: {{ .name }}
+        workspace: {{ .workspace }}
+      {{- end }}
+      {{- end }}
+      {{- else }}
+      {{- if $task_params  }}
+      params:
+      {{- range $task_params }}
+      - name: {{ .name }}
+        value: {{ .value }}
+      {{- end }}
+      {{- end }}
+      {{- if $task_workspaces  }}
+      workspaces:
+      {{- range $task_workspaces }}
+      - name: {{ .name }}
+        workspace: {{ .workspace }}
+      {{- end }}
+      {{- end }}
       {{- end }}
     {{- end }}
   {{- end }}
   tasks:
     {{- $previoustask := "" }}
     {{- range .Values.pipelines.tasks }}
-    {{- $default := include "pipeline-charts.get_default_task_values" (list . $default_tasks ) | fromJson }}
-    - name: {{ .name | default $default.name |default .taskName }}
-      {{- if or .when $default.when }}
-      when: 
-      {{- .when | default $default.when | toYaml | nindent 6 }}
+    {{- $default_tasks := include "pipeline-charts.get_default_task_values" (list . $default_tasks ) | fromJson -}}
+    {{- $task_params := include "pipeline-charts.merge_params" (list $default_tasks.params .params false ) | fromJsonArray }} 
+    {{- $task_workspaces := include "pipeline-charts.merge_workspaces" (list $default_tasks.workspaces .workspaces false) | fromJsonArray }} 
+    - name: {{ .name | default .defaultTaskName }}
+      {{- if or .when $default_tasks.when }}
+      when:
+      {{- .when | default $default_tasks.when | toYaml | nindent 6 }}
       {{- end }}
+      {{- if and .taskSpec .name }}
+      taskSpec:
+        {{- .taskSpec | toYaml | nindent 8 }}
+        {{- if .params }}
+        params:
+        {{- range .params }}
+        - name: {{ .name }}
+        {{- end }}
+        {{- end }}
+        {{- if .workspaces }}
+        workspaces:
+        {{- range .workspaces }}
+        - name: {{ .name }}
+        {{- end }}
+        {{- end }}
+      {{- else if and $default_tasks.taskSpec .defaultTaskName }}
+      taskSpec:
+        {{- $default_tasks.taskSpec | toYaml | nindent 8 }}
+        {{- if $task_params  }}
+        params:
+        {{- range $task_params }}
+        - name: {{ .name }}
+        {{- end }}
+        {{- end }}
+        {{- if $task_workspaces }}
+        workspaces:
+        {{- range $task_workspaces }}
+        - name: {{ .name }}
+        {{- end }}
+        {{- end }}
+      {{- else if and .taskRef .name }}
       taskRef:
-          name: {{ .taskName }}
-          kind: ClusterTask
+          name: {{ .taskRef.task }}
+          kind: {{ .taskRef.kind | default "ClusterTask" }}
+      {{- else if and $default_tasks.taskRef .defaultTaskName }}
+      taskRef:
+          name: {{ $default_tasks.taskRef.task }}
+          kind: {{ $default_tasks.taskRef.kind }}
+      {{- end }}
       {{- if .retries }}
       retries: {{ .retries }}
       {{- end }}
-      {{- if or $default.params .params }}
+      {{- if or .taskRef .taskSpec }}
+      {{- if .params }}
       params:
-      {{- $addedParams := dict }}
       {{- range .params }}
-      {{- $addedParams := set $addedParams .name "e" }}
       - name: {{ .name }}
         {{- if .value }}
         value: {{ .value | quote }}
@@ -97,30 +175,29 @@ spec:
         value: $(params.{{.name}})
         {{- end }}
       {{- end }}
-      {{- range $default.params }}
-      {{- if hasKey $addedParams .name }}
-      {{- else }}
-      - name: {{ .name }}
-        {{- if .value }}
-        value: {{ .value | quote }}
-        {{- else }}
-        value: $(params.{{.name}})
       {{- end }}
-      {{- end }}
-      {{- end }}
-      {{- end }}
-      {{- if or $default.workspaces .workspaces }}
+      {{- if .workspaces }}
       workspaces:
-        {{- range $default.workspaces }}
-        - name: {{ .name }}
-          {{- if .workspace }}
-          workspace: {{ .workspace }}
-          {{- end }}
-        {{- end }}
-        {{- range .workspaces }}
-        - name: {{ .name }}
-          workspace: {{ .workspace }}
-        {{- end }}
+      {{- range .workspaces }}
+      - name: {{ .name }}
+        workspace: {{ .workspace }}
+      {{- end }}
+      {{- end }}
+      {{- else }}
+      {{- if $task_params }}
+      params:
+      {{- range $task_params }}
+      - name: {{ .name }}
+        value: {{ .value }}
+      {{- end }}
+      {{- end }}
+      {{- if $task_workspaces  }}
+      workspaces:
+      {{- range $task_workspaces }}
+      - name: {{ .name }}
+        workspace: {{ .workspace }}
+      {{- end }}
+      {{- end }}
       {{- end }}
       {{- if or $previoustask .runAfter }}
       runAfter:
@@ -134,6 +211,6 @@ spec:
         {{- end }}
         {{- end -}}
       {{- end }}
-      {{- $previoustask = .name | default $default.name |default .taskName }}
+      {{- $previoustask = (.name | default .defaultTaskName) }}
     {{- end }}
 {{- end }}
