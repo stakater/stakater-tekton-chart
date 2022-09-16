@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## [0.0.29] - 2022-09-16
 - Added new triggers for gitlab and updated current trigger names. Make sure to change trigger names in values file with latest version.
+- Updated parameters for default tasks.
 
 ## [0.0.26] - 2022-09-06
 
