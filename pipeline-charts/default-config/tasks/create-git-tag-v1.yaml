@@ -5,6 +5,8 @@ taskRef:
 params:
   - name: prnumber
   - name: gitrevision
+  - name: oldcommit
+  - name: action
 workspaces:
   - name: source
     workspace: source

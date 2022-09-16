@@ -1,7 +1,7 @@
 
 default_triggers:
   templates:
-    - triggerName: pullrequest-create
+    - triggerName: github-pullrequest-create
       interceptors:
         - ref:
             name: "cel"
@@ -13,7 +13,7 @@ default_triggers:
                 - key: marshalled-body
                   expression: "body.marshalJSON()"
 
-    - triggerName: pullrequest-synchronize
+    - triggerName: github-pullrequest-synchronize
       interceptors:
         - ref:
             name: "cel"
@@ -25,7 +25,7 @@ default_triggers:
                 - key: marshalled-body
                   expression: "body.marshalJSON()"
 
-    - triggerName: push
+    - triggerName: github-push
       interceptors:
       - ref:
           name: "cel"
@@ -45,3 +45,38 @@ default_triggers:
         - name: "filter"
           value: "(header.match('X-GitHub-Event', 'pull_request') && body.action == 'closed' )"
 
+    - name: gitlab-mergerequest-create
+      interceptors:
+      - ref:
+        name: "cel"
+        params:
+          - name: "filter"
+            value: "(header.match('X-Gitlab-Event', 'Merge Request Hook'))"
+          - name: "overlays"
+            value:
+              - key: marshalled-body
+                expression: "body.marshalJSON()"
+
+    - name: gitlab-mergerequest-synchronize
+      interceptors:
+      - ref:
+        name: "cel"
+        params:
+        - name: "filter"
+          value: "(header.match('X-Gitlab-Event', 'Merge Request Hook') && body.object_attributes.action == 'update' )"
+        - name: "overlays"
+          value:
+            - key: marshalled-body
+              expression: "body.marshalJSON()"
+
+    - name: gitlab-push
+      interceptors:
+      - ref:
+        name: "cel"
+        params:
+        - name: "filter"
+          value: "(header.match('X-Gitlab-Event', 'Push Hook'))"
+        - name: "overlays"
+          value:
+            - key: marshalled-body
+              expression: "body.marshalJSON()"

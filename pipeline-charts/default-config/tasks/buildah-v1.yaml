@@ -9,6 +9,12 @@ params:
     value: "false"
   - name: FORMAT
     value: "docker"
+  - name: BUILD_IMAGE
+    value: $(tasks.stakater-build-image-flag-v1.results.build-image)
+  - name: IMAGE_REGISTRY
+    value: $(params.image_registry_url)
+  - name: CURRENT_GIT_TAG
+    value: $(tasks.stakater-create-git-tag-v1.results.CURRENT_GIT_TAG)
 workspaces:
   - name: source
     workspace: source
