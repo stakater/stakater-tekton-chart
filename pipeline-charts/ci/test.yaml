@@ -1,0 +1,57 @@
+
+   name: stakater-main-pr-v1
+   workspaces:
+   - name: source
+     volumeClaimTemplate:
+       accessModes: ReadWriteOnce
+       resourcesRequestsStorage: 1Gi
+   pipelines:
+     tasks:
+       - defaultTaskName: git-clone
+       - defaultTaskName: stakater-create-git-tag-v1
+       - defaultTaskName: stakater-buildah-v1
+         name: build-and-push
+         runAfter:
+         - stakater-build-image-flag-v1
+         params:
+         - name: BUILD_IMAGE
+           value: $(tasks.stakater-build-image-flag-v1.results.build-image)
+         - name: IMAGE_REGISTRY
+           value: $(params.image_registry_url)
+         - name: CURRENT_GIT_TAG
+           value: $(tasks.stakater-create-git-tag-v1.results.CURRENT_GIT_TAG)
+       - defaultTaskName: stakater-helm-push-v1
+       - defaultTaskName: stakater-update-cd-repo-v3
+         params:
+           - name: gitcdrepo
+             value: johndoe/nordmart-apps-gitops-config
+       - defaultTaskName: stakater-push-main-tag-v1
+       - defaultTaskName: stakater-app-sync-and-wait-v1
+         params:
+         - name: timeout
+           value: "120"
+   triggertemplate:
+        serviceAccountName: stakater-tekton-builder
+        pipelineRunNamePrefix: $(tt.params.repoName)-$(tt.params.prnumberBranch)
+        params:
+         - name: repoName
+         - name: prnumberBranch
+           default: "main"
+   eventlistener:
+        serviceAccountName: stakater-tekton-builder
+        triggers:
+        - name: gitlab-mergerequest-create
+          bindings:
+            - ref: stakater-pr-v1
+        - name: gitlab-mergerequest-synchronize
+          bindings:
+            - ref: stakater-pr-v1
+        - name: gitlab-push
+          bindings:
+            - ref: stakater-pr-v1
+              kind: TriggerBinding
+   rbac:
+     enabled: false
+   serviceAccount:
+     name:  stakater-workshop-tekton-builder
+     create: false
