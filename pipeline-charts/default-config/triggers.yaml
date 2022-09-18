@@ -48,7 +48,7 @@ default_triggers:
     - name: gitlab-mergerequest-create
       interceptors:
       - ref:
-        name: "cel"
+          name: "cel"
         params:
           - name: "filter"
             value: "(header.match('X-Gitlab-Event', 'Merge Request Hook')  && body.object_attributes.action == 'open' )"
@@ -60,7 +60,7 @@ default_triggers:
     - name: gitlab-mergerequest-synchronize
       interceptors:
       - ref:
-        name: "cel"
+          name: "cel"
         params:
         - name: "filter"
           value: "(header.match('X-Gitlab-Event', 'Merge Request Hook') && body.object_attributes.action == 'update' )"
@@ -72,7 +72,7 @@ default_triggers:
     - name: gitlab-push
       interceptors:
       - ref:
-        name: "cel"
+          name: "cel"
         params:
         - name: "filter"
           value: "(header.match('X-Gitlab-Event', 'Push Hook') && (body.ref == 'refs/heads/main' || body.ref == 'refs/heads/master'))"
