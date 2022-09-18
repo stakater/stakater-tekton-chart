@@ -51,7 +51,7 @@ default_triggers:
         name: "cel"
         params:
           - name: "filter"
-            value: "(header.match('X-Gitlab-Event', 'Merge Request Hook'))"
+            value: "(header.match('X-Gitlab-Event', 'Merge Request Hook')  && body.object_attributes.action == 'open' )"
           - name: "overlays"
             value:
               - key: marshalled-body
@@ -75,7 +75,7 @@ default_triggers:
         name: "cel"
         params:
         - name: "filter"
-          value: "(header.match('X-Gitlab-Event', 'Push Hook'))"
+          value: "(header.match('X-Gitlab-Event', 'Push Hook') && (body.ref == 'refs/heads/main' || body.ref == 'refs/heads/master'))"
         - name: "overlays"
           value:
             - key: marshalled-body
