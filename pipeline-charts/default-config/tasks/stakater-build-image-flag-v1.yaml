@@ -1,0 +1,10 @@
+name: stakater-build-image-flag-v1
+taskRef:
+  task: stakater-build-image-flag-v1
+  kind: ClusterTask
+workspaces:
+- name: source
+  workspace: source
+params:
+- name: oldcommit
+- name: newcommit
