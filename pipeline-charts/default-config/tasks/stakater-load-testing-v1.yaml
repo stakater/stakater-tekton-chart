@@ -6,7 +6,7 @@ params:
     value: $(params.namespace)
 taskRef:
   kind: ClusterTask
-  name: stakater-load-testing-v1
+  task: stakater-load-testing-v1
 workspaces:
   - name: source
     workspace: source
