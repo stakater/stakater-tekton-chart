@@ -1,0 +1,12 @@
+name: stakater-gitlab-save-allure-report-v1
+params:
+  - name: repoName
+    value: $(params.repoName)
+  - name: gitlab_group
+    value: $(params.gitlab_group)
+taskRef:
+  kind: ClusterTask
+  task: stakater-gitlab-save-allure-report-v1
+workspaces:
+  - name: source
+    workspace: source
