@@ -1,0 +1,14 @@
+name: stakater-load-testing-v1
+params:
+  - name: repoName
+    value: $(params.repoName)
+  - name: namespace
+    value: $(params.namespace)
+runAfter:
+  - stakater-push-main-tag-v1
+taskRef:
+  kind: ClusterTask
+  name: stakater-load-testing-v1
+workspaces:
+  - name: source
+    workspace: source
