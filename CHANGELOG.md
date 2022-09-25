@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.0.31] - 2022-09-16
+## [0.0.31] - 2022-09-25
 - Added stakater-load-testing-v1 to default tasks.
 
 ## [0.0.29] - 2022-09-16
