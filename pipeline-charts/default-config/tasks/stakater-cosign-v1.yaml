@@ -1,0 +1,12 @@
+name: stakater-cosign-v1
+params:
+  - name: image
+    value: '$(params.image_registry_url):$(tasks.stakater-create-git-tag-v1.results.GIT_TAG)'
+  - name: namespace
+    value: $(params.namespace)
+taskRef:
+  kind: ClusterTask
+  task: stakater-cosign-v1
+workspaces:
+  - name: source
+    workspace: source
