@@ -1,0 +1,14 @@
+name: stakater-zap-proxy-v1
+params:
+  - name: repoName
+    value: $(params.repoName)
+  - name: app_url
+    value: $(params.app_url)
+  - name: allure_host
+    value: $(params.allure_host)
+taskRef:
+  kind: ClusterTask
+  task: stakater-zap-proxy-v1
+workspaces:
+  - name: source
+    workspace: source
