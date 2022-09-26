@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.0.35] - 2022-09-25
+## [0.0.35] - 2022-09-26
 - Added stakater-cosign-v1 to default tasks.
 
 ## [0.0.34] - 2022-09-26
