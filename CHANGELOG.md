@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.0.35] - 2022-09-25
+- Added stakater-cosign-v1 to default tasks.
+
+## [0.0.34] - 2022-09-26
+- Added stakater-zap-proxy-v1 to default tasks.
+
+## [0.0.33] - 2022-09-26
+- Added name: stakater-gitlab-save-allure-report-v1 to default tasks.
+
+## [0.0.32] - 2022-09-25
+- Fixed typo in stakater-load-testing-v1 default tasks.
+
 ## [0.0.31] - 2022-09-25
 - Added stakater-load-testing-v1 to default tasks.
 
