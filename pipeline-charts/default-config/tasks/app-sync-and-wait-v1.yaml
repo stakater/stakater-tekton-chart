@@ -10,7 +10,7 @@ params:
 - name: repoName
   value: $(params.repoName)
 - name: timeout
-  value: "60"
+  value: "300"
 - name: namespace
   value: $(params.namespace)
 - name: IMAGE_TAG
