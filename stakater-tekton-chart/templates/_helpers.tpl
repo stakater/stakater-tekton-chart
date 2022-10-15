@@ -1,11 +1,11 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "pipeline-charts.name" -}}
+{{- define "stakater-tekton-chart.name" -}}
 {{- default .Values.name | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
-{{- define "pipeline-charts.get_default_task_values" }}
+{{- define "stakater-tekton-chart.get_default_task_values" }}
   {{- $task_to_search := index . 0 }}
   {{- $default_tasks := index . 1 }}
   {{- $result :=  dict }}
@@ -23,7 +23,7 @@ Expand the name of the chart.
   {{- $result | toJson }}
 {{- end }}
 
-{{- define "pipeline-charts.get_event_listener_default_trigger" }}
+{{- define "stakater-tekton-chart.get_event_listener_default_trigger" }}
   {{- $arg1 := index . 0 }}
   {{- $arg2 := index . 1 }}
   {{- $result :=  dict }}
@@ -36,13 +36,13 @@ Expand the name of the chart.
   {{- $result | toJson }}
 {{- end }}
 
-{{- define "pipeline-charts.get_pipeline_params" }}
+{{- define "stakater-tekton-chart.get_pipeline_params" }}
   {{- $task_list := index . 0 }}
   {{- $finally_task_list := index . 1}}
   {{- $default_task_list := index . 2 }}
   {{- $result :=  dict }}
   {{- range $task_list }}
-    {{- $default_task := include "pipeline-charts.get_default_task_values" (list . $default_task_list ) | fromJson }}
+    {{- $default_task := include "stakater-tekton-chart.get_default_task_values" (list . $default_task_list ) | fromJson }}
     {{- range .params }}
       {{- if .value }}
       {{- $match := regexFindAll "\\$\\(params\\.[a-zA-Z0-9\\-_]+\\)" .value -1 }}
@@ -67,7 +67,7 @@ Expand the name of the chart.
     {{- end }}
   {{- end }}
   {{- range $finally_task_list }}
-  {{- $default_task := include "pipeline-charts.get_default_task_values" (list . $default_task_list ) | fromJson }}
+  {{- $default_task := include "stakater-tekton-chart.get_default_task_values" (list . $default_task_list ) | fromJson }}
   {{- range .params }}
     {{- if .value }}
     {{- $match := regexFindAll "\\$\\(params\\.[a-zA-Z0-9\\-_]+\\)" .value -1 }}
@@ -94,7 +94,7 @@ Expand the name of the chart.
   {{ $result | toJson }}
 {{- end }}
 
-{{- define "pipeline-charts.merge_params" }}
+{{- define "stakater-tekton-chart.merge_params" }}
   {{- $list1 := index . 0 }}
   {{- $list2 := index . 1}}
   {{- $result:= list }}
@@ -126,7 +126,7 @@ Expand the name of the chart.
   {{- $result | toJson }}
 {{- end }}
 
-{{- define "pipeline-charts.merge_workspaces" }}
+{{- define "stakater-tekton-chart.merge_workspaces" }}
   {{- $list1 := index . 0 }}
   {{- $list2 := index . 1 }}
   {{- $result:= list }}

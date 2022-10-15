@@ -2,10 +2,10 @@
 apiVersion: triggers.tekton.dev/v1alpha1
 kind: EventListener
 metadata:
-  name: {{ include "pipeline-charts.name" . }}
+  name: {{ include "stakater-tekton-chart.name" . }}
   namespace: {{ .Release.Namespace }}
 spec:
-  serviceAccountName: {{ .Values.serviceAccount.name | default (include "pipeline-charts.name" . ) }}
+  serviceAccountName: {{ .Values.serviceAccount.name | default (include "stakater-tekton-chart.name" . ) }}
   {{- if .Values.eventlistener.triggers }}
   triggers:
   {{- if .Values.eventlistener.triggers }}
@@ -13,7 +13,7 @@ spec:
   {{- if eq .create false }}
   - triggerRef: {{ .name }}
   {{- else }}
-  - triggerRef: {{ include "pipeline-charts.name" $ }}-{{ .name }}
+  - triggerRef: {{ include "stakater-tekton-chart.name" $ }}-{{ .name }}
   {{- end }}
   {{- end }}
   {{- end }}
