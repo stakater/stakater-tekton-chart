@@ -1,4 +1,4 @@
-# Pipeline-Charts
+# Stakater-Tekton-Chart
 Jumbo chart for creating pipeline manifests
 
 ## Features
@@ -12,13 +12,13 @@ To install the chart:
 ### Using Helm CLI:
 
     helm repo add stakater https://stakater.github.io/stakater-charts or helm repo update
-    helm install pipeline-1 stakater/pipeline-charts --namespace test
+    helm install pipeline-1 stakater/stakater-tekton-chart --namespace test
 ### Using Chart with dependencies
 Chart.yaml
 
     apiVersion: v2
     dependencies:
-    - name: pipeline-charts
+    - name: stakater-tekton-chart
         repository: https://stakater.github.io/stakater-charts
         version: 0.0.23
     description: Helm chart for Tekton Pipelines
@@ -26,7 +26,7 @@ Chart.yaml
     version: 0.0.2
 Values.yaml
 
-    pipeline-charts:
+    stakater-tekton-chart:
         name: stakater-main-pr-v2
         workspaces:
             - name: source
@@ -95,7 +95,7 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
 
 
 ### Add a Default Task in pipeline
-- Navigate to pipeline-charts/default-config/tasks directory & make a new yaml file.
+- Navigate to stakater-tekton-chart/default-config/tasks directory & make a new yaml file.
 - Specify name (will be matched with defaulTaskName in pipeline.tasks),  taskRef or taskSpec , params & workspaces as specifed below:
 
       name: stakater-buildah-v1
@@ -125,7 +125,7 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
 
 - Resulting pipeline manifest
 
-      # Source: pipeline-charts/templates/pipeline.yaml
+      # Source: stakater-tekton-chart/templates/pipeline.yaml
       apiVersion: tekton.dev/v1beta1
       kind: Pipeline
       metadata:
@@ -183,7 +183,7 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
 
     - Resulting manifest after helm template
 
-          # Source: pipeline-charts/templates/pipeline.yaml
+          # Source: stakater-tekton-chart/templates/pipeline.yaml
           apiVersion: tekton.dev/v1beta1
           kind: Pipeline
           metadata:
@@ -225,7 +225,7 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
     - Resulting manifest after helm template contains both default & our newly added params.
 
 
-          # Source: pipeline-charts/templates/pipeline.yaml
+          # Source: stakater-tekton-chart/templates/pipeline.yaml
           apiVersion: tekton.dev/v1beta1
           kind: Pipeline
           metadata:
@@ -289,7 +289,7 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
 
 - Resulting manifest:
 
-      # Source: pipeline-charts/templates/pipeline.yaml
+      # Source: stakater-tekton-chart/templates/pipeline.yaml
       apiVersion: tekton.dev/v1beta1
       kind: Pipeline
       metadata:
@@ -331,7 +331,7 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
           - stakater-buildah-v1
 
 ### Add a trigger
-- Navigate to pipeline-charts/trigger.yaml
+- Navigate to stakater-tekton-chart/trigger.yaml
 - Specify triggerName & its interceptors under default_triggers.templates
 
         default_triggers:
@@ -382,7 +382,7 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
 
 - Resulting pipeline manifest
 
-      # Source: pipeline-charts/templates/triggers.yaml
+      # Source: stakater-tekton-chart/templates/triggers.yaml
       apiVersion: triggers.tekton.dev/v1alpha1
       kind: Trigger
       metadata:
@@ -403,7 +403,7 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
         template:
           ref: stakater-main-pr-v2
       ---
-      # Source: pipeline-charts/templates/triggers.yaml
+      # Source: stakater-tekton-chart/templates/triggers.yaml
       apiVersion: triggers.tekton.dev/v1alpha1
       kind: Trigger
       metadata:
@@ -425,7 +425,7 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
         template:
           ref: stakater-main-pr-v2
       --
-      # Source: pipeline-charts/templates/eventlistener.yaml
+      # Source: stakater-tekton-chart/templates/eventlistener.yaml
       apiVersion: triggers.tekton.dev/v1alpha1
       kind: EventListener
       metadata:

@@ -2,7 +2,7 @@
 # Name/Namespace of the application
 ##########################################################
 
-name: pipeline-charts
+name: stakater-tekton-chart
 
  # Workspace Definition
 workspaces:
@@ -82,7 +82,7 @@ triggerbinding:
   # All Bindings to be Created are specified here
   bindings:
     # Name
-  - name: pipeline-charts-triggerbinding
+  - name: stakater-tekton-chart-triggerbinding
     # Fields to Extracts from Event Body
     bodyParams:
       - name: param1

@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.0] - 2022-10-15
+- Renamed repository from pipeline-chart to stakater-tekton-chart.
+
 ## [0.0.35] - 2022-09-26
 - Added stakater-cosign-v1 to default tasks.
 

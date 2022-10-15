@@ -2,7 +2,7 @@
 apiVersion: triggers.tekton.dev/v1alpha1
 kind: TriggerTemplate
 metadata:
-  name: {{ include "pipeline-charts.name" . }}
+  name: {{ include "stakater-tekton-chart.name" . }}
   namespace: {{ .Release.Namespace }}
 spec:
     {{- $default_tasks := list }}
@@ -10,7 +10,7 @@ spec:
         {{- $task_file := $.Files.Get $path | fromYaml }}
         {{- $default_tasks = append $default_tasks $task_file }}
     {{- end }}
-  {{- $default_params := include "pipeline-charts.get_pipeline_params" (list .Values.pipelines.tasks .Values.pipelines.finally $default_tasks ) | fromJson }}
+  {{- $default_params := include "stakater-tekton-chart.get_pipeline_params" (list .Values.pipelines.tasks .Values.pipelines.finally $default_tasks ) | fromJson }}
   {{- if $default_params }}
   params:
     {{- range $k,$v := $default_params }}
@@ -28,7 +28,7 @@ spec:
           {{- toYaml .Values.triggertemplate.pipelineRunAnnotations | nindent 10 }}
         {{- end }}
       spec:
-        serviceAccountName: {{ .Values.serviceAccount.name | default (include "pipeline-charts.name" . ) }}
+        serviceAccountName: {{ .Values.serviceAccount.name | default (include "stakater-tekton-chart.name" . ) }}
         {{- if  $default_params }}
         params:
           {{- range $k,$v := $default_params }}
@@ -37,7 +37,7 @@ spec:
           {{- end }}
         {{- end }}
         pipelineRef:
-          name: {{ include "pipeline-charts.name" . }}
+          name: {{ include "stakater-tekton-chart.name" . }}
         {{- if .Values.workspaces }}
         workspaces:
           {{- range .Values.workspaces -}}

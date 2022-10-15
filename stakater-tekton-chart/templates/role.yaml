@@ -2,7 +2,7 @@
 kind: Role
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: {{ include "pipeline-charts.name" . }}
+  name: {{ include "stakater-tekton-chart.name" . }}
 rules:
   - apiGroups:
       - tekton.dev
@@ -50,7 +50,7 @@ rules:
   - apiGroups:
       - security.openshift.io
     resourceNames:
-      - {{ include "pipeline-charts.name" . }}
+      - {{ include "stakater-tekton-chart.name" . }}
     resources:
       - securitycontextconstraints
     verbs:

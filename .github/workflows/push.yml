@@ -9,7 +9,7 @@ on:
     - 'README.md'
 
 env:
-  CHART_NAME: "pipeline-charts"
+  CHART_NAME: "stakater-tekton-chart"
 
 jobs:
   build:
@@ -98,7 +98,7 @@ jobs:
           git config --local user.email "stakater@gmail.com"
           git config --local user.name "stakater-user"
           git status 
-          git add pipeline-charts/Chart.yaml
+          git add stakater-tekton-chart/Chart.yaml
           git commit -m "[skip-ci] Update artifacts" 
 
       # Push Changes back

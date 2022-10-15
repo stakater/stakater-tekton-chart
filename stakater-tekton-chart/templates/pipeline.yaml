@@ -2,7 +2,7 @@
 apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
-  name: {{ include "pipeline-charts.name" . }}
+  name: {{ include "stakater-tekton-chart.name" . }}
   namespace: {{ .Release.Namespace }}
 spec:
   {{- $default_tasks := list }}
@@ -10,7 +10,7 @@ spec:
       {{- $task_file := $.Files.Get $path | fromYaml }}
       {{- $default_tasks = append $default_tasks $task_file }}
   {{- end }}
-  {{- $pipeline_params := include "pipeline-charts.get_pipeline_params" (list .Values.pipelines.tasks .Values.pipelines.finally $default_tasks ) | fromJson }}
+  {{- $pipeline_params := include "stakater-tekton-chart.get_pipeline_params" (list .Values.pipelines.tasks .Values.pipelines.finally $default_tasks ) | fromJson }}
   {{- if $pipeline_params }}
   params:
     {{- range $k,$v := $pipeline_params }}
@@ -27,9 +27,9 @@ spec:
   {{- if .Values.pipelines.finally }}
   finally:
     {{- range .Values.pipelines.finally }}
-    {{- $default_tasks := include "pipeline-charts.get_default_task_values" (list . $default_tasks ) | fromJson }}
-    {{- $task_params := include "pipeline-charts.merge_params" (list $default_tasks.params .params false ) | fromJsonArray }} 
-    {{- $task_workspaces := include "pipeline-charts.merge_workspaces" (list $default_tasks.workspaces .workspaces false) | fromJsonArray }} 
+    {{- $default_tasks := include "stakater-tekton-chart.get_default_task_values" (list . $default_tasks ) | fromJson }}
+    {{- $task_params := include "stakater-tekton-chart.merge_params" (list $default_tasks.params .params false ) | fromJsonArray }}
+    {{- $task_workspaces := include "stakater-tekton-chart.merge_workspaces" (list $default_tasks.workspaces .workspaces false) | fromJsonArray }}
     - name: {{ .name | default .defaultTaskName }}
       {{- if or .when $default_tasks.when }}
       when:
@@ -114,9 +114,9 @@ spec:
   tasks:
     {{- $previoustask := "" }}
     {{- range .Values.pipelines.tasks }}
-    {{- $default_tasks := include "pipeline-charts.get_default_task_values" (list . $default_tasks ) | fromJson -}}
-    {{- $task_params := include "pipeline-charts.merge_params" (list $default_tasks.params .params false ) | fromJsonArray }} 
-    {{- $task_workspaces := include "pipeline-charts.merge_workspaces" (list $default_tasks.workspaces .workspaces false) | fromJsonArray }} 
+    {{- $default_tasks := include "stakater-tekton-chart.get_default_task_values" (list . $default_tasks ) | fromJson -}}
+    {{- $task_params := include "stakater-tekton-chart.merge_params" (list $default_tasks.params .params false ) | fromJsonArray }}
+    {{- $task_workspaces := include "stakater-tekton-chart.merge_workspaces" (list $default_tasks.workspaces .workspaces false) | fromJsonArray }}
     - name: {{ .name | default .defaultTaskName }}
       {{- if or .when $default_tasks.when }}
       when:
