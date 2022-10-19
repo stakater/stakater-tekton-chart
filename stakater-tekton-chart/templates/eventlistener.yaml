@@ -18,4 +18,8 @@ spec:
   {{- end }}
   {{- end }}
   {{- end }}
+  {{- if .Values.eventlistener.podTemplate }}
+  podTemplate:
+  {{ .Values.eventlistener.podTemplate | nindent 2 }}
+  {{- end }}
 {{- end }}
