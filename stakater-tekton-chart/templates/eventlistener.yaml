@@ -20,6 +20,6 @@ spec:
   {{- end }}
   {{- if .Values.eventlistener.podTemplate }}
   podTemplate:
-  {{ .Values.eventlistener.podTemplate | nindent 2 }}
+  {{- .Values.eventlistener.podTemplate | toYaml | nindent 4 }}
   {{- end }}
 {{- end }}

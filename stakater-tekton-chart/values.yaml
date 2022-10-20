@@ -71,7 +71,7 @@ triggertemplate:
 # tekton.dev/status-description: "Pipeline running on Openshift"
 
   # Pod Template for PipelineRun Pods
-  pipelineRunpodTemplate:
+  pipelineRunPodTemplate:
   #
   #
   #
