@@ -452,7 +452,7 @@ Specify podTemplate for eventlistener pod in values.yaml using **eventlistener.p
           operator: "Exists"
           effect: "NoExecute"
 
-### Add a podTemplate to eventlistener
+### Add a podTemplate to pipelinerun in triggertemplate
 Specify podTemplate for pipeline pods in values.yaml using **triggertemplate.pipelineRunPodTemplate** as follows:
 
     triggertemplate:
