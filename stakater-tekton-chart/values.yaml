@@ -72,9 +72,13 @@ triggertemplate:
 
   # Pod Template for PipelineRun Pods
   pipelineRunPodTemplate:
-  #
-  #
-  #
+  #  securityContext:
+  #    runAsNonRoot: true
+  #    runAsUser: 1001
+  #  volumes:
+  #    - name: my-cache
+  #      persistentVolumeClaim:
+  #        claimName: my-volume-claim
 
 ##########################################################
 # Trigger Binding Definition
@@ -122,9 +126,10 @@ eventlistener:
 
   # Pod Template for Eventlistener Pod
   podTemplate:
-  #
-  #
-  #
+  #  tolerations:
+  #  - key: "pipeline"
+  #    operator: "Exists"
+  #    effect: "NoExecute"
 
 #    triggers:
 #      - name: stakater-pr-cleaner-v1
