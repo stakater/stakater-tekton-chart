@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.0] - 2022-10-21
+- Added podTemplate to be specified in trigggertemplate and eventlistener.
+
 ## [1.0.0] - 2022-10-15
 - Renamed repository from pipeline-chart to stakater-tekton-chart.
 
