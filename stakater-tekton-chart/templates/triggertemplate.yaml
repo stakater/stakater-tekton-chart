@@ -38,6 +38,10 @@ spec:
         {{- end }}
         pipelineRef:
           name: {{ include "stakater-tekton-chart.name" . }}
+        {{- if .Values.triggertemplate.pipelineRunPodTemplate }}
+        podTemplate:
+        {{- .Values.triggertemplate.pipelineRunPodTemplate | toYaml | nindent 10 }}
+        {{- end }}
         {{- if .Values.workspaces }}
         workspaces:
           {{- range .Values.workspaces -}}

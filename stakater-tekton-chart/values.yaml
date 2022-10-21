@@ -70,6 +70,15 @@ triggertemplate:
 #  tekton.dev/status-context: "pipeline-operator"
 # tekton.dev/status-description: "Pipeline running on Openshift"
 
+  # Pod Template for PipelineRun Pods
+  pipelineRunPodTemplate:
+  #  securityContext:
+  #    runAsNonRoot: true
+  #    runAsUser: 1001
+  #  volumes:
+  #    - name: my-cache
+  #      persistentVolumeClaim:
+  #        claimName: my-volume-claim
 
 ##########################################################
 # Trigger Binding Definition
@@ -114,6 +123,14 @@ eventlistener:
     tls:
       termination: edge
       insecureEdgeTerminationPolicy: Redirect
+
+  # Pod Template for Eventlistener Pod
+  podTemplate:
+  #  tolerations:
+  #  - key: "pipeline"
+  #    operator: "Exists"
+  #    effect: "NoExecute"
+
 #    triggers:
 #      - name: stakater-pr-cleaner-v1
 #        create: false

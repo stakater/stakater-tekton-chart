@@ -65,6 +65,7 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
 | Name                     | Description                                                                                  | Value           |
 | ------------------------ | -------------------------------------------------------------------------------------------- | --------------- |
 | triggertemplate.enabled | Enable trigger template manifest on helm chart                                                | `true`          |
+| triggertemplate.pipelineRunPodTemplate | Specify pod template pipelineRun and resulting taskruns pods | {}            |
 | triggertemplate.pipelineRunAnnotations | Annotations for pipelineRun | ``            |
 | triggertemplate.pipelineRunNamePrefix | Prefix value for pipelineRun name                                               | ``              |
 | triggertemplate.serviceAccount | Uses Service account defined in serviceaccount key | ``              |
@@ -85,6 +86,7 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
 | Name                     | Description                                                                                  | Value           |
 | ------------------------ | -------------------------------------------------------------------------------------------- | --------------- |
 | eventlistener.enabled    | Enable event listener manifest on helm chart                                                 | ``              |
+| eventlistener.podTemplate    | Add a pod template for eventlistener pod                                                 | ``              |
 | eventlistener.route    | Enable route manifest for event listener , targetPort,tls, routelabels configurable inside this field | ``              |
 | eventlistener.serviceAccountName    | Service account for | ``              |
 | eventlistener.triggers    | Define pipelines trigger templates in case of event, can use already existing trigger templates. Matches name with default triggers and uses its interceptors if not specified | `{}`        |
@@ -437,6 +439,31 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
         - triggerRef: stakater-pr-cleaner-v2-pullrequest-merge
         - triggerRef: stakater-main-pr-v2-pullrequest
         - triggerRef: stakater-main-pr-v2-push
+
+### Add a podTemplate to eventlistener
+Specify podTemplate for eventlistener pod in values.yaml using **eventlistener.podTemplate** as follows:
+
+    eventlistener:
+      serviceAccountName: stakater-tekton-builder
+      # podTemplate
+      podTemplate:
+        tolerations:
+        - key: "pipeline"
+          operator: "Exists"
+          effect: "NoExecute"
+
+### Add a podTemplate to pipelinerun in triggertemplate
+Specify podTemplate for pipeline pods in values.yaml using **triggertemplate.pipelineRunPodTemplate** as follows:
+
+    triggertemplate:
+      serviceAccountName: stakater-tekton-builder
+      # podTemplate
+      pipelineRunPodTemplate:
+        tolerations:
+        - key: "pipeline"
+          operator: "Exists"
+          effect: "NoExecute"
+
 # Limitations
 
 All current limitations in this chart.
