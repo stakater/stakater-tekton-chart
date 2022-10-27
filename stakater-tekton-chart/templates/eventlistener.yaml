@@ -18,8 +18,8 @@ spec:
   {{- end }}
   {{- end }}
   {{- end }}
-  {{- if .Values.eventlistener.podTemplate }}
-  podTemplate:
-  {{- .Values.eventlistener.podTemplate | toYaml | nindent 4 }}
+  {{- if .Values.eventlistener.resources }}
+  resources:
+  {{- .Values.eventlistener.resources | toYaml | nindent 4 }}
   {{- end }}
 {{- end }}
