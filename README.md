@@ -440,17 +440,26 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
         - triggerRef: stakater-main-pr-v2-pullrequest
         - triggerRef: stakater-main-pr-v2-push
 
-### Add a podTemplate to eventlistener
-Specify podTemplate for eventlistener pod in values.yaml using **eventlistener.podTemplate** as follows:
+### Add a resource template to eventlistener
+Specify nodeSelector & tolerations for eventlistener pod using **eventlistener.resources** as follows:
 
     eventlistener:
       serviceAccountName: stakater-tekton-builder
-      # podTemplate
-      podTemplate:
-        tolerations:
-        - key: "pipeline"
-          operator: "Exists"
-          effect: "NoExecute"
+      resources:
+        kubernetesResource:
+          spec:
+            template:
+              spec:
+                tolerations:
+                - key: "pipeline"
+                  operator: "Exists"
+                  effect: "NoExecute"
+                nodeSelector:
+                  app: test
+
+Visit below links for more information:  
+  https://tekton.dev/docs/triggers/eventlisteners/#specifying-resources
+  https://github.com/tektoncd/triggers/tree/main/examples/v1beta1/eventlisteners
 
 ### Add a podTemplate to pipelinerun in triggertemplate
 Specify podTemplate for pipeline pods in values.yaml using **triggertemplate.pipelineRunPodTemplate** as follows:
