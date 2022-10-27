@@ -2,8 +2,8 @@
 
 All notable changes to this project will be documented in this file.
 
-## [1.2.0] - 2022-10-27
-- Added resources to be specified in eventlistener. 
+## [2.0.0] - 2022-10-27
+- Added resources to be specified in eventlistener.
 - Removed podTemplate in eventlistener (removed in tekton trigger v0.15.0)
 
 ## [1.1.0] - 2022-10-21
