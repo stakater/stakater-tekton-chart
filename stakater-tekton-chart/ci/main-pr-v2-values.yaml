@@ -115,11 +115,15 @@ triggertemplate:
 
 eventlistener:
   serviceAccountName: stakater-tekton-builder
-  podTemplate:
-    tolerations:
-    - key: "pipeline"
-      operator: "Exists"
-      effect: "NoExecute"
+  resources:
+    kubernetesResource:
+      spec:
+        template:
+          spec:
+            tolerations:
+            - key: "pipeline"
+              operator: "Exists"
+              effect: "NoExecute"
   triggers:
   - name: stakater-pr-cleaner-v2-pullrequest-merge
     create: false
