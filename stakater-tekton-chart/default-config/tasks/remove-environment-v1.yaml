@@ -1,0 +1,11 @@
+taskRef:
+  task: stakater-remove-environment-v1
+  kind: ClusterTask
+name: stakater-remove-environment-v1
+when:
+- input: $(tasks.stakater-update-cd-repo-v3.status)
+  operator: notin
+  values: ["Succeeded"]
+workspaces:
+- name: output
+  workspace: source
