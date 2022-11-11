@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.0.1] - 2022-11-11
+- Add clustertask stakater-create-environment-v2 to default tasks.
+- Add clustertask stakater-remove-environment-v1 to default tasks.
+
 ## [2.0.0] - 2022-10-27
 - Added resources to be specified in eventlistener.
 - Removed podTemplate in eventlistener (removed in tekton trigger v0.15.0)
