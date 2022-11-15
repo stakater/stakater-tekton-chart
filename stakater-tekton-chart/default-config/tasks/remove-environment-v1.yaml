@@ -9,3 +9,6 @@ when:
 workspaces:
 - name: output
   workspace: source
+params:
+- name: prNumber
+  value: $(params.prnumber)
