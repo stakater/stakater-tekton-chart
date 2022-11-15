@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.0.2] - 2022-11-15
+- Add params to clustertask stakater-create-environment-v2.
+
 ## [2.0.1] - 2022-11-11
 - Add clustertask stakater-create-environment-v2 to default tasks.
 - Add clustertask stakater-remove-environment-v1 to default tasks.
