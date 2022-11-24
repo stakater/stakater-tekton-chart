@@ -2,7 +2,8 @@
 
 All notable changes to this project will be documented in this file.
 ## [3.0.0] - 2022-11-24
-- Removed default url param from git-clone task
+- Removed default url param from git-clone task as we want the user to be able to specify both the ssh or https url.
+Previously we were setting the https url as default, restricting the user from cloning through ssh.
 
 ## [2.1.1] - 2022-11-24
 - Allow secret to be specified in workspaces
