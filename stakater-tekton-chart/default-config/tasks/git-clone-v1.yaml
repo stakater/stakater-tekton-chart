@@ -3,8 +3,6 @@ taskRef:
   task: git-clone
   kind: ClusterTask
 params:
-  - name: url
-    value: $(params.gitrepositoryurl)
   - name: revision
     value: $(params.gitrevision)
   - name: depth
