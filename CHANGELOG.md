@@ -1,7 +1,10 @@
 # Changelog
 
 All notable changes to this project will be documented in this file.
-## [2.1.1] -2022-11-24
+## [3.0.0] - 2022-11-24
+- Removed default url param from git-clone task
+
+## [2.1.1] - 2022-11-24
 - Allow secret to be specified in workspaces
 
 ## [2.0.2] - 2022-11-15

@@ -34,6 +34,9 @@ pipelines:
     #   params:
     #    - name: pipelineparam2
     #      value: value
+    #  params:
+    #    - name: url
+    #      value: git@github.com:stakater/my-dummy-repo
     #   workspaces:
     #    - name: source
     #      workspace: source
