@@ -1,7 +1,10 @@
 # Changelog
 
 All notable changes to this project will be documented in this file.
-## [2.1.0] -2022-11-24
+## [2.1.1] - 2022-11-24
+- Make workspace an optional field in task workspaces
+
+## [2.1.0] - 2022-11-24
 - Allow secret to be specified task workspaces
 
 ## [2.0.2] - 2022-11-15

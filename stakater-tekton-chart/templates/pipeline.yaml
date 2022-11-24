@@ -195,7 +195,9 @@ spec:
       workspaces:
       {{- range $task_workspaces }}
       - name: {{ .name }}
+      {{- if .workspace }}
         workspace: {{ .workspace }}
+      {{- end }}
       {{- if .secret }}
         secret:
           secretName: {{ .secret }}
