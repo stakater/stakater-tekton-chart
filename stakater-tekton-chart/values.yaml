@@ -10,6 +10,9 @@ workspaces:
 #    volumeClaimTemplate:
 #      accessModes: ReadWriteOnce
 #      resourcesRequestsStorage: 1Gi
+#  - name: ssh-creds
+#    secret:
+#      secretName: my-secret
 #  - name: source1
 #    persistentVolumeClaim:
 #      claimName: my-pvc

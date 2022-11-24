@@ -45,6 +45,7 @@ spec:
         {{- if .Values.workspaces }}
         workspaces:
           {{- range .Values.workspaces -}}
+
           {{- if and .volumeClaimTemplate .name }}
           - name: {{ .name }}
             {{- if and .volumeClaimTemplate.accessModes .volumeClaimTemplate.resourcesRequestsStorage }}
@@ -57,6 +58,15 @@ spec:
                     storage: {{ .volumeClaimTemplate.resourcesRequestsStorage }}
             {{- end -}}
           {{- end -}}
+
+          {{- if and .secret .name }}
+          - name: {{ .name }}
+            {{- if .secret.secretName }}
+            secret:
+              secretName: {{ .secret.secretName }}
+            {{- end -}}
+            {{- end -}}
+
           {{- if and .persistentVolumeClaim .name }}
           - name: {{ .name }}
             {{- if .persistentVolumeClaim.claimName }}
