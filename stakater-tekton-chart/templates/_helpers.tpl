@@ -134,12 +134,12 @@ Expand the name of the chart.
       {{- $addedParams := dict }}
       {{- range $list2 }}
       {{- $addedParams := set $addedParams .name "e" }}
-      {{- $result = (dict "name" .name "workspace" .workspace) | append $result }}
+      {{- $result = (dict "name" .name "workspace" .workspace "secret" .secret) | append $result }}
       {{- end }}
       {{- range $list1 }}
       {{- if hasKey $addedParams .name }}
       {{- else }}
-      {{- $result = (dict "name" .name "workspace" .workspace) | append $result }}
+      {{- $result = (dict "name" .name "workspace" .workspace "secret" .secret) | append $result }}
       {{- end }}
       {{- end }}
   {{- end }}
