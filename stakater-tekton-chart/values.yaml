@@ -34,6 +34,7 @@ pipelines:
     #   workspaces:
     #    - name: source
     #      workspace: source
+    #      secret: mysecret
     #   runAfter:
     #   - git-clone
     # - name: task3

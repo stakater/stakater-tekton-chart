@@ -1,6 +1,8 @@
 # Changelog
 
 All notable changes to this project will be documented in this file.
+## [2.1.0] -2022-11-24
+- Allow secret to be specified task workspaces
 
 ## [2.0.2] - 2022-11-15
 - Add params to clustertask remove-environment-v1.
