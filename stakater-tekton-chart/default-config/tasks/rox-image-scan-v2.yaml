@@ -1,0 +1,15 @@
+name: rox-image-scan-v2
+taskRef:
+  task: rox-image-scan
+  kind: ClusterTask
+params:
+  - name: image
+    value: '$(params.image_registry_url):$(tasks.stakater-create-git-tag-v2.results.GIT_TAG)'
+  - name: rox_api_token
+    value: rhacs-auth-forked
+  - name: rox_central_endpoint
+    value: rhacs-auth-forked
+  - name: output_format
+    value: csv
+  - name: image_digest
+    value: $(tasks.build-and-push.results.IMAGE_DIGEST)

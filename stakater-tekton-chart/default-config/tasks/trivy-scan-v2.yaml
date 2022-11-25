@@ -1,0 +1,12 @@
+name: stakater-trivy-scan-v2
+params:
+- name: IMAGE
+  value: $(params.image_registry_url):$(tasks.stakater-create-git-tag-v2.results.GIT_TAG)
+workspaces:
+- name: source
+  workspace: source
+runAfter:
+- stakater-buildah-v1
+taskRef: 
+  task: stakater-trivy-scan-v1
+  kind: ClusterTask
