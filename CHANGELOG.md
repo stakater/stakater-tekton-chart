@@ -1,6 +1,9 @@
 # Changelog
 
 All notable changes to this project will be documented in this file.
+## [3.1.0] - 2022-11-25
+- Add a new version of create-git-tag task which supports ssh.
+
 ## [3.0.0] - 2022-11-24
 - Removed default url param from git-clone task as we want the user to be able to specify both the ssh or https url.
 Previously we were setting the https url as default, restricting the user from cloning through ssh.
