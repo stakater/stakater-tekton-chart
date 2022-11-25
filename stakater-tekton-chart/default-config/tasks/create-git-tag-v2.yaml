@@ -1,0 +1,12 @@
+name: stakater-create-git-tag-v1
+taskRef:
+  task: stakater-create-git-tag-v2
+  kind: ClusterTask
+params:
+  - name: prnumber
+  - name: gitrevision
+  - name: oldcommit
+  - name: action
+workspaces:
+  - name: source
+    workspace: source
