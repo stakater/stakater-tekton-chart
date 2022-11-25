@@ -1,6 +1,9 @@
 # Changelog
 
 All notable changes to this project will be documented in this file.
+## [3.2.0] - 2022-11-25
+- Add new versions of tasks that need output from the create-git-tag task.
+
 ## [3.1.0] - 2022-11-25
 - Add a new version of create-git-tag task which supports ssh.
 
