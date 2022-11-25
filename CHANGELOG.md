@@ -1,6 +1,7 @@
 # Changelog
 
 All notable changes to this project will be documented in this file.
+
 ## [3.4.0] - 2022-11-25
 - Added new version of multiple task to support ssh.
 
