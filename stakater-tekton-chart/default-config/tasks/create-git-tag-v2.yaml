@@ -1,4 +1,4 @@
-name: stakater-create-git-tag-v1
+name: stakater-create-git-tag-v2
 taskRef:
   task: stakater-create-git-tag-v2
   kind: ClusterTask
