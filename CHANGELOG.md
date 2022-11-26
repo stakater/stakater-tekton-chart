@@ -2,9 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.5.3] - 2022-11-26
+- Fixed github-update-cd-repo task version
+
 ## [3.5.2] - 2022-11-26
 - Fixed github-update-cd-repo task name
-- 
+
 ## [3.5.1] - 2022-11-26
 - Fixed update-cd-repo task version
 
