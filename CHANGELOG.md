@@ -1,6 +1,9 @@
 # Changelog
 
 All notable changes to this project will be documented in this file.
+## [3.2.0] - 2022-11-26
+- Adding new version of comment-on-pr and update-cd-repo tasks to support ssh protocol.
+
 ## [3.3.0] - 2022-11-25
 - Added new version of comment on pr task
 ## [3.2.0] - 2022-11-25
