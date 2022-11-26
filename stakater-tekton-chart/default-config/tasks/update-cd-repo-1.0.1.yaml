@@ -1,6 +1,6 @@
-name: stakater-update-cd-repo-1.0.2
+name: stakater-github-update-cd-repo-1.0.2
 taskRef:
-  task: stakater-update-cd-repo-1.0.2
+  task: stakater-github-update-cd-repo-1.0.2
   kind: ClusterTask
 params:
 - name: pr-number
