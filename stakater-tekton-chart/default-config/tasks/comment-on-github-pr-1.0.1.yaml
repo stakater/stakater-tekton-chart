@@ -1,4 +1,4 @@
-name: stakater-comment-on-github-pr-v2
+name: stakater-comment-on-github-pr-1.0.1
 params:
   - name: pr-number
     value: $(params.prnumber)
