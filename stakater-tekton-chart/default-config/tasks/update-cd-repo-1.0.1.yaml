@@ -1,0 +1,28 @@
+name: stakater-update-cd-repo-v4
+taskRef:
+  task: stakater-update-cd-repo-1.0.1
+  kind: ClusterTask
+params:
+- name: pr-number
+  value: $(params.prnumber)
+- name: image-tag
+  value: $(tasks.stakater-create-git-tag-v2.results.GIT_TAG)
+- name: image-name
+  value: $(params.image_registry_url)
+- name: environment
+  value: $(params.environment)
+- name: repo-path
+  value: $(params.repoPath)
+- name: git-revision
+  value: $(params.gitrevision)
+- name: cluster-name
+  value: $(params.clusterName)
+- name: team
+  value: $(params.team)
+- name: namespace
+  value: $(params.namespace)
+- name: helm-registry
+  value: $(params.helm_registry)
+workspaces:
+- name: source
+  workspace: source
