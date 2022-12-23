@@ -1,6 +1,8 @@
 # Changelog
 
 All notable changes to this project will be documented in this file.
+## [3.5.5] - 2022-13-23
+- Added new version of stakaterbuildah task
 
 ## [3.5.4] - 2022-11-26
 - Added new version of stakaterbuildah task
