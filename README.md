@@ -95,6 +95,13 @@ Pipeline parameters will be defined using the task parameter & Pipeline workspac
 | eventlistener.triggers.create    | If you dont want to create the trigger, set this false. useful for using predefined triggers.  | ``              |
 | eventlistener.triggers.bindings    | Trigger Bindings to be passed to trigger templates                                 | `{}`            |
 
+### Cluster Role Parameters
+
+| Name                          | Description                                                | Value |
+|-------------------------------|------------------------------------------------------------|-------|
+| additionalclusterrole.enabled | Enable cluster role that pipeline service account can use. | ``    |
+| additionalclusterrole.rules   | Define rules for clusterrole.                              | {}    |
+
 
 ### Add a Default Task in pipeline
 - Navigate to stakater-tekton-chart/default-config/tasks directory & make a new yaml file.
