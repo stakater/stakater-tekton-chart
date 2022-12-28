@@ -173,3 +173,15 @@ serviceAccount:
 
 rbac:
   enabled: false
+
+#additionalclusterrole:
+#  enabled: true
+#  rules:
+#    - apiGroups:
+#        - rbac.authorization.k8s.io
+#      resources:
+#        - clusterrolebindings
+#        - clusterroles
+#      verbs:
+#        - get
+#        - list

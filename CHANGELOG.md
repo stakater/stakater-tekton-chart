@@ -1,7 +1,10 @@
 # Changelog
 
 All notable changes to this project will be documented in this file.
-## [3.5.5] - 2022-13-23
+## [3.5.6] - 2022-12-28
+- Add support for adding additional clustrrole
+
+## [3.5.5] - 2022-12-23
 - Added new version of stakaterbuildah task
 
 ## [3.5.4] - 2022-11-26
