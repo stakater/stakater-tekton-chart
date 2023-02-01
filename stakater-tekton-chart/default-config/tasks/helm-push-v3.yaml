@@ -1,4 +1,4 @@
-name: stakater-helm-push-v2
+name: stakater-helm-push-v3
 taskRef:
   task: stakater-helm-push-1.0.1
   kind: ClusterTask
