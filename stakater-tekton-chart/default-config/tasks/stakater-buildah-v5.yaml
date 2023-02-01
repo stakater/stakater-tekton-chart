@@ -1,0 +1,26 @@
+name: stakater-buildah-v5
+taskRef:
+  task: stakater-buildah-1.0.4
+  kind: ClusterTask
+runAfter:
+- stakater-build-image-flag-v1
+params:
+  - name: IMAGE
+    value: $(params.image_registry_url):$(tasks.stakater-create-git-tag-v2.results.GIT_TAG)
+  - name: TLSVERIFY
+    value: "false"
+  - name: FORMAT
+    value: "docker"
+  - name: BUILD_IMAGE
+    value: $(tasks.stakater-build-image-flag-v1.results.build-image)
+  - name: IMAGE_REGISTRY
+    value: $(params.image_registry_url)
+  - name: CURRENT_GIT_TAG
+    value: $(tasks.stakater-create-git-tag-v2.results.CURRENT_GIT_TAG)
+  - name: BUILD_EXTRA_ARGS
+  - name: PUSH_EXTRA_ARGS
+workspaces:
+  - name: source
+    workspace: source
+  - name: buildah-git-dependency-token
+    optional: true

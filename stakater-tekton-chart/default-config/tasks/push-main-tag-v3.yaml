@@ -1,0 +1,12 @@
+name: stakater-push-main-tag-v3
+taskRef:
+  task: stakater-push-main-tag-1.0.6
+  kind: ClusterTask
+params:
+  - name: PR_NUMBER
+  - name: GIT_REVISION
+  - name: IMAGE_TAG
+    value: $(tasks.stakater-create-git-tag-v2.results.GIT_TAG)
+workspaces:
+  - name: source
+    workspace: source

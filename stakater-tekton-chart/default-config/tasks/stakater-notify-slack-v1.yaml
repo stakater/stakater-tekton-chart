@@ -1,0 +1,10 @@
+name: stakater-notify-slack-v1
+taskRef:
+  task: stakater-notify-slack-1.0.1
+  kind: ClusterTask
+runAfter:
+- stakater-validate-environment 
+params:
+  - name: PR_NUMBER
+  - name: REPO
+  - name: GIT_REPO_URL

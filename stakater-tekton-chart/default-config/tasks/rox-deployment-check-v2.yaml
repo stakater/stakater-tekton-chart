@@ -1,0 +1,17 @@
+name: rox-deployment-check-v2
+taskRef:
+  task: rox-deployment-check-1.0.1
+  kind: ClusterTask
+params:
+  - name: ROX_API_TOKEN
+    value: rhacs-auth-forked
+  - name: ROX_CENTRAL_ENDPOINT
+    value: rhacs-auth-forked
+  - name: FILE
+    value: manifest.yaml
+  - name: DEPLOYMENT_FILES_PATH
+    value: deploy
+  - name: BUILD_IMAGE
+workspaces:
+- name: source
+  workspace: source

@@ -1,0 +1,29 @@
+name: stakater-gitlab-update-cd-repo-v3
+taskRef:
+  task: stakater-gitlab-update-cd-repo-1.0.2
+  kind: ClusterTask
+params:
+- name: prnumber
+  value: $(params.prnumber)
+- name: IMAGE_TAG
+  value: $(tasks.stakater-create-git-tag-v2.results.GIT_TAG)
+- name: IMAGE_NAME
+  value: $(params.image_registry_url)
+- name: environment
+  value: $(params.environment)
+- name: repoPath
+  value: $(params.repoPath)
+- name: gitrevision
+  value: $(params.gitrevision)
+- name: clusterName
+  value: $(params.clusterName)
+- name: team
+  value: $(params.team)
+- name: namespace
+  value: $(params.namespace)
+- name: helm_registry
+  value: $(params.helm_registry)
+- name: gitcdrepo
+workspaces:
+- name: source
+  workspace: source

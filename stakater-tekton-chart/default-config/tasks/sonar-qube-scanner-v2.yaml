@@ -1,0 +1,12 @@
+name: stakater-sonarqube-scanner-v2
+taskRef:
+  task: stakater-sonarqube-scanner-1.0.0
+  kind: ClusterTask
+params:
+  - name: SONAR_HOST_URL
+    value: "http://sonarqube.stakater-sonarqube:9000"
+  - name: SONAR_PROJECT_KEY
+    value: $(params.repoName)
+workspaces:
+- name: source
+  workspace: source

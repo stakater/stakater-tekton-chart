@@ -1,0 +1,12 @@
+name: stakater-comment-on-github-pr-v3
+params:
+  - name: pr-number
+  - name: git-repository-url
+  - name: image
+    value: $(params.image_registry_url):$(tasks.stakater-create-git-tag-v2.results.GIT_TAG)
+workspaces:
+  - name: source
+    workspace: source
+taskRef: 
+  task: stakater-comment-pr-1.0.2
+  kind: ClusterTask
