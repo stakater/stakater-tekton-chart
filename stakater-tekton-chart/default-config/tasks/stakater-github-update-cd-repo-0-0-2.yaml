@@ -1,0 +1,30 @@
+name: stakater-update-cd-repo-0-0-2
+taskRef:
+  task: stakater-update-cd-repo-0.0.2
+  kind: ClusterTask
+params:
+  - name: CD_REPO_URL
+    value: 'git@github.com:org/repo.git'
+  - name: PR_NUMBER
+    value: $(params.prnumber)
+  - name: IMAGE_TAG
+    value: $(tasks.stakater-create-git-tag.results.GIT_TAG)
+  - name: IMAGE_NAME
+    value: $(params.image_registry_url)
+  - name: ENVIRONMENT
+    value: $(params.environment)
+  - name: REPO_PATH
+    value: $(params.repoPath)
+  - name: GIT_REVISION
+    value: $(params.gitrevision)
+  - name: CLUSTER_NAME
+    value: $(params.clusterName)
+  - name: TEAM
+    value: $(params.team)
+  - name: NAMESPACE
+    value: $(params.namespace)
+  - name: HELM_REGISTRY
+    value: $(params.helm_registry)
+workspaces:
+- name: source
+  workspace: source

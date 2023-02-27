@@ -1,0 +1,16 @@
+name: stakater-push-main-tag-0-0-2
+taskRef:
+  task: stakater-push-main-tag-0.0.2
+  kind: ClusterTask
+params:
+  - name: PR_NUMBER
+    value: $(params.prnumber)
+  - name: GIT_REVISION
+    value: $(params.gitrevision)
+  - name: IMAGE_TAG
+    value: $(tasks.stakater-create-git-tag.results.GIT_TAG)
+  - name: GITHUB_TOKEN_SECRET
+    value: "mto-console-repo-ssh-creds"
+workspaces:
+  - name: source
+    workspace: source
