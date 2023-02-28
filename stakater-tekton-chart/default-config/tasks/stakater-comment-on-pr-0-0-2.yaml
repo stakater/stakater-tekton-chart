@@ -1,4 +1,4 @@
-name: stakater-comment-on-pr
+name: stakater-comment-on-pr-0-0-2
 params:
   - name: git-repository-url
     value: $(params.gitrepositoryurl)
