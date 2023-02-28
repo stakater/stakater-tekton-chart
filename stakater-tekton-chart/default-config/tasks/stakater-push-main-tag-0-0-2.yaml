@@ -10,7 +10,7 @@ params:
   - name: IMAGE_TAG
     value: $(tasks.stakater-create-git-tag.results.GIT_TAG)
   - name: GITHUB_TOKEN_SECRET
-    value: "mto-console-repo-ssh-creds"
+    value: "repo-ssh-creds"
 workspaces:
   - name: source
     workspace: source
