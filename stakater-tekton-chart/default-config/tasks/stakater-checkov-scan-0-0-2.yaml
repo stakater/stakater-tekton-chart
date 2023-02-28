@@ -1,0 +1,7 @@
+name: stakater-checkov-scan-0-0-2
+workspaces:
+  - name: source
+    workspace: source
+taskRef: 
+  task: stakater-checkov-scan-0.0.2
+  kind: ClusterTask

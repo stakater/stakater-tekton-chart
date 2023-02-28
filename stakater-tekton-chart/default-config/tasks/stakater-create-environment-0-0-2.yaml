@@ -1,0 +1,26 @@
+name: stakater-create-environment-0-0-2
+taskRef:
+  kind: ClusterTask
+  task: stakater-create-environment-0.0.2
+params:
+  - name: CREATE_ON_CLUSTER
+    value: "true"
+  - name: REPO_NAME
+    value: $(params.repoName)
+  - name: PR_NUMBER
+    value: $(params.prnumber)
+  - name: GIT_URL
+    value: $(params.gitrepositoryurl)
+  - name: GIT_BRANCH
+    value: $(params.gitbranch)
+  - name: IMAGE_TAG
+    value: $(tasks.stakater-create-git-tag.results.GIT_TAG)
+  - name: IMAGE_REPO
+    value: $(params.image_registry_url)
+  - name: PULL_REQUEST_COMMITS_API
+    value: $(params.pull_request_commits_api)
+workspaces:
+  - name: output
+    workspace: source
+  - name: repo-token
+    workspace: repo-token

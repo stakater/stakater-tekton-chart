@@ -1,0 +1,15 @@
+name: stakater-set-commit-status-0-0-1
+taskRef:
+  task: stakater-set-commit-status-0.0.1
+  kind: ClusterTask
+params:
+  - name: webhook-payload
+    value: $(params.webhook-payload)
+  - name: state
+    value: $(tasks.status)
+  - name: tekton-base-url
+    value: $(params.tekton-base-url)
+  - name: pipeline_name
+    value: $(context.pipelineRun.name)
+  - name: pipeline_namespace
+    value: $(context.pipelineRun.namespace)

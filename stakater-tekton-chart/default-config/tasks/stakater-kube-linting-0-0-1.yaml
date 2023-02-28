@@ -1,0 +1,12 @@
+name: stakater-kube-linting-0-0-1
+taskRef:
+  task: stakater-kube-linting-0.0.1
+  kind: ClusterTask
+params:
+- name: file
+  value: manifest.yaml
+- name: deployment_files_path
+  value: deploy
+workspaces:
+- name: source
+  workspace: source
