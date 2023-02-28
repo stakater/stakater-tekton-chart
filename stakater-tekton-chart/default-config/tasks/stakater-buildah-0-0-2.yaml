@@ -3,16 +3,19 @@ taskRef:
   task: stakater-buildah-0.0.2
   kind: ClusterTask
 params:
+  # Must Override in Pipeline
   - name: IMAGE
     value: $(params.image_registry_url):$(tasks.stakater-create-git-tag.results.GIT_TAG)
   - name: TLSVERIFY
     value: "false"
   - name: FORMAT
     value: "docker"
+  # Must Override in Pipeline
   - name: BUILD_IMAGE
-    value: $(tasks.stakater-build-image-flag-v1.results.build-image)
+    value: $(tasks.stakater-build-image-flag.results.build-image)
   - name: IMAGE_REGISTRY
     value: $(params.image_registry_url)
+  # Must Override in Pipeline
   - name: CURRENT_GIT_TAG
     value: $(tasks.stakater-create-git-tag.results.CURRENT_GIT_TAG)
 workspaces:

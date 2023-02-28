@@ -7,6 +7,8 @@ params:
   value: manifest.yaml
 - name: deployment_files_path
   value: deploy
+- name: namespace
+  value: $(context.pipelineRun.namespace)
 workspaces:
 - name: source
   workspace: source

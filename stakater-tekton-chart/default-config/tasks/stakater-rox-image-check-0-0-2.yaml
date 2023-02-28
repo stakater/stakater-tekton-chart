@@ -9,5 +9,6 @@ params:
     value: rhacs-auth-forked
   - name: ROX_CENTRAL_ENDPOINT
     value: rhacs-auth-forked
+  # Must Override in Pipeline
   - name: BUILD_IMAGE
     value: $(tasks.stakater-build-image-flag.results.build-image)

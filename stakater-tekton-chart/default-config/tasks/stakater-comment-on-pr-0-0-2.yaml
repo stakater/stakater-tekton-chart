@@ -1,9 +1,10 @@
-name: stakater-comment-on-pr
+name: stakater-comment-on-pr-0-0-2
 params:
   - name: git-repository-url
     value: $(params.gitrepositoryurl)
   - name: pr-number
     value: $(params.prnumber)
+  # Must Override in Pipeline
   - name: image
     value: $(params.image_registry_url):$(tasks.stakater-create-git-tag.results.GIT_TAG)
 taskRef:

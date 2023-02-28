@@ -3,8 +3,12 @@ taskRef:
   task: stakater-trivy-scan-0.0.1
   kind: ClusterTask
 params:
+# Must Override in Pipeline
 - name: IMAGE
-  value: $(params.image_registry_url):$(tasks.stakater-create-git-tag-v2.results.GIT_TAG)
+  value: $(params.image_registry_url):$(tasks.stakater-create-git-tag.results.GIT_TAG)
+# Must Override in Pipeline
+- name: BUILD_IMAGE
+  value: $(tasks.stakater-build-image-flag.results.build-image)
 workspaces:
 - name: source
   workspace: source
