@@ -10,4 +10,4 @@ params:
   - name: ROX_CENTRAL_ENDPOINT
     value: rhacs-auth-forked
   - name: BUILD_IMAGE
-	value: $(tasks.stakater-build-image-flag.results.build-image)
+    value: $(tasks.stakater-build-image-flag.results.build-image)

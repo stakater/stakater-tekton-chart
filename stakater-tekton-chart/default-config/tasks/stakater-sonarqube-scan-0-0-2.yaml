@@ -1,6 +1,6 @@
-name: stakater-sonarqube-scanner-0-0-2
+name: stakater-sonarqube-scan-0-0-2
 taskRef:
-  task: stakater-sonarqube-scanner-0.0.2
+  task: stakater-sonarqube-scan-0.0.2
   kind: ClusterTask
 params:
   - name: SONAR_HOST_URL
