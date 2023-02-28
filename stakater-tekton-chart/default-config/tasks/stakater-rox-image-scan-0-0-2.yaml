@@ -11,5 +11,9 @@ params:
     value: rhacs-auth-forked
   - name: OUTPUT_FORMAT
     value: csv
+  # Must Override in Pipeline
   - name: IMAGE_DIGEST
     value: $(tasks.build-and-push.results.IMAGE_DIGEST)
+  # Must Override in Pipeline
+  - name: BUILD_IMAGE
+    value: $(tasks.stakater-build-image-flag.results.build-image)
