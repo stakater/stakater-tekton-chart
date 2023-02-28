@@ -7,6 +7,7 @@ params:
     value: 'git@github.com:org/repo.git'
   - name: PR_NUMBER
     value: $(params.prnumber)
+  # Must Override in Pipeline
   - name: IMAGE_TAG
     value: $(tasks.stakater-create-git-tag.results.GIT_TAG)
   - name: IMAGE_NAME
