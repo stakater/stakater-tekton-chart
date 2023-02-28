@@ -24,4 +24,3 @@ workspaces:
     workspace: source
   - name: repo-token
     workspace: repo-token
-
