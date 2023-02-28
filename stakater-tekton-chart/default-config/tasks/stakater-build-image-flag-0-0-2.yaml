@@ -10,3 +10,6 @@ params:
   value: $(params.oldcommit)
 - name: NEW_COMMIT
   value: $(params.newcommit)
+# Must Override in Pipeline
+- name: BUILD_IMAGE
+  value: $(tasks.stakater-build-image-flag.results.build-image)
