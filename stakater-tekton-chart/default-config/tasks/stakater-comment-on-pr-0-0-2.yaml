@@ -11,4 +11,4 @@ taskRef:
   task: stakater-comment-on-pr-0.0.2
 workspaces:
   - name: source
-	workspace: source
+    workspace: source
