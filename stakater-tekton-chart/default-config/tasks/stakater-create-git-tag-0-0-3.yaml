@@ -1,0 +1,18 @@
+name: stakater-create-git-tag-0-0-3
+taskRef:
+  task: stakater-create-git-tag-0.0.3
+  kind: ClusterTask
+params:
+  - name: PR_NUMBER
+    value: $(params.prnumber)
+  - name: GIT_REVISION
+    value: $(params.gitrevision)
+  - name: OLD_COMMIT
+    value: $(params.oldcommit)
+  - name: ACTION
+    value: $(params.action)
+workspaces:
+  - name: source
+    workspace: source
+  - name: ssh-directory
+    workspace: ssh-directory
