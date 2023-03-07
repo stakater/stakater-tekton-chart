@@ -11,5 +11,5 @@ params:
     value: rhacs-auth-forked
   - name: OUTPUT_FORMAT
     value: csv
-  - name: IMAGE_FORMAT
+  - name: IMAGE_DIGEST
     value: $(tasks.build-and-push.results.IMAGE_DIGEST)
