@@ -6,5 +6,5 @@ workspaces:
 - name: source
   workspace: source
 params:
-- name: oldcommit
-- name: newcommit
+- name: OLD_COMMIT
+- name: NEW_COMMIT

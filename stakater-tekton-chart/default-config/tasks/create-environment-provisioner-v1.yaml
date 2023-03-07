@@ -1,14 +1,14 @@
 name: stakater-create-environment-provisioner-v1
 params:
-  - name: repoName
-  - name: prNumber
+  - name: REPO_NAME
+  - name: PR_NUMBER
     value: $(params.prnumber)
-  - name: gitUrl
+  - name: GIT_URL
     value: $(params.gitrepositoryurl)
-  - name: gitBranch
-  - name: imageTag
+  - name: GIT_BRANCH
+  - name: IMAGE_TAG
     value: $(tasks.stakater-create-git-tag-v1.results.GIT_TAG)
-  - name: imageRepo
+  - name: IMAGE_REPO
     value: $(params.image_registry_url)
 workspaces:
   - name: output

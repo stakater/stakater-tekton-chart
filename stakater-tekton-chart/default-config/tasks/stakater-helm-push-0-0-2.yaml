@@ -3,12 +3,12 @@ taskRef:
   task: stakater-helm-push-0.0.2
   kind: ClusterTask
 params:
-  - name: prnumber
-  - name: repoPath
-  - name: gitrevision
-  - name: registry
+  - name: PR_NUMBER
+  - name: REPO_PATH
+  - name: GIT_REVISION
+  - name: REGISTRY
     value: $(params.helm_registry)
-  - name: semVer
+  - name: SEM_VER
     value: $(tasks.stakater-create-git-tag.results.GIT_TAG)
 workspaces:
   - name: source

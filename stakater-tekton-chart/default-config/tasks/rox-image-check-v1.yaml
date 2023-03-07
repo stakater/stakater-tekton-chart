@@ -3,9 +3,9 @@ taskRef:
   task: rox-image-check
   kind: ClusterTask
 params:
-  - name: image
+  - name: IMAGE
     value: '$(params.image_registry_url):$(tasks.stakater-create-git-tag-v1.results.GIT_TAG)'
-  - name: rox_api_token
+  - name: ROX_API_TOKEN
     value: rhacs-auth-forked
-  - name: rox_central_endpoint
+  - name: ROX_CENTRAL_ENDPOINT
     value: rhacs-auth-forked

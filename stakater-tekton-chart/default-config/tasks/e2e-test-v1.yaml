@@ -3,13 +3,13 @@ taskRef:
   task: stakater-e2e-test-v1
   kind: ClusterTask
 params:
-- name: gitorganization
+- name: GIT_ORGANIZATION
   value: github.com/stakater-lab
-- name: gite2erepo
+- name: GIT_E2E_REPO
   value: stakater-nordmart-review-e2e
-- name: repoName
+- name: REPO_NAME
   value: $(params.repoName)
-- name: prNumber
+- name: PR_NUMBER
   value: $(params.prnumber)
 workspaces:
 - name: source

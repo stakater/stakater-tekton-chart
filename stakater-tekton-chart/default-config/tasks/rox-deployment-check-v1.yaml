@@ -3,13 +3,13 @@ taskRef:
   task: rox-deployment-check
   kind: ClusterTask
 params:
-  - name: rox_api_token
+  - name: ROX_API_TOKEN
     value: rhacs-auth-forked
-  - name: rox_central_endpoint
+  - name: ROX_CENTRAL_ENDPOINT
     value: rhacs-auth-forked
-  - name: file
+  - name: FILE
     value: manifest.yaml
-  - name: deployment_files_path
+  - name: DEPLOYMENT_FILES_PATH
     value: deploy
 workspaces:
 - name: source

@@ -6,5 +6,5 @@ workspaces:
 - name: output
   workspace: source
 params:
-- name: prNumber
+- name: PR_NUMBER
   value: $(params.prnumber)

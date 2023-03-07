@@ -1,8 +1,8 @@
 name: stakater-load-testing-v1
 params:
-  - name: repoName
+  - name: REPO_NAME
     value: $(params.repoName)
-  - name: namespace
+  - name: NAMESPACE
     value: $(params.namespace)
 taskRef:
   kind: ClusterTask

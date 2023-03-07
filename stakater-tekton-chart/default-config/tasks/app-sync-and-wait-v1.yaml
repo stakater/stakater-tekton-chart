@@ -3,15 +3,15 @@ taskRef:
   task: stakater-app-sync-and-wait-v1
   kind: ClusterTask
 params:
-- name: gitrepositoryurl
+- name: GIT_REPOSITORY_URL
   value: $(params.gitrepositoryurl)
-- name: prNumber
+- name: PR_NUMBER
   value: $(params.prnumber)
-- name: repoName
+- name: REPO_NAME
   value: $(params.repoName)
-- name: timeout
+- name: TIMEOUT
   value: "300"
-- name: namespace
+- name: NAMESPACE
   value: $(params.namespace)
 - name: IMAGE_TAG
   value: $(tasks.stakater-create-git-tag-v1.results.GIT_TAG)

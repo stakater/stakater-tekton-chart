@@ -3,11 +3,11 @@ taskRef:
   task: stakater-kube-linting-0.0.1
   kind: ClusterTask
 params:
-- name: file
+- name: FILE
   value: manifest.yaml
-- name: deployment_files_path
+- name: DEPLOYMENT_FILES_PATH
   value: deploy
-- name: namespace
+- name: NAMESPACE
   value: $(context.pipelineRun.namespace)
 workspaces:
 - name: source

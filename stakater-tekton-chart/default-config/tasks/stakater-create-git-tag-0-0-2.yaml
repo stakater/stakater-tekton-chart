@@ -3,10 +3,10 @@ taskRef:
   task: stakater-create-git-tag-0.0.2
   kind: ClusterTask
 params:
-  - name: prnumber
-  - name: gitrevision
-  - name: oldcommit
-  - name: action
+  - name: PR_NUMBER
+  - name: GIT_REVISION
+  - name: OLD_COMMIT
+  - name: ACTION
 workspaces:
   - name: source
     workspace: source

@@ -1,8 +1,8 @@
 name: stakater-comment-on-github-pr-1.0.1
 params:
-  - name: pr-number
+  - name: PR_NUMBER
     value: $(params.prnumber)
-  - name: image
+  - name: IMAGE
     value: $(params.image_registry_url):$(tasks.stakater-create-git-tag-v2.results.GIT_TAG)
 workspaces:
   - name: source

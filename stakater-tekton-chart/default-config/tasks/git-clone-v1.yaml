@@ -3,9 +3,9 @@ taskRef:
   task: git-clone
   kind: ClusterTask
 params:
-  - name: revision
+  - name: REVISION
     value: $(params.gitrevision)
-  - name: depth
+  - name: DEPTH
     value: "0"
 workspaces:
   - name: output

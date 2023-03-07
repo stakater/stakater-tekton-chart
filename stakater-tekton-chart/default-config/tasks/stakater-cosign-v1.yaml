@@ -1,8 +1,8 @@
 name: stakater-cosign-v1
 params:
-  - name: image
+  - name: IMAGE
     value: '$(params.image_registry_url):$(tasks.stakater-create-git-tag-v1.results.GIT_TAG)'
-  - name: namespace
+  - name: NAMESPACE
     value: $(params.namespace)
 taskRef:
   kind: ClusterTask

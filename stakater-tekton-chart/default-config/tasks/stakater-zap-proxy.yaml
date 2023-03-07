@@ -1,10 +1,10 @@
 name: stakater-zap-proxy-v1
 params:
-  - name: repoName
+  - name: REPO_NAME
     value: $(params.repoName)
-  - name: app_url
+  - name: APP_URL
     value: $(params.app_url)
-  - name: allure_host
+  - name: ALLURE_HOST
     value: $(params.allure_host)
 taskRef:
   kind: ClusterTask

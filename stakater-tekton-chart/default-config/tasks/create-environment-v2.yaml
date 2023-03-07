@@ -3,17 +3,17 @@ taskRef:
   task: stakater-create-environment-v2
   kind: ClusterTask
 params:
-  - name: repoName
+  - name: REPO_NAME
     value: $(params.repoName)
-  - name: prNumber
+  - name: PR_NUMBER
     value: $(params.prnumber)
-  - name: gitUrl
+  - name: GIT_URL
     value: $(params.gitrepositoryurl)
-  - name: gitBranch
+  - name: GIT_BRANCH
     value: $(params.gitbranch)
-  - name: imageTag
+  - name: IMAGE_TAG
     value: $(tasks.stakater-create-git-tag-v1.results.GIT_TAG)
-  - name: imageRepo
+  - name: IMAGE_REPO
     value: $(params.image_registry_url)
 workspaces:
   - name: output
