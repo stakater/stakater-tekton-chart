@@ -1,0 +1,10 @@
+name: stakater-remove-environment-0-0-2
+taskRef:
+  task: stakater-remove-environment-0.0.2
+  kind: ClusterTask
+workspaces:
+- name: output
+  workspace: source
+params:
+- name: PR_NUMBER
+  value: $(params.prnumber)

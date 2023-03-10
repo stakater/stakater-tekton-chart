@@ -1,0 +1,15 @@
+name: stakater-comment-on-pr-0-0-3
+params:
+  - name: GIT_REPOSITORY_URL
+    value: $(params.gitrepositoryurl)
+  - name: PR_NUMBER
+    value: $(params.prnumber)
+  # Must Override in Pipeline
+  - name: IMAGE
+    value: $(params.image_registry_url):$(tasks.stakater-create-git-tag.results.GIT_TAG)
+taskRef:
+  kind: ClusterTask
+  task: stakater-comment-on-pr-0.0.3
+workspaces:
+  - name: source
+    workspace: source
