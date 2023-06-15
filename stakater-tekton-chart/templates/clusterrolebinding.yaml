@@ -10,5 +10,5 @@ subjects:
 roleRef:
   apiGroup: rbac.authorization.k8s.io 
   kind: ClusterRole
-  name: openshift-pipelines-clusterinterceptors
+  name: tekton-triggers-eventlistener-clusterroles
 {{- end }}

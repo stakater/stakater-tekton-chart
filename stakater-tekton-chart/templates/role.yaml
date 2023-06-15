@@ -18,6 +18,7 @@ rules:
       - triggerbindings
       - triggertemplates
       - triggers
+      - interceptors
     verbs:
       - get
       - list
