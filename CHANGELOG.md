@@ -1,6 +1,8 @@
 # Changelog
 
 All notable changes to this project will be documented in this file.
+# [3.7.0] - 2021-05-15
+- Remove 'forked' from defaault secret names
 
 ## [3.6.9] - 2023-05-15
 - Adding permission for interceptors and clusterinterceptors in the default rbac

@@ -166,10 +166,10 @@ serviceAccount:
   name: stakater-tekton-builder
   create: false
   secrets:
-    - name: nexus-docker-config-forked
-    - name: git-auth-forked
+    - name: nexus-docker-config
+    - name: git-auth
   imagePullSecrets:
-    - name: nexus-docker-config-forked
+    - name: nexus-docker-config
 
 rbac:
   enabled: false
