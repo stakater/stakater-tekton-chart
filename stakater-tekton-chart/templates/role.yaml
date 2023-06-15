@@ -28,6 +28,7 @@ rules:
     resources:
       - pipelineruns
       - pipelineresources
+      - taskruns
     verbs:
       - create
   - apiGroups:
