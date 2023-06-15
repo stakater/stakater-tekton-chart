@@ -1,6 +1,10 @@
 # Changelog
 
 All notable changes to this project will be documented in this file.
+
+## [3.6.9] - 2023-05-15
+- Adding permission for interceptors and clusterinterceptors in the default rbac
+
 ## [3.6.0] - 2022-12-28
 - Add support for adding additional clustrrole
 
