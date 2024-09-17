@@ -63,7 +63,7 @@ jobs:
 
       # Set Up ct
       - name: Set up chart-testing
-        uses: helm/chart-testing-action@v2.2.1
+        uses: helm/chart-testing-action@v2.6.1
 
       - name: Run chart-testing (lint)
         run: ct lint --config ct-config.yml
