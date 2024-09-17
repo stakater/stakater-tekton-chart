@@ -1,4 +1,3 @@
-
 name: Push Chart to Helm Repository
 
 on:
@@ -25,20 +24,12 @@ jobs:
           persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
           fetch-depth: 0 # otherwise, you will fail to push refs to dest repo
 
-      # Log in to OC cluster
-#      - name: Authenticate to OC cluster
-#        uses: redhat-actions/oc-login@v1
-#        with:
-#          openshift_server_url: ${{ secrets.STAKATER_TEST_CLUSTER }}
-#          openshift_username: ${{ secrets.STAKATER_TEST_USER }}
-#          openshift_password: ${{ secrets.STAKATER_TEST_PASSWORD }}
-
       # Generate Tag without tagging the branch
       - name: Generate Tag
         id: generate_tag
         uses: anothrNick/github-tag-action@1.36.0
         env:
-          GITHUB_TOKEN: ${{ secrets.STAKATER_GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PUBLISH_TOKEN }}
           WITH_V: false
           DEFAULT_BUMP: patch
           DRY_RUN: true
@@ -80,7 +71,7 @@ jobs:
           branch: master
           repository: stakater-charts
           target_dir: docs
-          token: ${{ secrets.STAKATER_GITHUB_TOKEN }}
+          token: ${{ secrets.GHCR_TOKEN }}
           charts_dir: .
           charts_url: https://stakater.github.io/stakater-charts
           owner: stakater
@@ -101,13 +92,13 @@ jobs:
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
-          github_token: ${{ secrets.STAKATER_GITHUB_TOKEN }}
+          github_token: ${{ secrets.PUBLISH_TOKEN }}
 
       # Push tag to repo
       - name: Push Latest Tag
         uses: anothrNick/github-tag-action@1.36.0
         env:
-          GITHUB_TOKEN: ${{ secrets.STAKATER_GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PUBLISH_TOKEN }}
           WITH_V: true
           DEFAULT_BUMP: patch
 
@@ -119,5 +110,5 @@ jobs:
           status: ${{ job.status }}
           fields: repo,author,action,eventName,ref,workflow
         env:
-          GITHUB_TOKEN: ${{ secrets.STAKATER_GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PUBLISH_TOKEN }}
           SLACK_WEBHOOK_URL: ${{ secrets.STAKATER_DELIVERY_SLACK_WEBHOOK }}
