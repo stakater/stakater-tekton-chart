@@ -71,7 +71,7 @@ jobs:
           branch: master
           repository: stakater-charts
           target_dir: docs
-          token: ${{ secrets.PUBLISH_TOKEN }}
+          token: ${{ secrets.GHCR_TOKEN }}
           charts_dir: .
           charts_url: https://stakater.github.io/stakater-charts
           owner: stakater
