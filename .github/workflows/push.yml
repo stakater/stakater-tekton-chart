@@ -27,7 +27,7 @@ jobs:
       # Generate Tag without tagging the branch
       - name: Generate Tag
         id: generate_tag
-        uses: anothrNick/github-tag-action@1.36.0
+        uses: anothrNick/github-tag-action@1.70.0
         env:
           GITHUB_TOKEN: ${{ secrets.PUBLISH_TOKEN }}
           WITH_V: false
@@ -96,7 +96,7 @@ jobs:
 
       # Push tag to repo
       - name: Push Latest Tag
-        uses: anothrNick/github-tag-action@1.36.0
+        uses: anothrNick/github-tag-action@1.70.0
         env:
           GITHUB_TOKEN: ${{ secrets.PUBLISH_TOKEN }}
           WITH_V: true
